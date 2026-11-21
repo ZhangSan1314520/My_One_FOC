@@ -1,0 +1,199 @@
+ARM GAS  /tmp/cc6zfJ6P.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"Task_SystemInit.cpp"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "My_Top/Task/Task_SystemInit.cpp"
+  20              		.section	.rodata.str1.4,"aMS",%progbits,1
+  21              		.align	2
+  22              	.LC0:
+  23 0000 5379735F 		.ascii	"Sys_init\346\240\210\345\211\251\344\275\231:%d\015"
+  23      696E6974 
+  23      E6A088E5 
+  23      89A9E4BD 
+  23      993A2564 
+  24 0015 0A00     		.ascii	"\012\000"
+  25              		.text
+  26              		.align	1
+  27              		.global	_Z15Task_SystemInitPv
+  28              		.syntax unified
+  29              		.thumb
+  30              		.thumb_func
+  32              	_Z15Task_SystemInitPv:
+  33              	.LVL0:
+  34              	.LFB1381:
+   1:My_Top/Task/Task_SystemInit.cpp **** 
+   2:My_Top/Task/Task_SystemInit.cpp **** #include "FreeRTOS.h"
+   3:My_Top/Task/Task_SystemInit.cpp **** #include "task.h"
+   4:My_Top/Task/Task_SystemInit.cpp **** #include "ex_math.hpp"
+   5:My_Top/Task/Task_SystemInit.cpp **** #include "HAL_System.hpp"
+   6:My_Top/Task/Task_SystemInit.cpp **** #include "MC_Serial.hpp"
+   7:My_Top/Task/Task_SystemInit.cpp **** #include "FocMotor_ClosedLoop.hpp"
+   8:My_Top/Task/Task_SystemInit.cpp **** #include "My_Vofa.hpp"
+   9:My_Top/Task/Task_SystemInit.cpp **** #include "uorb.hpp"
+  10:My_Top/Task/Task_SystemInit.cpp **** #include "my_tim.hpp"
+  11:My_Top/Task/Task_SystemInit.cpp **** #include "Motor_Storage.hpp"
+  12:My_Top/Task/Task_SystemInit.cpp **** 
+  13:My_Top/Task/Task_SystemInit.cpp **** void Task_SystemInit(void *argument)
+  14:My_Top/Task/Task_SystemInit.cpp **** {
+  35              		.loc 1 14 1 view -0
+  36              		.cfi_startproc
+  37              		@ args = 0, pretend = 0, frame = 0
+  38              		@ frame_needed = 0, uses_anonymous_args = 0
+  39              		.loc 1 14 1 is_stmt 0 view .LVU1
+  40 0000 08B5     		push	{r3, lr}
+ARM GAS  /tmp/cc6zfJ6P.s 			page 2
+
+
+  41              		.cfi_def_cfa_offset 8
+  42              		.cfi_offset 3, -8
+  43              		.cfi_offset 14, -4
+  15:My_Top/Task/Task_SystemInit.cpp ****     uorb_init(); //初始化uORB消息中间件
+  44              		.loc 1 15 5 is_stmt 1 view .LVU2
+  45              		.loc 1 15 14 is_stmt 0 view .LVU3
+  46 0002 FFF7FEFF 		bl	uorb_init
+  47              	.LVL1:
+  16:My_Top/Task/Task_SystemInit.cpp ****     // My_Canard_Init(); //初始化Canard协议栈
+  17:My_Top/Task/Task_SystemInit.cpp ****     HAL_System::init(); //初始化计时器 
+  48              		.loc 1 17 5 is_stmt 1 view .LVU4
+  49              		.loc 1 17 21 is_stmt 0 view .LVU5
+  50 0006 FFF7FEFF 		bl	_ZN10HAL_System4initEv
+  51              	.LVL2:
+  18:My_Top/Task/Task_SystemInit.cpp ****     MC_Serial::init(); //初始化串口
+  52              		.loc 1 18 5 is_stmt 1 view .LVU6
+  53              		.loc 1 18 20 is_stmt 0 view .LVU7
+  54 000a FFF7FEFF 		bl	_ZN9MC_Serial4initEv
+  55              	.LVL3:
+  19:My_Top/Task/Task_SystemInit.cpp ****     Vofa_Init(Vofa_huart); //初始化Vofa 
+  56              		.loc 1 19 5 is_stmt 1 view .LVU8
+  57              		.loc 1 19 14 is_stmt 0 view .LVU9
+  58 000e 0A48     		ldr	r0, .L3
+  59 0010 FFF7FEFF 		bl	_Z9Vofa_InitP20__UART_HandleTypeDef
+  60              	.LVL4:
+  20:My_Top/Task/Task_SystemInit.cpp ****     M1_TIM.init(); //初始化定时器绑定中断
+  61              		.loc 1 20 5 is_stmt 1 view .LVU10
+  62              		.loc 1 20 16 is_stmt 0 view .LVU11
+  63 0014 0948     		ldr	r0, .L3+4
+  64 0016 FFF7FEFF 		bl	_ZN6My_Tim4initEv
+  65              	.LVL5:
+  21:My_Top/Task/Task_SystemInit.cpp ****     M1.My_FOC_Motor_Init(); //初始化电机1
+  66              		.loc 1 21 5 is_stmt 1 view .LVU12
+  67              		.loc 1 21 25 is_stmt 0 view .LVU13
+  68 001a 0948     		ldr	r0, .L3+8
+  69 001c FFF7FEFF 		bl	_ZN9FOC_Motor17My_FOC_Motor_InitEv
+  70              	.LVL6:
+  22:My_Top/Task/Task_SystemInit.cpp ****     // // Motor_Storage::load(1);//读eeprom的数据传回给电机
+  23:My_Top/Task/Task_SystemInit.cpp ****     // // Motor_Storage::load(2);//读eeprom的数据传回给电机
+  24:My_Top/Task/Task_SystemInit.cpp ****     
+  25:My_Top/Task/Task_SystemInit.cpp ****     printf("Sys_init栈剩余:%d\r\n", uxTaskGetStackHighWaterMark(NULL));
+  71              		.loc 1 25 5 is_stmt 1 view .LVU14
+  72              		.loc 1 25 11 is_stmt 0 view .LVU15
+  73 0020 0020     		movs	r0, #0
+  74 0022 FFF7FEFF 		bl	uxTaskGetStackHighWaterMark
+  75              	.LVL7:
+  76 0026 0146     		mov	r1, r0
+  77              		.loc 1 25 11 discriminator 1 view .LVU16
+  78 0028 0648     		ldr	r0, .L3+12
+  79 002a FFF7FEFF 		bl	printf_
+  80              	.LVL8:
+  26:My_Top/Task/Task_SystemInit.cpp ****     vTaskDelete(NULL); //删除任务
+  81              		.loc 1 26 5 is_stmt 1 view .LVU17
+  82              		.loc 1 26 16 is_stmt 0 view .LVU18
+  83 002e 0020     		movs	r0, #0
+  84 0030 FFF7FEFF 		bl	vTaskDelete
+  85              	.LVL9:
+ARM GAS  /tmp/cc6zfJ6P.s 			page 3
+
+
+  27:My_Top/Task/Task_SystemInit.cpp **** }
+  86              		.loc 1 27 1 view .LVU19
+  87 0034 08BD     		pop	{r3, pc}
+  88              	.L4:
+  89 0036 00BF     		.align	2
+  90              	.L3:
+  91 0038 00000000 		.word	huart3
+  92 003c 00000000 		.word	M1_TIM
+  93 0040 00000000 		.word	M1
+  94 0044 00000000 		.word	.LC0
+  95              		.cfi_endproc
+  96              	.LFE1381:
+  98              	.Letext0:
+  99              		.file 2 "/opt/arm-gnu-toolchain-14.2/lib/gcc/arm-none-eabi/14.2.1/include/stddef.h"
+ 100              		.file 3 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/machine/_default_types.h"
+ 101              		.file 4 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/sys/_stdint.h"
+ 102              		.file 5 "Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h"
+ 103              		.file 6 "Middlewares/Third_Party/FreeRTOS/Source/include/task.h"
+ 104              		.file 7 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/cmath"
+ 105              		.file 8 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/type_traits"
+ 106              		.file 9 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/debug/debug.h"
+ 107              		.file 10 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/bits/std_abs.h"
+ 108              		.file 11 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/cstdlib"
+ 109              		.file 12 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/bits/predefined_ops.h"
+ 110              		.file 13 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/math.h"
+ 111              		.file 14 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/stdlib.h"
+ 112              		.file 15 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/arm-none-eabi/thumb/v7e-m+f
+ 113              		.file 16 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/math.h"
+ 114              		.file 17 "Lib/compute/ex_math.hpp"
+ 115              		.file 18 "Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g474xx.h"
+ 116              		.file 19 "Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h"
+ 117              		.file 20 "Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h"
+ 118              		.file 21 "Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h"
+ 119              		.file 22 "Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h"
+ 120              		.file 23 "Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h"
+ 121              		.file 24 "Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h"
+ 122              		.file 25 "My_Top/System/bsp.hpp"
+ 123              		.file 26 "My_Top/System/HAL_System.hpp"
+ 124              		.file 27 "My_Top/MC/MC_Serial.hpp"
+ 125              		.file 28 "Lib/compute/pid/pid.hpp"
+ 126              		.file 29 "Lib/compute/pid/pll.hpp"
+ 127              		.file 30 "Lib/compute/pid/foc_math.hpp"
+ 128              		.file 31 "Lib/compute/pid/LQR.hpp"
+ 129              		.file 32 "My_Top/System/current_read.hpp"
+ 130              		.file 33 "My_Top/System/encoder.hpp"
+ 131              		.file 34 "Lib/compute/wave/wave_generator.hpp"
+ 132              		.file 35 "My_Top/Motor_Control/FocMotor_ClosedLoop.hpp"
+ 133              		.file 36 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/stdlib.h"
+ 134              		.file 37 "My_Top/Motor_Control/my_tim.hpp"
+ 135              		.file 38 "Core/Inc/usart.h"
+ 136              		.file 39 "Lib/serial/printf.h"
+ 137              		.file 40 "My_Top/MC/My_Vofa.hpp"
+ 138              		.file 41 "Lib/uorb/uorb.hpp"
+ARM GAS  /tmp/cc6zfJ6P.s 			page 4
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 Task_SystemInit.cpp
+     /tmp/cc6zfJ6P.s:21     .rodata.str1.4:00000000 $d
+     /tmp/cc6zfJ6P.s:26     .text:00000000 $t
+     /tmp/cc6zfJ6P.s:32     .text:00000000 _Z15Task_SystemInitPv
+     /tmp/cc6zfJ6P.s:91     .text:00000038 $d
+
+UNDEFINED SYMBOLS
+uorb_init
+_ZN10HAL_System4initEv
+_ZN9MC_Serial4initEv
+_Z9Vofa_InitP20__UART_HandleTypeDef
+_ZN6My_Tim4initEv
+_ZN9FOC_Motor17My_FOC_Motor_InitEv
+uxTaskGetStackHighWaterMark
+printf_
+vTaskDelete
+huart3
+M1_TIM
+M1

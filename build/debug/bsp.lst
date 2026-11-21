@@ -1,0 +1,93 @@
+ARM GAS  /tmp/ccmNBfvx.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"bsp.cpp"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "My_Top/System/bsp.cpp"
+  20              		.global	M2_PWM
+  21              		.global	M1_PWM
+  22              		.section	.rodata
+  23              		.align	2
+  26              	M2_PWM:
+  27 0000 00000000 		.word	htim1
+  28 0004 002C0140 		.word	1073818624
+  29 0008 00000000 		.word	0
+  30 000c 04000000 		.word	4
+  31 0010 08000000 		.word	8
+  32 0014 00000000 		.word	huart1
+  33 0018 00000000 		.word	hadc2
+  34 001c 00000048 		.word	1207959552
+  35 0020 0008     		.short	2048
+  36 0022 0000     		.space	2
+  37 0024 00040048 		.word	1207960576
+  38 0028 0400     		.short	4
+  39 002a 0000     		.space	2
+  42              	M1_PWM:
+  43 002c 00000000 		.word	htim1
+  44 0030 002C0140 		.word	1073818624
+  45 0034 00000000 		.word	0
+  46 0038 04000000 		.word	4
+  47 003c 08000000 		.word	8
+  48 0040 00000000 		.word	huart1
+  49 0044 00000000 		.word	hadc2
+  50 0048 00000048 		.word	1207959552
+  51 004c 0008     		.short	2048
+  52 004e 0000     		.space	2
+  53 0050 00040048 		.word	1207960576
+  54 0054 0400     		.short	4
+  55 0056 0000     		.space	2
+  56              		.text
+  57              	.Letext0:
+  58              		.file 2 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/machine/_default_types.h"
+  59              		.file 3 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/sys/_stdint.h"
+  60              		.file 4 "Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g474xx.h"
+  61              		.file 5 "Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h"
+ARM GAS  /tmp/ccmNBfvx.s 			page 2
+
+
+  62              		.file 6 "Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h"
+  63              		.file 7 "Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h"
+  64              		.file 8 "Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h"
+  65              		.file 9 "Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h"
+  66              		.file 10 "Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h"
+  67              		.file 11 "Core/Inc/usart.h"
+  68              		.file 12 "Core/Inc/tim.h"
+  69              		.file 13 "Core/Inc/adc.h"
+  70              		.file 14 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/cmath"
+  71              		.file 15 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/type_traits"
+  72              		.file 16 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/debug/debug.h"
+  73              		.file 17 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/bits/std_abs.h"
+  74              		.file 18 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/bits/predefined_ops.h"
+  75              		.file 19 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/math.h"
+  76              		.file 20 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/arm-none-eabi/thumb/v7e-m+f
+  77              		.file 21 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/math.h"
+  78              		.file 22 "My_Top/System/bsp.hpp"
+ARM GAS  /tmp/ccmNBfvx.s 			page 3
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 bsp.cpp
+     /tmp/ccmNBfvx.s:26     .rodata:00000000 M2_PWM
+     /tmp/ccmNBfvx.s:42     .rodata:0000002c M1_PWM
+     /tmp/ccmNBfvx.s:23     .rodata:00000000 $d
+
+UNDEFINED SYMBOLS
+htim1
+huart1
+hadc2

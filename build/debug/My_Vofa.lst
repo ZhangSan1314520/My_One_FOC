@@ -1,0 +1,729 @@
+ARM GAS  /tmp/ccOxeCZx.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"My_Vofa.cpp"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "My_Top/MC/My_Vofa.cpp"
+  20              		.section	.text._ZN7VoFA_Rx7on_recvEPht,"axG",%progbits,_ZN7VoFA_Rx7on_recvEPht,comdat
+  21              		.align	1
+  22              		.weak	_ZN7VoFA_Rx7on_recvEPht
+  23              		.syntax unified
+  24              		.thumb
+  25              		.thumb_func
+  27              	_ZN7VoFA_Rx7on_recvEPht:
+  28              	.LVL0:
+  29              	.LFB1313:
+  30              		.file 2 "My_Top/MC/My_Vofa.hpp"
+   1:My_Top/MC/My_Vofa.hpp **** #pragma once
+   2:My_Top/MC/My_Vofa.hpp **** 
+   3:My_Top/MC/My_Vofa.hpp **** #include <stdint.h>
+   4:My_Top/MC/My_Vofa.hpp **** #include <stdarg.h>
+   5:My_Top/MC/My_Vofa.hpp **** #include <string.h>
+   6:My_Top/MC/My_Vofa.hpp **** #include <stdlib.h>     // atof
+   7:My_Top/MC/My_Vofa.hpp **** #include "FreeRTOS.h"
+   8:My_Top/MC/My_Vofa.hpp **** #include "task.h"
+   9:My_Top/MC/My_Vofa.hpp **** #include "queue.h" 
+  10:My_Top/MC/My_Vofa.hpp **** #include "bsp.hpp"
+  11:My_Top/MC/My_Vofa.hpp **** 
+  12:My_Top/MC/My_Vofa.hpp **** #define VOFA_PARAM_MAX    30   // 最大参数个数
+  13:My_Top/MC/My_Vofa.hpp **** #define VOFA_NAME_LEN     25   // 参数名最大长度
+  14:My_Top/MC/My_Vofa.hpp **** #define VOFA_RX_BUF_SIZE 128   // DMA 接收缓冲
+  15:My_Top/MC/My_Vofa.hpp **** 
+  16:My_Top/MC/My_Vofa.hpp **** 
+  17:My_Top/MC/My_Vofa.hpp **** 
+  18:My_Top/MC/My_Vofa.hpp **** /* 队列项：一帧 VOFA 接收数据 */
+  19:My_Top/MC/My_Vofa.hpp **** struct VofaRxFrame_t {
+  20:My_Top/MC/My_Vofa.hpp ****     uint16_t len;
+  21:My_Top/MC/My_Vofa.hpp ****     uint8_t  buf[VOFA_RX_BUF_SIZE];
+  22:My_Top/MC/My_Vofa.hpp **** };
+  23:My_Top/MC/My_Vofa.hpp **** 
+  24:My_Top/MC/My_Vofa.hpp **** extern QueueHandle_t vofaRxQueue;   // VOFA队列句柄
+  25:My_Top/MC/My_Vofa.hpp **** 
+  26:My_Top/MC/My_Vofa.hpp **** struct vofa_param_t {            // 单个参数
+  27:My_Top/MC/My_Vofa.hpp ****     char  name[VOFA_NAME_LEN];
+  28:My_Top/MC/My_Vofa.hpp ****     float value;
+ARM GAS  /tmp/ccOxeCZx.s 			page 2
+
+
+  29:My_Top/MC/My_Vofa.hpp ****     bool  valid; //是否赋值
+  30:My_Top/MC/My_Vofa.hpp **** };
+  31:My_Top/MC/My_Vofa.hpp **** 
+  32:My_Top/MC/My_Vofa.hpp **** struct VoFA_Rx {
+  33:My_Top/MC/My_Vofa.hpp ****     uint8_t      rx_buf[VOFA_RX_BUF_SIZE]; // DMA 原始数据
+  34:My_Top/MC/My_Vofa.hpp ****     uint16_t     rx_len;                    // 本帧字节数
+  35:My_Top/MC/My_Vofa.hpp ****     volatile bool rx_ready;                 // 中断置1，Task清0
+  36:My_Top/MC/My_Vofa.hpp **** 
+  37:My_Top/MC/My_Vofa.hpp ****     vofa_param_t params[VOFA_PARAM_MAX];   // 参数表
+  38:My_Top/MC/My_Vofa.hpp ****     uint8_t      param_cnt;                // 已注册参数数
+  39:My_Top/MC/My_Vofa.hpp **** 
+  40:My_Top/MC/My_Vofa.hpp ****     /* 中断里调：拷贝数据到队列，替代 rx_ready 标志位 */
+  41:My_Top/MC/My_Vofa.hpp ****     void on_recv(uint8_t *buf, uint16_t len) {
+  31              		.loc 2 41 10 view -0
+  32              		.cfi_startproc
+  33              		@ args = 0, pretend = 0, frame = 136
+  34              		@ frame_needed = 0, uses_anonymous_args = 0
+  35              		.loc 2 41 10 is_stmt 0 view .LVU1
+  36 0000 00B5     		push	{lr}
+  37              		.cfi_def_cfa_offset 4
+  38              		.cfi_offset 14, -4
+  39 0002 A3B0     		sub	sp, sp, #140
+  40              		.cfi_def_cfa_offset 144
+  42:My_Top/MC/My_Vofa.hpp ****         VofaRxFrame_t frame;
+  41              		.loc 2 42 9 is_stmt 1 view .LVU2
+  43:My_Top/MC/My_Vofa.hpp ****         if (len > VOFA_RX_BUF_SIZE) len = VOFA_RX_BUF_SIZE;
+  42              		.loc 2 43 9 view .LVU3
+  43 0004 802A     		cmp	r2, #128
+  44 0006 00D9     		bls	.L2
+  45              		.loc 2 43 41 is_stmt 0 discriminator 1 view .LVU4
+  46 0008 8022     		movs	r2, #128
+  47              	.LVL1:
+  48              	.L2:
+  44:My_Top/MC/My_Vofa.hpp ****         frame.len = len;
+  49              		.loc 2 44 9 is_stmt 1 view .LVU5
+  50              		.loc 2 44 19 is_stmt 0 view .LVU6
+  51 000a ADF80420 		strh	r2, [sp, #4]	@ movhi
+  45:My_Top/MC/My_Vofa.hpp ****         memcpy(frame.buf, buf, len);
+  52              		.loc 2 45 9 is_stmt 1 view .LVU7
+  53              		.loc 2 45 15 is_stmt 0 view .LVU8
+  54 000e 0DF10600 		add	r0, sp, #6
+  55              	.LVL2:
+  56              		.loc 2 45 15 view .LVU9
+  57 0012 FFF7FEFF 		bl	memcpy
+  58              	.LVL3:
+  46:My_Top/MC/My_Vofa.hpp ****         
+  47:My_Top/MC/My_Vofa.hpp ****         BaseType_t xHigherPriorityTaskWoken = pdFALSE; //中断里向队列发消息的标准三板
+  59              		.loc 2 47 9 is_stmt 1 view .LVU10
+  60              		.loc 2 47 20 is_stmt 0 view .LVU11
+  61 0016 0023     		movs	r3, #0
+  62 0018 0093     		str	r3, [sp]
+  48:My_Top/MC/My_Vofa.hpp ****         xQueueSendFromISR(vofaRxQueue, &frame, &xHigherPriorityTaskWoken);
+  63              		.loc 2 48 9 is_stmt 1 view .LVU12
+  64 001a 6A46     		mov	r2, sp
+  65 001c 01A9     		add	r1, sp, #4
+  66 001e 0948     		ldr	r0, .L6
+  67 0020 0068     		ldr	r0, [r0]
+ARM GAS  /tmp/ccOxeCZx.s 			page 3
+
+
+  68 0022 FFF7FEFF 		bl	xQueueGenericSendFromISR
+  69              	.LVL4:
+  49:My_Top/MC/My_Vofa.hpp ****         portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+  70              		.loc 2 49 9 view .LVU13
+  71 0026 009B     		ldr	r3, [sp]
+  72 0028 4BB1     		cbz	r3, .L1
+  73              		.loc 2 49 9 discriminator 1 view .LVU14
+  74 002a 4FF0E023 		mov	r3, #-536813568
+  75 002e 4FF08052 		mov	r2, #268435456
+  76 0032 C3F8042D 		str	r2, [r3, #3332]
+  77              		.loc 2 49 9 view .LVU15
+  78              		.loc 2 49 9 is_stmt 0 discriminator 1 view .LVU16
+  79              		.syntax unified
+  80              	@ 49 "My_Top/MC/My_Vofa.hpp" 1
+  81 0036 BFF34F8F 		dsb
+  82              	@ 0 "" 2
+  83              		.loc 2 49 9 is_stmt 1 view .LVU17
+  84              		.loc 2 49 9 is_stmt 0 discriminator 1 view .LVU18
+  85              	@ 49 "My_Top/MC/My_Vofa.hpp" 1
+  86 003a BFF36F8F 		isb
+  87              	@ 0 "" 2
+  88              		.loc 2 49 53 is_stmt 1 discriminator 3 view .LVU19
+  89              		.thumb
+  90              		.syntax unified
+  91              	.L1:
+  50:My_Top/MC/My_Vofa.hpp ****     }
+  92              		.loc 2 50 5 is_stmt 0 view .LVU20
+  93 003e 23B0     		add	sp, sp, #140
+  94              		.cfi_def_cfa_offset 4
+  95              		@ sp needed
+  96 0040 5DF804FB 		ldr	pc, [sp], #4
+  97              	.L7:
+  98              		.align	2
+  99              	.L6:
+ 100 0044 00000000 		.word	vofaRxQueue
+ 101              		.cfi_endproc
+ 102              	.LFE1313:
+ 104              		.text
+ 105              		.align	1
+ 106              		.global	_Z16My_Vofa_CallbackP20__UART_HandleTypeDeft
+ 107              		.syntax unified
+ 108              		.thumb
+ 109              		.thumb_func
+ 111              	_Z16My_Vofa_CallbackP20__UART_HandleTypeDeft:
+ 112              	.LVL5:
+ 113              	.LFB1320:
+   1:My_Top/MC/My_Vofa.cpp **** #include "My_Vofa.hpp"
+   2:My_Top/MC/My_Vofa.cpp **** 
+   3:My_Top/MC/My_Vofa.cpp **** 
+   4:My_Top/MC/My_Vofa.cpp **** // 1.发送部分
+   5:My_Top/MC/My_Vofa.cpp **** // 定义双缓冲区，防止连续发送时覆盖 
+   6:My_Top/MC/My_Vofa.cpp **** #define MAX_VOFA_FLOATS 30 // 临时缓冲区，最多发送 30 个浮点数 
+   7:My_Top/MC/My_Vofa.cpp **** #define VOFA_BUFFER_SIZE (MAX_VOFA_FLOATS * sizeof(float) + 4)  // 最多20个浮点数 + 4字节�
+   8:My_Top/MC/My_Vofa.cpp **** static uint8_t vofa_buf1[VOFA_BUFFER_SIZE];
+   9:My_Top/MC/My_Vofa.cpp **** static uint8_t vofa_buf2[VOFA_BUFFER_SIZE];
+  10:My_Top/MC/My_Vofa.cpp **** static uint8_t vofa_buf_sel = 0;  // 简单轮换选择
+  11:My_Top/MC/My_Vofa.cpp **** 
+ARM GAS  /tmp/ccOxeCZx.s 			page 4
+
+
+  12:My_Top/MC/My_Vofa.cpp **** static const uint8_t tail[4] = {0x00, 0x00, 0x80, 0x7F};
+  13:My_Top/MC/My_Vofa.cpp **** 
+  14:My_Top/MC/My_Vofa.cpp **** void Vofa_SendFireWater(UART_HandleTypeDef *huart,float *data, uint16_t count, uint32_t timeout)//�
+  15:My_Top/MC/My_Vofa.cpp **** {
+  16:My_Top/MC/My_Vofa.cpp ****     if (count == 0) return;
+  17:My_Top/MC/My_Vofa.cpp ****     uint16_t data_len = count * sizeof(float);
+  18:My_Top/MC/My_Vofa.cpp ****     uint16_t total_len = data_len + 4;
+  19:My_Top/MC/My_Vofa.cpp **** 
+  20:My_Top/MC/My_Vofa.cpp ****     // 选择当前可用的缓冲区（简单轮换，确保不覆盖正在DMA发送中的数据�
+  21:My_Top/MC/My_Vofa.cpp ****     uint8_t *buf = (vofa_buf_sel == 0) ? vofa_buf1 : vofa_buf2;
+  22:My_Top/MC/My_Vofa.cpp ****     vofa_buf_sel = !vofa_buf_sel;  // 下次用另一个
+  23:My_Top/MC/My_Vofa.cpp **** 
+  24:My_Top/MC/My_Vofa.cpp ****     // 拼接数据
+  25:My_Top/MC/My_Vofa.cpp ****     memcpy(buf, data, data_len);
+  26:My_Top/MC/My_Vofa.cpp ****     memcpy(buf + data_len, tail, 4);
+  27:My_Top/MC/My_Vofa.cpp ****  
+  28:My_Top/MC/My_Vofa.cpp ****     if (timeout == 0) HAL_UART_Transmit_DMA(huart, buf, total_len);//DMA 发送
+  29:My_Top/MC/My_Vofa.cpp ****     else HAL_UART_Transmit(huart, (uint8_t*)buf, total_len, timeout); //轮询发送
+  30:My_Top/MC/My_Vofa.cpp **** }
+  31:My_Top/MC/My_Vofa.cpp **** 
+  32:My_Top/MC/My_Vofa.cpp **** 
+  33:My_Top/MC/My_Vofa.cpp **** 
+  34:My_Top/MC/My_Vofa.cpp **** void Vofa_SendFireWater_VA(UART_HandleTypeDef *huart,uint16_t count, ...)//发送不定长浮点型
+  35:My_Top/MC/My_Vofa.cpp **** {
+  36:My_Top/MC/My_Vofa.cpp ****     float buffer[MAX_VOFA_FLOATS];
+  37:My_Top/MC/My_Vofa.cpp ****     
+  38:My_Top/MC/My_Vofa.cpp ****     if (count > MAX_VOFA_FLOATS) count = MAX_VOFA_FLOATS;  // 防溢出
+  39:My_Top/MC/My_Vofa.cpp ****     
+  40:My_Top/MC/My_Vofa.cpp ****     va_list args;
+  41:My_Top/MC/My_Vofa.cpp ****     va_start(args, count); //让 args 指向第一个可变参数
+  42:My_Top/MC/My_Vofa.cpp ****     for (uint16_t i = 0; i < count; i++) {//取出下一个参数
+  43:My_Top/MC/My_Vofa.cpp ****         buffer[i] = (float)va_arg(args, double);  // 变参 float 会被提升为 double
+  44:My_Top/MC/My_Vofa.cpp ****     }
+  45:My_Top/MC/My_Vofa.cpp ****     va_end(args);
+  46:My_Top/MC/My_Vofa.cpp ****     
+  47:My_Top/MC/My_Vofa.cpp ****     Vofa_SendFireWater(huart, buffer, count,0);//dma发送
+  48:My_Top/MC/My_Vofa.cpp **** }
+  49:My_Top/MC/My_Vofa.cpp **** 
+  50:My_Top/MC/My_Vofa.cpp **** 
+  51:My_Top/MC/My_Vofa.cpp **** 
+  52:My_Top/MC/My_Vofa.cpp **** //2.接受部分
+  53:My_Top/MC/My_Vofa.cpp **** VoFA_Rx vofa1 = {};
+  54:My_Top/MC/My_Vofa.cpp **** uint8_t DMA_RxBuff[VOFA_RX_BUF_SIZE]={};
+  55:My_Top/MC/My_Vofa.cpp **** 
+  56:My_Top/MC/My_Vofa.cpp **** void My_Vofa_Callback(UART_HandleTypeDef *huart, uint16_t Size)
+  57:My_Top/MC/My_Vofa.cpp **** {
+ 114              		.loc 1 57 1 is_stmt 1 view -0
+ 115              		.cfi_startproc
+ 116              		@ args = 0, pretend = 0, frame = 0
+ 117              		@ frame_needed = 0, uses_anonymous_args = 0
+ 118              		.loc 1 57 1 is_stmt 0 view .LVU22
+ 119 0000 38B5     		push	{r3, r4, r5, lr}
+ 120              		.cfi_def_cfa_offset 16
+ 121              		.cfi_offset 3, -16
+ 122              		.cfi_offset 4, -12
+ 123              		.cfi_offset 5, -8
+ 124              		.cfi_offset 14, -4
+ARM GAS  /tmp/ccOxeCZx.s 			page 5
+
+
+ 125 0002 0446     		mov	r4, r0
+ 126 0004 0A46     		mov	r2, r1
+  58:My_Top/MC/My_Vofa.cpp ****     // 解析收到的数据
+  59:My_Top/MC/My_Vofa.cpp ****     vofa1.on_recv(DMA_RxBuff, Size);
+ 127              		.loc 1 59 5 is_stmt 1 view .LVU23
+ 128              		.loc 1 59 18 is_stmt 0 view .LVU24
+ 129 0006 094D     		ldr	r5, .L10
+ 130 0008 2946     		mov	r1, r5
+ 131              	.LVL6:
+ 132              		.loc 1 59 18 view .LVU25
+ 133 000a 05F18000 		add	r0, r5, #128
+ 134              	.LVL7:
+ 135              		.loc 1 59 18 view .LVU26
+ 136 000e FFF7FEFF 		bl	_ZN7VoFA_Rx7on_recvEPht
+ 137              	.LVL8:
+  60:My_Top/MC/My_Vofa.cpp ****     HAL_UARTEx_ReceiveToIdle_DMA(huart, DMA_RxBuff, sizeof(DMA_RxBuff));
+ 138              		.loc 1 60 5 is_stmt 1 view .LVU27
+ 139              		.loc 1 60 33 is_stmt 0 view .LVU28
+ 140 0012 8022     		movs	r2, #128
+ 141 0014 2946     		mov	r1, r5
+ 142 0016 2046     		mov	r0, r4
+ 143 0018 FFF7FEFF 		bl	HAL_UARTEx_ReceiveToIdle_DMA
+ 144              	.LVL9:
+  61:My_Top/MC/My_Vofa.cpp ****     __HAL_DMA_DISABLE_IT(huart->hdmarx, DMA_IT_HT);
+ 145              		.loc 1 61 5 is_stmt 1 view .LVU29
+ 146 001c D4F88030 		ldr	r3, [r4, #128]
+ 147 0020 1A68     		ldr	r2, [r3]
+ 148 0022 1368     		ldr	r3, [r2]
+ 149 0024 23F00403 		bic	r3, r3, #4
+ 150 0028 1360     		str	r3, [r2]
+  62:My_Top/MC/My_Vofa.cpp **** }
+ 151              		.loc 1 62 1 is_stmt 0 view .LVU30
+ 152 002a 38BD     		pop	{r3, r4, r5, pc}
+ 153              	.LVL10:
+ 154              	.L11:
+ 155              		.loc 1 62 1 view .LVU31
+ 156              		.align	2
+ 157              	.L10:
+ 158 002c 00000000 		.word	.LANCHOR0
+ 159              		.cfi_endproc
+ 160              	.LFE1320:
+ 162              		.align	1
+ 163              		.global	_Z18Vofa_SendFireWaterP20__UART_HandleTypeDefPftm
+ 164              		.syntax unified
+ 165              		.thumb
+ 166              		.thumb_func
+ 168              	_Z18Vofa_SendFireWaterP20__UART_HandleTypeDefPftm:
+ 169              	.LVL11:
+ 170              	.LFB1318:
+  15:My_Top/MC/My_Vofa.cpp ****     if (count == 0) return;
+ 171              		.loc 1 15 1 is_stmt 1 view -0
+ 172              		.cfi_startproc
+ 173              		@ args = 0, pretend = 0, frame = 0
+ 174              		@ frame_needed = 0, uses_anonymous_args = 0
+  16:My_Top/MC/My_Vofa.cpp ****     uint16_t data_len = count * sizeof(float);
+ 175              		.loc 1 16 5 view .LVU33
+ 176 0030 72B3     		cbz	r2, .L18
+ARM GAS  /tmp/ccOxeCZx.s 			page 6
+
+
+  15:My_Top/MC/My_Vofa.cpp ****     if (count == 0) return;
+ 177              		.loc 1 15 1 is_stmt 0 view .LVU34
+ 178 0032 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 179              		.cfi_def_cfa_offset 24
+ 180              		.cfi_offset 4, -24
+ 181              		.cfi_offset 5, -20
+ 182              		.cfi_offset 6, -16
+ 183              		.cfi_offset 7, -12
+ 184              		.cfi_offset 8, -8
+ 185              		.cfi_offset 14, -4
+ 186 0036 0546     		mov	r5, r0
+ 187 0038 1E46     		mov	r6, r3
+  17:My_Top/MC/My_Vofa.cpp ****     uint16_t total_len = data_len + 4;
+ 188              		.loc 1 17 5 is_stmt 1 view .LVU35
+  17:My_Top/MC/My_Vofa.cpp ****     uint16_t total_len = data_len + 4;
+ 189              		.loc 1 17 14 is_stmt 0 view .LVU36
+ 190 003a 9400     		lsls	r4, r2, #2
+ 191 003c A4B2     		uxth	r4, r4
+ 192              	.LVL12:
+  18:My_Top/MC/My_Vofa.cpp **** 
+ 193              		.loc 1 18 5 is_stmt 1 view .LVU37
+  18:My_Top/MC/My_Vofa.cpp **** 
+ 194              		.loc 1 18 14 is_stmt 0 view .LVU38
+ 195 003e 04F10408 		add	r8, r4, #4
+ 196 0042 1FFA88F8 		uxth	r8, r8
+ 197              	.LVL13:
+  21:My_Top/MC/My_Vofa.cpp ****     vofa_buf_sel = !vofa_buf_sel;  // 下次用另一个
+ 198              		.loc 1 21 5 is_stmt 1 view .LVU39
+  21:My_Top/MC/My_Vofa.cpp ****     vofa_buf_sel = !vofa_buf_sel;  // 下次用另一个
+ 199              		.loc 1 21 34 is_stmt 0 view .LVU40
+ 200 0046 134B     		ldr	r3, .L21
+ 201              	.LVL14:
+  21:My_Top/MC/My_Vofa.cpp ****     vofa_buf_sel = !vofa_buf_sel;  // 下次用另一个
+ 202              		.loc 1 21 34 view .LVU41
+ 203 0048 93F83826 		ldrb	r2, [r3, #1592]	@ zero_extendqisi2
+ 204              	.LVL15:
+  21:My_Top/MC/My_Vofa.cpp ****     vofa_buf_sel = !vofa_buf_sel;  // 下次用另一个
+ 205              		.loc 1 21 14 view .LVU42
+ 206 004c BAB9     		cbnz	r2, .L16
+  21:My_Top/MC/My_Vofa.cpp ****     vofa_buf_sel = !vofa_buf_sel;  // 下次用另一个
+ 207              		.loc 1 21 14 discriminator 1 view .LVU43
+ 208 004e 03F5A867 		add	r7, r3, #1344
+ 209              	.L14:
+ 210              	.LVL16:
+  22:My_Top/MC/My_Vofa.cpp **** 
+ 211              		.loc 1 22 5 is_stmt 1 view .LVU44
+  22:My_Top/MC/My_Vofa.cpp **** 
+ 212              		.loc 1 22 20 is_stmt 0 view .LVU45
+ 213 0052 B2FA82FC 		clz	ip, r2
+ 214 0056 4FEA5C1C 		lsr	ip, ip, #5
+  22:My_Top/MC/My_Vofa.cpp **** 
+ 215              		.loc 1 22 18 view .LVU46
+ 216 005a 0E4B     		ldr	r3, .L21
+ 217 005c 83F838C6 		strb	ip, [r3, #1592]
+  25:My_Top/MC/My_Vofa.cpp ****     memcpy(buf + data_len, tail, 4);
+ 218              		.loc 1 25 5 is_stmt 1 view .LVU47
+  25:My_Top/MC/My_Vofa.cpp ****     memcpy(buf + data_len, tail, 4);
+ARM GAS  /tmp/ccOxeCZx.s 			page 7
+
+
+ 219              		.loc 1 25 11 is_stmt 0 view .LVU48
+ 220 0060 2246     		mov	r2, r4
+ 221 0062 3846     		mov	r0, r7
+ 222              	.LVL17:
+  25:My_Top/MC/My_Vofa.cpp ****     memcpy(buf + data_len, tail, 4);
+ 223              		.loc 1 25 11 view .LVU49
+ 224 0064 FFF7FEFF 		bl	memcpy
+ 225              	.LVL18:
+  26:My_Top/MC/My_Vofa.cpp ****  
+ 226              		.loc 1 26 5 is_stmt 1 view .LVU50
+  26:My_Top/MC/My_Vofa.cpp ****  
+ 227              		.loc 1 26 11 is_stmt 0 view .LVU51
+ 228 0068 0B4B     		ldr	r3, .L21+4
+ 229 006a 1868     		ldr	r0, [r3]
+ 230 006c 3851     		str	r0, [r7, r4]	@ unaligned
+  28:My_Top/MC/My_Vofa.cpp ****     else HAL_UART_Transmit(huart, (uint8_t*)buf, total_len, timeout); //轮询发送
+ 231              		.loc 1 28 5 is_stmt 1 view .LVU52
+ 232 006e 46B9     		cbnz	r6, .L15
+  28:My_Top/MC/My_Vofa.cpp ****     else HAL_UART_Transmit(huart, (uint8_t*)buf, total_len, timeout); //轮询发送
+ 233              		.loc 1 28 23 discriminator 1 view .LVU53
+  28:My_Top/MC/My_Vofa.cpp ****     else HAL_UART_Transmit(huart, (uint8_t*)buf, total_len, timeout); //轮询发送
+ 234              		.loc 1 28 44 is_stmt 0 discriminator 1 view .LVU54
+ 235 0070 4246     		mov	r2, r8
+ 236 0072 3946     		mov	r1, r7
+ 237 0074 2846     		mov	r0, r5
+ 238 0076 FFF7FEFF 		bl	HAL_UART_Transmit_DMA
+ 239              	.LVL19:
+ 240              	.L12:
+  30:My_Top/MC/My_Vofa.cpp **** 
+ 241              		.loc 1 30 1 view .LVU55
+ 242 007a BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 243              	.LVL20:
+ 244              	.L16:
+  21:My_Top/MC/My_Vofa.cpp ****     vofa_buf_sel = !vofa_buf_sel;  // 下次用另一个
+ 245              		.loc 1 21 14 discriminator 2 view .LVU56
+ 246 007e 074F     		ldr	r7, .L21+8
+ 247 0080 E7E7     		b	.L14
+ 248              	.LVL21:
+ 249              	.L15:
+  29:My_Top/MC/My_Vofa.cpp **** }
+ 250              		.loc 1 29 10 is_stmt 1 view .LVU57
+  29:My_Top/MC/My_Vofa.cpp **** }
+ 251              		.loc 1 29 27 is_stmt 0 view .LVU58
+ 252 0082 3346     		mov	r3, r6
+ 253 0084 4246     		mov	r2, r8
+ 254 0086 3946     		mov	r1, r7
+ 255 0088 2846     		mov	r0, r5
+ 256 008a FFF7FEFF 		bl	HAL_UART_Transmit
+ 257              	.LVL22:
+ 258 008e F4E7     		b	.L12
+ 259              	.LVL23:
+ 260              	.L18:
+ 261              		.cfi_def_cfa_offset 0
+ 262              		.cfi_restore 4
+ 263              		.cfi_restore 5
+ 264              		.cfi_restore 6
+ 265              		.cfi_restore 7
+ARM GAS  /tmp/ccOxeCZx.s 			page 8
+
+
+ 266              		.cfi_restore 8
+ 267              		.cfi_restore 14
+  29:My_Top/MC/My_Vofa.cpp **** }
+ 268              		.loc 1 29 27 view .LVU59
+ 269 0090 7047     		bx	lr
+ 270              	.L22:
+ 271 0092 00BF     		.align	2
+ 272              	.L21:
+ 273 0094 00000000 		.word	.LANCHOR0
+ 274 0098 00000000 		.word	.LANCHOR1
+ 275 009c BC050000 		.word	.LANCHOR0+1468
+ 276              		.cfi_endproc
+ 277              	.LFE1318:
+ 279              		.align	1
+ 280              		.global	_Z21Vofa_SendFireWater_VAP20__UART_HandleTypeDeftz
+ 281              		.syntax unified
+ 282              		.thumb
+ 283              		.thumb_func
+ 285              	_Z21Vofa_SendFireWater_VAP20__UART_HandleTypeDeftz:
+ 286              	.LVL24:
+ 287              	.LFB1319:
+  35:My_Top/MC/My_Vofa.cpp ****     float buffer[MAX_VOFA_FLOATS];
+ 288              		.loc 1 35 1 is_stmt 1 view -0
+ 289              		.cfi_startproc
+ 290              		@ args = 4, pretend = 12, frame = 128
+ 291              		@ frame_needed = 0, uses_anonymous_args = 1
+  35:My_Top/MC/My_Vofa.cpp ****     float buffer[MAX_VOFA_FLOATS];
+ 292              		.loc 1 35 1 is_stmt 0 view .LVU61
+ 293 00a0 0EB4     		push	{r1, r2, r3}
+ 294              		.cfi_def_cfa_offset 12
+ 295              		.cfi_offset 1, -12
+ 296              		.cfi_offset 2, -8
+ 297              		.cfi_offset 3, -4
+ 298 00a2 70B5     		push	{r4, r5, r6, lr}
+ 299              		.cfi_def_cfa_offset 28
+ 300              		.cfi_offset 4, -28
+ 301              		.cfi_offset 5, -24
+ 302              		.cfi_offset 6, -20
+ 303              		.cfi_offset 14, -16
+ 304 00a4 A1B0     		sub	sp, sp, #132
+ 305              		.cfi_def_cfa_offset 160
+ 306 00a6 0646     		mov	r6, r0
+ 307 00a8 BDF89450 		ldrh	r5, [sp, #148]
+  36:My_Top/MC/My_Vofa.cpp ****     
+ 308              		.loc 1 36 5 is_stmt 1 view .LVU62
+  38:My_Top/MC/My_Vofa.cpp ****     
+ 309              		.loc 1 38 5 view .LVU63
+ 310 00ac 1E2D     		cmp	r5, #30
+ 311 00ae 00D9     		bls	.L24
+  38:My_Top/MC/My_Vofa.cpp ****     
+ 312              		.loc 1 38 40 is_stmt 0 discriminator 1 view .LVU64
+ 313 00b0 1E25     		movs	r5, #30
+ 314              	.L24:
+ 315              	.LVL25:
+  40:My_Top/MC/My_Vofa.cpp ****     va_start(args, count); //让 args 指向第一个可变参数
+ 316              		.loc 1 40 5 is_stmt 1 view .LVU65
+  41:My_Top/MC/My_Vofa.cpp ****     for (uint16_t i = 0; i < count; i++) {//取出下一个参数
+ARM GAS  /tmp/ccOxeCZx.s 			page 9
+
+
+ 317              		.loc 1 41 5 view .LVU66
+ 318 00b2 26AB     		add	r3, sp, #152
+ 319 00b4 0193     		str	r3, [sp, #4]
+  42:My_Top/MC/My_Vofa.cpp ****         buffer[i] = (float)va_arg(args, double);  // 变参 float 会被提升为 double
+ 320              		.loc 1 42 5 view .LVU67
+ 321              	.LVL26:
+ 322              	.LBB2:
+  42:My_Top/MC/My_Vofa.cpp ****         buffer[i] = (float)va_arg(args, double);  // 变参 float 会被提升为 double
+ 323              		.loc 1 42 19 is_stmt 0 view .LVU68
+ 324 00b6 0024     		movs	r4, #0
+  42:My_Top/MC/My_Vofa.cpp ****         buffer[i] = (float)va_arg(args, double);  // 变参 float 会被提升为 double
+ 325              		.loc 1 42 5 view .LVU69
+ 326 00b8 11E0     		b	.L25
+ 327              	.LVL27:
+ 328              	.L26:
+  43:My_Top/MC/My_Vofa.cpp ****     }
+ 329              		.loc 1 43 9 is_stmt 1 view .LVU70
+  43:My_Top/MC/My_Vofa.cpp ****     }
+ 330              		.loc 1 43 28 is_stmt 0 view .LVU71
+ 331 00ba 019B     		ldr	r3, [sp, #4]
+ 332 00bc 0733     		adds	r3, r3, #7
+ 333 00be 23F00703 		bic	r3, r3, #7
+ 334 00c2 03F10802 		add	r2, r3, #8
+ 335 00c6 0192     		str	r2, [sp, #4]
+  43:My_Top/MC/My_Vofa.cpp ****     }
+ 336              		.loc 1 43 21 discriminator 1 view .LVU72
+ 337 00c8 D3E90001 		ldrd	r0, [r3]
+ 338 00cc FFF7FEFF 		bl	__aeabi_d2f
+ 339              	.LVL28:
+  43:My_Top/MC/My_Vofa.cpp ****     }
+ 340              		.loc 1 43 19 discriminator 1 view .LVU73
+ 341 00d0 20AB     		add	r3, sp, #128
+ 342 00d2 03EB8403 		add	r3, r3, r4, lsl #2
+ 343 00d6 43F8780C 		str	r0, [r3, #-120]	@ float
+  42:My_Top/MC/My_Vofa.cpp ****         buffer[i] = (float)va_arg(args, double);  // 变参 float 会被提升为 double
+ 344              		.loc 1 42 5 is_stmt 1 discriminator 3 view .LVU74
+ 345 00da 0134     		adds	r4, r4, #1
+ 346              	.LVL29:
+  42:My_Top/MC/My_Vofa.cpp ****         buffer[i] = (float)va_arg(args, double);  // 变参 float 会被提升为 double
+ 347              		.loc 1 42 5 is_stmt 0 discriminator 3 view .LVU75
+ 348 00dc A4B2     		uxth	r4, r4
+ 349              	.LVL30:
+ 350              	.L25:
+  42:My_Top/MC/My_Vofa.cpp ****         buffer[i] = (float)va_arg(args, double);  // 变参 float 会被提升为 double
+ 351              		.loc 1 42 28 is_stmt 1 discriminator 1 view .LVU76
+ 352 00de A542     		cmp	r5, r4
+ 353 00e0 EBD8     		bhi	.L26
+ 354              	.LBE2:
+  45:My_Top/MC/My_Vofa.cpp ****     
+ 355              		.loc 1 45 5 view .LVU77
+  47:My_Top/MC/My_Vofa.cpp **** }
+ 356              		.loc 1 47 5 view .LVU78
+  47:My_Top/MC/My_Vofa.cpp **** }
+ 357              		.loc 1 47 23 is_stmt 0 view .LVU79
+ 358 00e2 0023     		movs	r3, #0
+ 359 00e4 2A46     		mov	r2, r5
+ 360 00e6 02A9     		add	r1, sp, #8
+ARM GAS  /tmp/ccOxeCZx.s 			page 10
+
+
+ 361 00e8 3046     		mov	r0, r6
+ 362 00ea FFF7FEFF 		bl	_Z18Vofa_SendFireWaterP20__UART_HandleTypeDefPftm
+ 363              	.LVL31:
+  48:My_Top/MC/My_Vofa.cpp **** 
+ 364              		.loc 1 48 1 view .LVU80
+ 365 00ee 21B0     		add	sp, sp, #132
+ 366              		.cfi_def_cfa_offset 28
+ 367              		@ sp needed
+ 368 00f0 BDE87040 		pop	{r4, r5, r6, lr}
+ 369              		.cfi_restore 14
+ 370              		.cfi_restore 6
+ 371              		.cfi_restore 5
+ 372              		.cfi_restore 4
+ 373              		.cfi_def_cfa_offset 12
+ 374              	.LVL32:
+  48:My_Top/MC/My_Vofa.cpp **** 
+ 375              		.loc 1 48 1 view .LVU81
+ 376 00f4 03B0     		add	sp, sp, #12
+ 377              		.cfi_restore 3
+ 378              		.cfi_restore 2
+ 379              		.cfi_restore 1
+ 380              		.cfi_def_cfa_offset 0
+ 381 00f6 7047     		bx	lr
+ 382              		.cfi_endproc
+ 383              	.LFE1319:
+ 385              		.align	1
+ 386              		.global	_Z9Vofa_InitP20__UART_HandleTypeDef
+ 387              		.syntax unified
+ 388              		.thumb
+ 389              		.thumb_func
+ 391              	_Z9Vofa_InitP20__UART_HandleTypeDef:
+ 392              	.LVL33:
+ 393              	.LFB1321:
+  63:My_Top/MC/My_Vofa.cpp **** 
+  64:My_Top/MC/My_Vofa.cpp **** void Vofa_Init(UART_HandleTypeDef *huart)
+  65:My_Top/MC/My_Vofa.cpp **** {
+ 394              		.loc 1 65 1 is_stmt 1 view -0
+ 395              		.cfi_startproc
+ 396              		@ args = 0, pretend = 0, frame = 0
+ 397              		@ frame_needed = 0, uses_anonymous_args = 0
+ 398              		.loc 1 65 1 is_stmt 0 view .LVU83
+ 399 00f8 10B5     		push	{r4, lr}
+ 400              		.cfi_def_cfa_offset 8
+ 401              		.cfi_offset 4, -8
+ 402              		.cfi_offset 14, -4
+ 403 00fa 0446     		mov	r4, r0
+  66:My_Top/MC/My_Vofa.cpp ****     huart->RxEventCallback = My_Vofa_Callback; //绑定Vofa串口3回调函数
+ 404              		.loc 1 66 5 is_stmt 1 view .LVU84
+ 405              		.loc 1 66 28 is_stmt 0 view .LVU85
+ 406 00fc 084B     		ldr	r3, .L31
+ 407 00fe C0F8C030 		str	r3, [r0, #192]
+  67:My_Top/MC/My_Vofa.cpp ****     HAL_UART_AbortReceive(huart);  // 清除残留状态和错误指针 防止第一次接受到错
+ 408              		.loc 1 67 5 is_stmt 1 view .LVU86
+ 409              		.loc 1 67 26 is_stmt 0 view .LVU87
+ 410 0102 FFF7FEFF 		bl	HAL_UART_AbortReceive
+ 411              	.LVL34:
+  68:My_Top/MC/My_Vofa.cpp ****     HAL_UARTEx_ReceiveToIdle_DMA(huart, DMA_RxBuff, sizeof(DMA_RxBuff));
+ARM GAS  /tmp/ccOxeCZx.s 			page 11
+
+
+ 412              		.loc 1 68 5 is_stmt 1 view .LVU88
+ 413              		.loc 1 68 33 is_stmt 0 view .LVU89
+ 414 0106 8022     		movs	r2, #128
+ 415 0108 0649     		ldr	r1, .L31+4
+ 416 010a 2046     		mov	r0, r4
+ 417 010c FFF7FEFF 		bl	HAL_UARTEx_ReceiveToIdle_DMA
+ 418              	.LVL35:
+  69:My_Top/MC/My_Vofa.cpp ****     __HAL_DMA_DISABLE_IT(huart->hdmarx, DMA_IT_HT); // 禁止半传输中断
+ 419              		.loc 1 69 5 is_stmt 1 view .LVU90
+ 420 0110 D4F88030 		ldr	r3, [r4, #128]
+ 421 0114 1A68     		ldr	r2, [r3]
+ 422 0116 1368     		ldr	r3, [r2]
+ 423 0118 23F00403 		bic	r3, r3, #4
+ 424 011c 1360     		str	r3, [r2]
+  70:My_Top/MC/My_Vofa.cpp **** }
+ 425              		.loc 1 70 1 is_stmt 0 view .LVU91
+ 426 011e 10BD     		pop	{r4, pc}
+ 427              	.LVL36:
+ 428              	.L32:
+ 429              		.loc 1 70 1 view .LVU92
+ 430              		.align	2
+ 431              	.L31:
+ 432 0120 00000000 		.word	_Z16My_Vofa_CallbackP20__UART_HandleTypeDeft
+ 433 0124 00000000 		.word	.LANCHOR0
+ 434              		.cfi_endproc
+ 435              	.LFE1321:
+ 437              		.global	DMA_RxBuff
+ 438              		.global	vofa1
+ 439              		.section	.rodata
+ 440              		.align	2
+ 441              		.set	.LANCHOR1,. + 0
+ 442              	.LC0:
+ 443 0000 0000807F 		.ascii	"\000\000\200\177"
+ 444              		.bss
+ 445              		.align	2
+ 446              		.set	.LANCHOR0,. + 0
+ 449              	DMA_RxBuff:
+ 450 0000 00000000 		.space	128
+ 450      00000000 
+ 450      00000000 
+ 450      00000000 
+ 450      00000000 
+ 453              	vofa1:
+ 454 0080 00000000 		.space	1216
+ 454      00000000 
+ 454      00000000 
+ 454      00000000 
+ 454      00000000 
+ 457              	_ZL9vofa_buf1:
+ 458 0540 00000000 		.space	124
+ 458      00000000 
+ 458      00000000 
+ 458      00000000 
+ 458      00000000 
+ 461              	_ZL9vofa_buf2:
+ 462 05bc 00000000 		.space	124
+ 462      00000000 
+ARM GAS  /tmp/ccOxeCZx.s 			page 12
+
+
+ 462      00000000 
+ 462      00000000 
+ 462      00000000 
+ 465              	_ZL12vofa_buf_sel:
+ 466 0638 00       		.space	1
+ 467              		.text
+ 468              	.Letext0:
+ 469              		.file 3 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/machine/_default_types.h"
+ 470              		.file 4 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/sys/_stdint.h"
+ 471              		.file 5 "/opt/arm-gnu-toolchain-14.2/lib/gcc/arm-none-eabi/14.2.1/include/stdarg.h"
+ 472              		.file 6 "/opt/arm-gnu-toolchain-14.2/lib/gcc/arm-none-eabi/14.2.1/include/stddef.h"
+ 473              		.file 7 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/stdlib.h"
+ 474              		.file 8 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/cstdlib"
+ 475              		.file 9 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/bits/std_abs.h"
+ 476              		.file 10 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/cmath"
+ 477              		.file 11 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/type_traits"
+ 478              		.file 12 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/debug/debug.h"
+ 479              		.file 13 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/bits/predefined_ops.h"
+ 480              		.file 14 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/stdlib.h"
+ 481              		.file 15 "Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h"
+ 482              		.file 16 "Middlewares/Third_Party/FreeRTOS/Source/include/queue.h"
+ 483              		.file 17 "Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g474xx.h"
+ 484              		.file 18 "Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h"
+ 485              		.file 19 "Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h"
+ 486              		.file 20 "Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h"
+ 487              		.file 21 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/math.h"
+ 488              		.file 22 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/arm-none-eabi/thumb/v7e-m+f
+ 489              		.file 23 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/math.h"
+ 490              		.file 24 "Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h"
+ 491              		.file 25 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/string.h"
+ 492              		.file 26 "<built-in>"
+ARM GAS  /tmp/ccOxeCZx.s 			page 13
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 My_Vofa.cpp
+     /tmp/ccOxeCZx.s:21     .text._ZN7VoFA_Rx7on_recvEPht:00000000 $t
+     /tmp/ccOxeCZx.s:27     .text._ZN7VoFA_Rx7on_recvEPht:00000000 _ZN7VoFA_Rx7on_recvEPht
+     /tmp/ccOxeCZx.s:100    .text._ZN7VoFA_Rx7on_recvEPht:00000044 $d
+     /tmp/ccOxeCZx.s:105    .text:00000000 $t
+     /tmp/ccOxeCZx.s:111    .text:00000000 _Z16My_Vofa_CallbackP20__UART_HandleTypeDeft
+     /tmp/ccOxeCZx.s:158    .text:0000002c $d
+     /tmp/ccOxeCZx.s:162    .text:00000030 $t
+     /tmp/ccOxeCZx.s:168    .text:00000030 _Z18Vofa_SendFireWaterP20__UART_HandleTypeDefPftm
+     /tmp/ccOxeCZx.s:273    .text:00000094 $d
+     /tmp/ccOxeCZx.s:279    .text:000000a0 $t
+     /tmp/ccOxeCZx.s:285    .text:000000a0 _Z21Vofa_SendFireWater_VAP20__UART_HandleTypeDeftz
+     /tmp/ccOxeCZx.s:391    .text:000000f8 _Z9Vofa_InitP20__UART_HandleTypeDef
+     /tmp/ccOxeCZx.s:432    .text:00000120 $d
+     /tmp/ccOxeCZx.s:449    .bss:00000000 DMA_RxBuff
+     /tmp/ccOxeCZx.s:453    .bss:00000080 vofa1
+     /tmp/ccOxeCZx.s:440    .rodata:00000000 $d
+     /tmp/ccOxeCZx.s:445    .bss:00000000 $d
+     /tmp/ccOxeCZx.s:457    .bss:00000540 _ZL9vofa_buf1
+     /tmp/ccOxeCZx.s:461    .bss:000005bc _ZL9vofa_buf2
+     /tmp/ccOxeCZx.s:465    .bss:00000638 _ZL12vofa_buf_sel
+
+UNDEFINED SYMBOLS
+memcpy
+xQueueGenericSendFromISR
+vofaRxQueue
+HAL_UARTEx_ReceiveToIdle_DMA
+HAL_UART_Transmit_DMA
+HAL_UART_Transmit
+__aeabi_d2f
+HAL_UART_AbortReceive

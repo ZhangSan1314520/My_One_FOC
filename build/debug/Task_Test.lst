@@ -1,0 +1,637 @@
+ARM GAS  /tmp/cc9VOpeP.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"Task_Test.cpp"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "My_Top/Task/Task_Test.cpp"
+  20              		.section	.rodata.str1.4,"aMS",%progbits,1
+  21              		.align	2
+  22              	.LC0:
+  23 0000 E58E86E5 		.ascii	"\345\216\206\345\217\262\346\234\200\344\275\216\346"
+  23      8FB2E69C 
+  23      80E4BD8E 
+  23      E6
+  24 000d A088E589 		.ascii	"\240\210\345\211\251\344\275\231 Sys:%d VofaRx:%d C"
+  24      A9E4BD99 
+  24      20537973 
+  24      3A256420 
+  24      566F6661 
+  25 0028 4C493A25 		.ascii	"LI:%d Can:%d Pub:%d VofaTx:%d \350\207\252\345\267\261"
+  25      64204361 
+  25      6E3A2564 
+  25      20507562 
+  25      3A256420 
+  26 004c 3A256420 		.ascii	":%d \345\240\206\345\211\251\344\275\231:%d / %d\015"
+  26      E5A086E5 
+  26      89A9E4BD 
+  26      993A2564 
+  26      202F2025 
+  27 0062 0A00     		.ascii	"\012\000"
+  28              		.text
+  29              		.align	1
+  30              		.global	_Z8look_memv
+  31              		.syntax unified
+  32              		.thumb
+  33              		.thumb_func
+  35              	_Z8look_memv:
+  36              	.LFB1378:
+   1:My_Top/Task/Task_Test.cpp **** 
+   2:My_Top/Task/Task_Test.cpp **** #include "FreeRTOS.h"
+   3:My_Top/Task/Task_Test.cpp **** #include "task.h"
+   4:My_Top/Task/Task_Test.cpp **** #include "MC_Serial.hpp"
+   5:My_Top/Task/Task_Test.cpp **** #include "My_Vofa.hpp"
+   6:My_Top/Task/Task_Test.cpp **** #include "uorb.hpp"
+   7:My_Top/Task/Task_Test.cpp **** #include "bsp.hpp"
+ARM GAS  /tmp/cc9VOpeP.s 			page 2
+
+
+   8:My_Top/Task/Task_Test.cpp **** #include "FocMotor_ClosedLoop.hpp"
+   9:My_Top/Task/Task_Test.cpp **** #include "My_FM24V02A.hpp"
+  10:My_Top/Task/Task_Test.cpp **** 
+  11:My_Top/Task/Task_Test.cpp **** extern TaskHandle_t SystemInitHandle;
+  12:My_Top/Task/Task_Test.cpp **** extern TaskHandle_t TestHandle;
+  13:My_Top/Task/Task_Test.cpp **** extern TaskHandle_t Task_VofaRxHandle;
+  14:My_Top/Task/Task_Test.cpp **** extern TaskHandle_t DroneCANHandle;
+  15:My_Top/Task/Task_Test.cpp **** extern TaskHandle_t MotorPubHandle;
+  16:My_Top/Task/Task_Test.cpp **** extern TaskHandle_t CLIHandle;
+  17:My_Top/Task/Task_Test.cpp **** extern TaskHandle_t VofaTxHandle;
+  18:My_Top/Task/Task_Test.cpp **** 
+  19:My_Top/Task/Task_Test.cpp **** void look_mem(void)
+  20:My_Top/Task/Task_Test.cpp **** {
+  37              		.loc 1 20 1 view -0
+  38              		.cfi_startproc
+  39              		@ args = 0, pretend = 0, frame = 0
+  40              		@ frame_needed = 0, uses_anonymous_args = 0
+  41 0000 2DE9F047 		push	{r4, r5, r6, r7, r8, r9, r10, lr}
+  42              		.cfi_def_cfa_offset 32
+  43              		.cfi_offset 4, -32
+  44              		.cfi_offset 5, -28
+  45              		.cfi_offset 6, -24
+  46              		.cfi_offset 7, -20
+  47              		.cfi_offset 8, -16
+  48              		.cfi_offset 9, -12
+  49              		.cfi_offset 10, -8
+  50              		.cfi_offset 14, -4
+  51 0004 86B0     		sub	sp, sp, #24
+  52              		.cfi_def_cfa_offset 56
+  21:My_Top/Task/Task_Test.cpp ****     printf("历史最低栈剩余 Sys:%d VofaRx:%d CLI:%d Can:%d Pub:%d VofaTx:%d 自己:%d 堆剩�
+  53              		.loc 1 21 5 view .LVU1
+  54              		.loc 1 21 11 is_stmt 0 view .LVU2
+  55 0006 1C4B     		ldr	r3, .L3
+  56 0008 1868     		ldr	r0, [r3]
+  57 000a FFF7FEFF 		bl	uxTaskGetStackHighWaterMark
+  58              	.LVL0:
+  59 000e 0446     		mov	r4, r0
+  60              		.loc 1 21 11 discriminator 1 view .LVU3
+  61 0010 1A4B     		ldr	r3, .L3+4
+  62 0012 1868     		ldr	r0, [r3]
+  63 0014 FFF7FEFF 		bl	uxTaskGetStackHighWaterMark
+  64              	.LVL1:
+  65 0018 0546     		mov	r5, r0
+  66              		.loc 1 21 11 discriminator 2 view .LVU4
+  67 001a 194B     		ldr	r3, .L3+8
+  68 001c 1868     		ldr	r0, [r3]
+  69 001e FFF7FEFF 		bl	uxTaskGetStackHighWaterMark
+  70              	.LVL2:
+  71 0022 0646     		mov	r6, r0
+  72              		.loc 1 21 11 discriminator 3 view .LVU5
+  73 0024 174B     		ldr	r3, .L3+12
+  74 0026 1868     		ldr	r0, [r3]
+  75 0028 FFF7FEFF 		bl	uxTaskGetStackHighWaterMark
+  76              	.LVL3:
+  77 002c 0746     		mov	r7, r0
+  78              		.loc 1 21 11 discriminator 4 view .LVU6
+  79 002e 164B     		ldr	r3, .L3+16
+ARM GAS  /tmp/cc9VOpeP.s 			page 3
+
+
+  80 0030 1868     		ldr	r0, [r3]
+  81 0032 FFF7FEFF 		bl	uxTaskGetStackHighWaterMark
+  82              	.LVL4:
+  83 0036 8046     		mov	r8, r0
+  84              		.loc 1 21 11 discriminator 5 view .LVU7
+  85 0038 144B     		ldr	r3, .L3+20
+  86 003a 1868     		ldr	r0, [r3]
+  87 003c FFF7FEFF 		bl	uxTaskGetStackHighWaterMark
+  88              	.LVL5:
+  89 0040 8146     		mov	r9, r0
+  90              		.loc 1 21 11 discriminator 6 view .LVU8
+  91 0042 0020     		movs	r0, #0
+  92 0044 FFF7FEFF 		bl	uxTaskGetStackHighWaterMark
+  93              	.LVL6:
+  94 0048 8246     		mov	r10, r0
+  95              		.loc 1 21 11 discriminator 7 view .LVU9
+  96 004a FFF7FEFF 		bl	xPortGetFreeHeapSize
+  97              	.LVL7:
+  98              		.loc 1 21 11 discriminator 8 view .LVU10
+  99 004e 4FF6E853 		movw	r3, #65000
+ 100 0052 0593     		str	r3, [sp, #20]
+ 101 0054 0490     		str	r0, [sp, #16]
+ 102 0056 CDF80CA0 		str	r10, [sp, #12]
+ 103 005a CDF80890 		str	r9, [sp, #8]
+ 104 005e CDF80480 		str	r8, [sp, #4]
+ 105 0062 0097     		str	r7, [sp]
+ 106 0064 3346     		mov	r3, r6
+ 107 0066 2A46     		mov	r2, r5
+ 108 0068 2146     		mov	r1, r4
+ 109 006a 0948     		ldr	r0, .L3+24
+ 110 006c FFF7FEFF 		bl	printf_
+ 111              	.LVL8:
+  22:My_Top/Task/Task_Test.cpp ****            uxTaskGetStackHighWaterMark(SystemInitHandle),
+  23:My_Top/Task/Task_Test.cpp ****            uxTaskGetStackHighWaterMark(Task_VofaRxHandle),
+  24:My_Top/Task/Task_Test.cpp ****            uxTaskGetStackHighWaterMark(CLIHandle),
+  25:My_Top/Task/Task_Test.cpp ****            uxTaskGetStackHighWaterMark(DroneCANHandle),
+  26:My_Top/Task/Task_Test.cpp ****            uxTaskGetStackHighWaterMark(MotorPubHandle),
+  27:My_Top/Task/Task_Test.cpp ****            uxTaskGetStackHighWaterMark(VofaTxHandle),
+  28:My_Top/Task/Task_Test.cpp ****            uxTaskGetStackHighWaterMark(NULL), // 自己的任务栈
+  29:My_Top/Task/Task_Test.cpp ****            xPortGetFreeHeapSize(), configTOTAL_HEAP_SIZE);
+  30:My_Top/Task/Task_Test.cpp **** }
+ 112              		.loc 1 30 1 view .LVU11
+ 113 0070 06B0     		add	sp, sp, #24
+ 114              		.cfi_def_cfa_offset 32
+ 115              		@ sp needed
+ 116 0072 BDE8F087 		pop	{r4, r5, r6, r7, r8, r9, r10, pc}
+ 117              	.L4:
+ 118 0076 00BF     		.align	2
+ 119              	.L3:
+ 120 0078 00000000 		.word	SystemInitHandle
+ 121 007c 00000000 		.word	Task_VofaRxHandle
+ 122 0080 00000000 		.word	CLIHandle
+ 123 0084 00000000 		.word	DroneCANHandle
+ 124 0088 00000000 		.word	MotorPubHandle
+ 125 008c 00000000 		.word	VofaTxHandle
+ 126 0090 00000000 		.word	.LC0
+ 127              		.cfi_endproc
+ARM GAS  /tmp/cc9VOpeP.s 			page 4
+
+
+ 128              	.LFE1378:
+ 130              		.align	1
+ 131              		.global	_Z9test_lajiv
+ 132              		.syntax unified
+ 133              		.thumb
+ 134              		.thumb_func
+ 136              	_Z9test_lajiv:
+ 137              	.LFB1379:
+  31:My_Top/Task/Task_Test.cpp **** 
+  32:My_Top/Task/Task_Test.cpp **** uint8_t add[]= {0x22,0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09,0x0a,0x0d,0x10,0x11,0x12,0x16,0x7
+  33:My_Top/Task/Task_Test.cpp **** uint8_t data_tx[]= {0x00,0x00,0x80,0xff,0x03,0x00,0x07,0x00,0x00,0xa5,0xa5,0x88,0x00,0xaC,0x02,0x08
+  34:My_Top/Task/Task_Test.cpp **** 
+  35:My_Top/Task/Task_Test.cpp **** uint8_t len = sizeof(data_tx)/sizeof(data_tx[0]);
+  36:My_Top/Task/Task_Test.cpp **** uint8_t data_rx1[20], data_rx2[20], data_rx3[20], data_rx4[20],data_rx5[20];
+  37:My_Top/Task/Task_Test.cpp **** 
+  38:My_Top/Task/Task_Test.cpp **** float DR1 = 0.1;//0.92极限
+  39:My_Top/Task/Task_Test.cpp **** float DR2 = 0.3;//0.47
+  40:My_Top/Task/Task_Test.cpp **** float DR3 = 0.8;//0.45
+  41:My_Top/Task/Task_Test.cpp **** float ARR = 5250;
+  42:My_Top/Task/Task_Test.cpp **** void test_laji()
+  43:My_Top/Task/Task_Test.cpp **** {
+ 138              		.loc 1 43 1 is_stmt 1 view -0
+ 139              		.cfi_startproc
+ 140              		@ args = 0, pretend = 0, frame = 0
+ 141              		@ frame_needed = 0, uses_anonymous_args = 0
+ 142 0094 10B5     		push	{r4, lr}
+ 143              		.cfi_def_cfa_offset 8
+ 144              		.cfi_offset 4, -8
+ 145              		.cfi_offset 14, -4
+  44:My_Top/Task/Task_Test.cpp ****     vTaskDelay(pdMS_TO_TICKS(300));
+ 146              		.loc 1 44 5 view .LVU13
+ 147              		.loc 1 44 15 is_stmt 0 view .LVU14
+ 148 0096 4FF49670 		mov	r0, #300
+ 149 009a FFF7FEFF 		bl	vTaskDelay
+ 150              	.LVL9:
+  45:My_Top/Task/Task_Test.cpp **** 
+  46:My_Top/Task/Task_Test.cpp ****     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_11, GPIO_PIN_SET);
+ 151              		.loc 1 46 5 is_stmt 1 view .LVU15
+ 152              		.loc 1 46 22 is_stmt 0 view .LVU16
+ 153 009e 0122     		movs	r2, #1
+ 154 00a0 4FF40061 		mov	r1, #2048
+ 155 00a4 4FF09040 		mov	r0, #1207959552
+ 156 00a8 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 157              	.LVL10:
+  47:My_Top/Task/Task_Test.cpp ****     
+  48:My_Top/Task/Task_Test.cpp ****     __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, (uint16_t)(ARR*DR1));
+ 158              		.loc 1 48 5 is_stmt 1 view .LVU17
+ 159 00ac 274A     		ldr	r2, .L7
+ 160 00ae D2ED007A 		vldr.32	s15, [r2]
+ 161 00b2 92ED017A 		vldr.32	s14, [r2, #4]
+ 162 00b6 27EE877A 		vmul.f32	s14, s15, s14
+ 163 00ba 254C     		ldr	r4, .L7+4
+ 164 00bc 2168     		ldr	r1, [r4]
+ 165 00be BCEEC77A 		vcvt.u32.f32	s14, s14
+ 166 00c2 17EE103A 		vmov	r3, s14	@ int
+ 167 00c6 9BB2     		uxth	r3, r3
+ 168 00c8 4B63     		str	r3, [r1, #52]
+ARM GAS  /tmp/cc9VOpeP.s 			page 5
+
+
+  49:My_Top/Task/Task_Test.cpp ****     __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, (uint16_t)(ARR*DR2));
+ 169              		.loc 1 49 5 view .LVU18
+ 170 00ca 92ED027A 		vldr.32	s14, [r2, #8]
+ 171 00ce 27EE877A 		vmul.f32	s14, s15, s14
+ 172 00d2 BCEEC77A 		vcvt.u32.f32	s14, s14
+ 173 00d6 17EE103A 		vmov	r3, s14	@ int
+ 174 00da 9BB2     		uxth	r3, r3
+ 175 00dc 8B63     		str	r3, [r1, #56]
+  50:My_Top/Task/Task_Test.cpp ****     __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, (uint16_t)(ARR*DR3));        
+ 176              		.loc 1 50 5 view .LVU19
+ 177 00de 92ED037A 		vldr.32	s14, [r2, #12]
+ 178 00e2 67EE877A 		vmul.f32	s15, s15, s14
+ 179 00e6 FCEEE77A 		vcvt.u32.f32	s15, s15
+ 180 00ea 17EE903A 		vmov	r3, s15	@ int
+ 181 00ee 9BB2     		uxth	r3, r3
+ 182 00f0 CB63     		str	r3, [r1, #60]
+  51:My_Top/Task/Task_Test.cpp **** 
+  52:My_Top/Task/Task_Test.cpp ****     HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
+ 183              		.loc 1 52 5 view .LVU20
+ 184              		.loc 1 52 22 is_stmt 0 view .LVU21
+ 185 00f2 0021     		movs	r1, #0
+ 186 00f4 2046     		mov	r0, r4
+ 187 00f6 FFF7FEFF 		bl	HAL_TIM_PWM_Start
+ 188              	.LVL11:
+  53:My_Top/Task/Task_Test.cpp ****     HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_1);
+ 189              		.loc 1 53 5 is_stmt 1 view .LVU22
+ 190              		.loc 1 53 25 is_stmt 0 view .LVU23
+ 191 00fa 0021     		movs	r1, #0
+ 192 00fc 2046     		mov	r0, r4
+ 193 00fe FFF7FEFF 		bl	HAL_TIMEx_PWMN_Start
+ 194              	.LVL12:
+  54:My_Top/Task/Task_Test.cpp ****     HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
+ 195              		.loc 1 54 5 is_stmt 1 view .LVU24
+ 196              		.loc 1 54 22 is_stmt 0 view .LVU25
+ 197 0102 0421     		movs	r1, #4
+ 198 0104 2046     		mov	r0, r4
+ 199 0106 FFF7FEFF 		bl	HAL_TIM_PWM_Start
+ 200              	.LVL13:
+  55:My_Top/Task/Task_Test.cpp ****     HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_2);
+ 201              		.loc 1 55 5 is_stmt 1 view .LVU26
+ 202              		.loc 1 55 25 is_stmt 0 view .LVU27
+ 203 010a 0421     		movs	r1, #4
+ 204 010c 2046     		mov	r0, r4
+ 205 010e FFF7FEFF 		bl	HAL_TIMEx_PWMN_Start
+ 206              	.LVL14:
+  56:My_Top/Task/Task_Test.cpp ****     HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_3);
+ 207              		.loc 1 56 5 is_stmt 1 view .LVU28
+ 208              		.loc 1 56 22 is_stmt 0 view .LVU29
+ 209 0112 0821     		movs	r1, #8
+ 210 0114 2046     		mov	r0, r4
+ 211 0116 FFF7FEFF 		bl	HAL_TIM_PWM_Start
+ 212              	.LVL15:
+  57:My_Top/Task/Task_Test.cpp ****     HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_3);
+ 213              		.loc 1 57 5 is_stmt 1 view .LVU30
+ 214              		.loc 1 57 25 is_stmt 0 view .LVU31
+ 215 011a 0821     		movs	r1, #8
+ 216 011c 2046     		mov	r0, r4
+ARM GAS  /tmp/cc9VOpeP.s 			page 6
+
+
+ 217 011e FFF7FEFF 		bl	HAL_TIMEx_PWMN_Start
+ 218              	.LVL16:
+  58:My_Top/Task/Task_Test.cpp ****     __HAL_TIM_ENABLE(&htim1); // 使能定时器外设
+ 219              		.loc 1 58 5 is_stmt 1 view .LVU32
+ 220 0122 2268     		ldr	r2, [r4]
+ 221 0124 1368     		ldr	r3, [r2]
+ 222 0126 43F00103 		orr	r3, r3, #1
+ 223 012a 1360     		str	r3, [r2]
+  59:My_Top/Task/Task_Test.cpp **** 
+  60:My_Top/Task/Task_Test.cpp **** 
+  61:My_Top/Task/Task_Test.cpp ****     vTaskDelay(pdMS_TO_TICKS(100));
+ 224              		.loc 1 61 5 view .LVU33
+ 225              		.loc 1 61 15 is_stmt 0 view .LVU34
+ 226 012c 6420     		movs	r0, #100
+ 227 012e FFF7FEFF 		bl	vTaskDelay
+ 228              	.LVL17:
+  62:My_Top/Task/Task_Test.cpp ****     M1.Current_Auto_Calibration(true);
+ 229              		.loc 1 62 5 is_stmt 1 view .LVU35
+ 230              		.loc 1 62 32 is_stmt 0 view .LVU36
+ 231 0132 084C     		ldr	r4, .L7+8
+ 232 0134 0121     		movs	r1, #1
+ 233 0136 2046     		mov	r0, r4
+ 234 0138 FFF7FEFF 		bl	_ZN9FOC_Motor24Current_Auto_CalibrationEb
+ 235              	.LVL18:
+  63:My_Top/Task/Task_Test.cpp ****     vTaskDelay(pdMS_TO_TICKS(100));
+ 236              		.loc 1 63 5 is_stmt 1 view .LVU37
+ 237              		.loc 1 63 15 is_stmt 0 view .LVU38
+ 238 013c 6420     		movs	r0, #100
+ 239 013e FFF7FEFF 		bl	vTaskDelay
+ 240              	.LVL19:
+  64:My_Top/Task/Task_Test.cpp ****     M1.Current_Auto_Calibration(false);
+ 241              		.loc 1 64 5 is_stmt 1 view .LVU39
+ 242              		.loc 1 64 32 is_stmt 0 view .LVU40
+ 243 0142 0021     		movs	r1, #0
+ 244 0144 2046     		mov	r0, r4
+ 245 0146 FFF7FEFF 		bl	_ZN9FOC_Motor24Current_Auto_CalibrationEb
+ 246              	.LVL20:
+  65:My_Top/Task/Task_Test.cpp **** }
+ 247              		.loc 1 65 1 view .LVU41
+ 248 014a 10BD     		pop	{r4, pc}
+ 249              	.L8:
+ 250              		.align	2
+ 251              	.L7:
+ 252 014c 00000000 		.word	.LANCHOR0
+ 253 0150 00000000 		.word	htim1
+ 254 0154 00000000 		.word	M1
+ 255              		.cfi_endproc
+ 256              	.LFE1379:
+ 258              		.section	.rodata.str1.4
+ 259              		.align	2
+ 260              	.LC1:
+ 261 0064 312DE4BB 		.ascii	"1-\344\273\273\345\212\241\345\220\257\345\212\250\344"
+ 261      BBE58AA1 
+ 261      E590AFE5 
+ 261      8AA8E4
+ 262 0073 B8AD0D0A 		.ascii	"\270\255\015\012\000"
+ 262      00
+ARM GAS  /tmp/cc9VOpeP.s 			page 7
+
+
+ 263              		.text
+ 264              		.align	1
+ 265              		.global	_Z9Task_TestPv
+ 266              		.syntax unified
+ 267              		.thumb
+ 268              		.thumb_func
+ 270              	_Z9Task_TestPv:
+ 271              	.LVL21:
+ 272              	.LFB1380:
+  66:My_Top/Task/Task_Test.cpp **** 
+  67:My_Top/Task/Task_Test.cpp **** HAL_StatusTypeDef ret1, ret2;
+  68:My_Top/Task/Task_Test.cpp **** 
+  69:My_Top/Task/Task_Test.cpp **** void Task_Test(void *argument)
+  70:My_Top/Task/Task_Test.cpp **** {
+ 273              		.loc 1 70 1 is_stmt 1 view -0
+ 274              		.cfi_startproc
+ 275              		@ Volatile: function does not return.
+ 276              		@ args = 0, pretend = 0, frame = 0
+ 277              		@ frame_needed = 0, uses_anonymous_args = 0
+ 278              		.loc 1 70 1 is_stmt 0 view .LVU43
+ 279 0158 80B5     		push	{r7, lr}
+ 280              		.cfi_def_cfa_offset 8
+ 281              		.cfi_offset 7, -8
+ 282              		.cfi_offset 14, -4
+  71:My_Top/Task/Task_Test.cpp ****     printf("1-任务启动中\r\n");
+ 283              		.loc 1 71 5 is_stmt 1 view .LVU44
+ 284              		.loc 1 71 11 is_stmt 0 view .LVU45
+ 285 015a 0F48     		ldr	r0, .L12
+ 286              	.LVL22:
+ 287              		.loc 1 71 11 view .LVU46
+ 288 015c FFF7FEFF 		bl	printf_
+ 289              	.LVL23:
+  72:My_Top/Task/Task_Test.cpp ****     ret1 = FM24V02A0.write(0x00, add, len); //写入多个寄存器
+ 290              		.loc 1 72 5 is_stmt 1 view .LVU47
+ 291              		.loc 1 72 27 is_stmt 0 view .LVU48
+ 292 0160 0E4D     		ldr	r5, .L12+4
+ 293 0162 0F4F     		ldr	r7, .L12+8
+ 294 0164 2B7C     		ldrb	r3, [r5, #16]	@ zero_extendqisi2
+ 295 0166 05F11402 		add	r2, r5, #20
+ 296 016a 0021     		movs	r1, #0
+ 297 016c 3846     		mov	r0, r7
+ 298 016e FFF7FEFF 		bl	_ZN11My_FM24V02A5writeEtPht
+ 299              	.LVL24:
+ 300              		.loc 1 72 10 discriminator 1 view .LVU49
+ 301 0172 0C4E     		ldr	r6, .L12+12
+ 302 0174 3446     		mov	r4, r6
+ 303 0176 04F8040B 		strb	r0, [r4], #4
+  73:My_Top/Task/Task_Test.cpp ****     vTaskDelay(pdMS_TO_TICKS(100));
+ 304              		.loc 1 73 5 is_stmt 1 view .LVU50
+ 305              		.loc 1 73 15 is_stmt 0 view .LVU51
+ 306 017a 6420     		movs	r0, #100
+ 307 017c FFF7FEFF 		bl	vTaskDelay
+ 308              	.LVL25:
+  74:My_Top/Task/Task_Test.cpp ****     ret2 = FM24V02A0.read(0x00, data_rx1, len); //读取多个寄存器
+ 309              		.loc 1 74 5 is_stmt 1 view .LVU52
+ 310              		.loc 1 74 26 is_stmt 0 view .LVU53
+ 311 0180 2B7C     		ldrb	r3, [r5, #16]	@ zero_extendqisi2
+ARM GAS  /tmp/cc9VOpeP.s 			page 8
+
+
+ 312 0182 2246     		mov	r2, r4
+ 313 0184 0021     		movs	r1, #0
+ 314 0186 3846     		mov	r0, r7
+ 315 0188 FFF7FEFF 		bl	_ZN11My_FM24V02A4readEtPht
+ 316              	.LVL26:
+ 317              		.loc 1 74 10 discriminator 1 view .LVU54
+ 318 018c 3076     		strb	r0, [r6, #24]
+ 319              	.L10:
+  75:My_Top/Task/Task_Test.cpp ****     
+  76:My_Top/Task/Task_Test.cpp **** 
+  77:My_Top/Task/Task_Test.cpp ****     // test_laji();
+  78:My_Top/Task/Task_Test.cpp ****     while (1)
+ 320              		.loc 1 78 5 is_stmt 1 view .LVU55
+  79:My_Top/Task/Task_Test.cpp ****     {
+  80:My_Top/Task/Task_Test.cpp ****         
+  81:My_Top/Task/Task_Test.cpp ****         // printf("laji:%d\r\n",M1.laji);     
+  82:My_Top/Task/Task_Test.cpp ****         // M1.laji++;
+  83:My_Top/Task/Task_Test.cpp ****         vTaskDelay(pdMS_TO_TICKS(500));
+ 321              		.loc 1 83 9 discriminator 1 view .LVU56
+ 322              		.loc 1 83 19 is_stmt 0 discriminator 1 view .LVU57
+ 323 018e 4FF4FA70 		mov	r0, #500
+ 324 0192 FFF7FEFF 		bl	vTaskDelay
+ 325              	.LVL27:
+  78:My_Top/Task/Task_Test.cpp ****     {
+ 326              		.loc 1 78 5 is_stmt 1 view .LVU58
+ 327 0196 FAE7     		b	.L10
+ 328              	.L13:
+ 329              		.align	2
+ 330              	.L12:
+ 331 0198 64000000 		.word	.LC1
+ 332 019c 00000000 		.word	.LANCHOR0
+ 333 01a0 00000000 		.word	FM24V02A0
+ 334 01a4 00000000 		.word	.LANCHOR1
+ 335              		.cfi_endproc
+ 336              	.LFE1380:
+ 338              		.global	ret2
+ 339              		.global	ret1
+ 340              		.global	ARR
+ 341              		.global	DR3
+ 342              		.global	DR2
+ 343              		.global	DR1
+ 344              		.global	data_rx5
+ 345              		.global	data_rx4
+ 346              		.global	data_rx3
+ 347              		.global	data_rx2
+ 348              		.global	data_rx1
+ 349              		.global	len
+ 350              		.global	data_tx
+ 351              		.global	add
+ 352              		.data
+ 353              		.align	2
+ 354              		.set	.LANCHOR0,. + 0
+ 357              	ARR:
+ 358 0000 0010A445 		.word	1168379904
+ 361              	DR1:
+ 362 0004 CDCCCC3D 		.word	1036831949
+ 365              	DR2:
+ARM GAS  /tmp/cc9VOpeP.s 			page 9
+
+
+ 366 0008 9A99993E 		.word	1050253722
+ 369              	DR3:
+ 370 000c CDCC4C3F 		.word	1061997773
+ 373              	len:
+ 374 0010 11       		.byte	17
+ 375 0011 000000   		.space	3
+ 378              	add:
+ 379 0014 22010203 		.ascii	"\"\001\002\003\004\005\006\007\010\011\012\015\020\021"
+ 379      04050607 
+ 379      08090A0D 
+ 379      1011
+ 380 0022 121672   		.ascii	"\022\026r"
+ 381 0025 000000   		.space	3
+ 384              	data_tx:
+ 385 0028 000080FF 		.ascii	"\000\000\200\377\003\000\007\000\000\245\245\210\000"
+ 385      03000700 
+ 385      00A5A588 
+ 385      00
+ 386 0035 AC020800 		.ascii	"\254\002\010\000"
+ 387              		.bss
+ 388              		.align	2
+ 389              		.set	.LANCHOR1,. + 0
+ 392              	ret1:
+ 393 0000 00       		.space	1
+ 394 0001 000000   		.space	3
+ 397              	data_rx1:
+ 398 0004 00000000 		.space	20
+ 398      00000000 
+ 398      00000000 
+ 398      00000000 
+ 398      00000000 
+ 401              	ret2:
+ 402 0018 00       		.space	1
+ 403 0019 000000   		.space	3
+ 406              	data_rx5:
+ 407 001c 00000000 		.space	20
+ 407      00000000 
+ 407      00000000 
+ 407      00000000 
+ 407      00000000 
+ 410              	data_rx4:
+ 411 0030 00000000 		.space	20
+ 411      00000000 
+ 411      00000000 
+ 411      00000000 
+ 411      00000000 
+ 414              	data_rx3:
+ 415 0044 00000000 		.space	20
+ 415      00000000 
+ 415      00000000 
+ 415      00000000 
+ 415      00000000 
+ 418              	data_rx2:
+ 419 0058 00000000 		.space	20
+ 419      00000000 
+ 419      00000000 
+ 419      00000000 
+ARM GAS  /tmp/cc9VOpeP.s 			page 10
+
+
+ 419      00000000 
+ 420              		.text
+ 421              	.Letext0:
+ 422              		.file 2 "/opt/arm-gnu-toolchain-14.2/lib/gcc/arm-none-eabi/14.2.1/include/stddef.h"
+ 423              		.file 3 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/machine/_default_types.h"
+ 424              		.file 4 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/sys/_stdint.h"
+ 425              		.file 5 "Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h"
+ 426              		.file 6 "Middlewares/Third_Party/FreeRTOS/Source/include/task.h"
+ 427              		.file 7 "Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g474xx.h"
+ 428              		.file 8 "Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h"
+ 429              		.file 9 "Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h"
+ 430              		.file 10 "Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h"
+ 431              		.file 11 "Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h"
+ 432              		.file 12 "Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h"
+ 433              		.file 13 "Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h"
+ 434              		.file 14 "Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h"
+ 435              		.file 15 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/cmath"
+ 436              		.file 16 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/type_traits"
+ 437              		.file 17 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/debug/debug.h"
+ 438              		.file 18 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/bits/std_abs.h"
+ 439              		.file 19 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/cstdlib"
+ 440              		.file 20 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/bits/predefined_ops.h"
+ 441              		.file 21 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/math.h"
+ 442              		.file 22 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/stdlib.h"
+ 443              		.file 23 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/arm-none-eabi/thumb/v7e-m+f
+ 444              		.file 24 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/math.h"
+ 445              		.file 25 "Lib/compute/ex_math.hpp"
+ 446              		.file 26 "My_Top/System/bsp.hpp"
+ 447              		.file 27 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/stdlib.h"
+ 448              		.file 28 "Lib/compute/pid/pid.hpp"
+ 449              		.file 29 "Lib/compute/pid/pll.hpp"
+ 450              		.file 30 "Lib/compute/pid/foc_math.hpp"
+ 451              		.file 31 "Lib/compute/pid/LQR.hpp"
+ 452              		.file 32 "My_Top/System/current_read.hpp"
+ 453              		.file 33 "My_Top/System/encoder.hpp"
+ 454              		.file 34 "Lib/compute/wave/wave_generator.hpp"
+ 455              		.file 35 "My_Top/Motor_Control/FocMotor_ClosedLoop.hpp"
+ 456              		.file 36 "My_Top/EEPROM/My_FM24V02A.hpp"
+ 457              		.file 37 "Core/Inc/tim.h"
+ 458              		.file 38 "Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h"
+ 459              		.file 39 "Lib/serial/printf.h"
+ 460              		.file 40 "Middlewares/Third_Party/FreeRTOS/Source/include/portable.h"
+ARM GAS  /tmp/cc9VOpeP.s 			page 11
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 Task_Test.cpp
+     /tmp/cc9VOpeP.s:21     .rodata.str1.4:00000000 $d
+     /tmp/cc9VOpeP.s:29     .text:00000000 $t
+     /tmp/cc9VOpeP.s:35     .text:00000000 _Z8look_memv
+     /tmp/cc9VOpeP.s:120    .text:00000078 $d
+     /tmp/cc9VOpeP.s:130    .text:00000094 $t
+     /tmp/cc9VOpeP.s:136    .text:00000094 _Z9test_lajiv
+     /tmp/cc9VOpeP.s:252    .text:0000014c $d
+     /tmp/cc9VOpeP.s:264    .text:00000158 $t
+     /tmp/cc9VOpeP.s:270    .text:00000158 _Z9Task_TestPv
+     /tmp/cc9VOpeP.s:331    .text:00000198 $d
+     /tmp/cc9VOpeP.s:401    .bss:00000018 ret2
+     /tmp/cc9VOpeP.s:392    .bss:00000000 ret1
+     /tmp/cc9VOpeP.s:357    .data:00000000 ARR
+     /tmp/cc9VOpeP.s:369    .data:0000000c DR3
+     /tmp/cc9VOpeP.s:365    .data:00000008 DR2
+     /tmp/cc9VOpeP.s:361    .data:00000004 DR1
+     /tmp/cc9VOpeP.s:406    .bss:0000001c data_rx5
+     /tmp/cc9VOpeP.s:410    .bss:00000030 data_rx4
+     /tmp/cc9VOpeP.s:414    .bss:00000044 data_rx3
+     /tmp/cc9VOpeP.s:418    .bss:00000058 data_rx2
+     /tmp/cc9VOpeP.s:397    .bss:00000004 data_rx1
+     /tmp/cc9VOpeP.s:373    .data:00000010 len
+     /tmp/cc9VOpeP.s:384    .data:00000028 data_tx
+     /tmp/cc9VOpeP.s:378    .data:00000014 add
+     /tmp/cc9VOpeP.s:353    .data:00000000 $d
+     /tmp/cc9VOpeP.s:388    .bss:00000000 $d
+
+UNDEFINED SYMBOLS
+uxTaskGetStackHighWaterMark
+xPortGetFreeHeapSize
+printf_
+SystemInitHandle
+Task_VofaRxHandle
+CLIHandle
+DroneCANHandle
+MotorPubHandle
+VofaTxHandle
+vTaskDelay
+HAL_GPIO_WritePin
+HAL_TIM_PWM_Start
+HAL_TIMEx_PWMN_Start
+_ZN9FOC_Motor24Current_Auto_CalibrationEb
+htim1
+M1
+_ZN11My_FM24V02A5writeEtPht
+_ZN11My_FM24V02A4readEtPht
+FM24V02A0

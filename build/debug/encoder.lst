@@ -1,0 +1,940 @@
+ARM GAS  /tmp/ccw0tTki.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"encoder.cpp"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "My_Top/System/encoder.cpp"
+  20              		.align	1
+  21              		.global	_ZN7Encoder23My_Encode_ErrorCallbackEP20__UART_HandleTypeDef
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	_ZN7Encoder23My_Encode_ErrorCallbackEP20__UART_HandleTypeDef:
+  27              	.LVL0:
+  28              	.LFB1313:
+   1:My_Top/System/encoder.cpp **** #include "encoder.hpp"
+   2:My_Top/System/encoder.cpp **** Encoder* Encoder::encoder_list[4] = {nullptr}; // Encoder 对象地址列表
+   3:My_Top/System/encoder.cpp **** 
+   4:My_Top/System/encoder.cpp **** uint8_t Encoder::encoder_num = 0;
+   5:My_Top/System/encoder.cpp **** 
+   6:My_Top/System/encoder.cpp **** uint8_t Encoder::_crc_calc(uint8_t *buf, uint16_t len)
+   7:My_Top/System/encoder.cpp **** {
+   8:My_Top/System/encoder.cpp **** 
+   9:My_Top/System/encoder.cpp ****     uint8_t crc = 0;
+  10:My_Top/System/encoder.cpp ****     while (len--)
+  11:My_Top/System/encoder.cpp ****     {
+  12:My_Top/System/encoder.cpp ****         crc ^= buf[len];
+  13:My_Top/System/encoder.cpp ****     }
+  14:My_Top/System/encoder.cpp ****     return crc;
+  15:My_Top/System/encoder.cpp **** }
+  16:My_Top/System/encoder.cpp **** 
+  17:My_Top/System/encoder.cpp **** 
+  18:My_Top/System/encoder.cpp **** void Encoder::encoder_init()
+  19:My_Top/System/encoder.cpp **** {
+  20:My_Top/System/encoder.cpp **** 
+  21:My_Top/System/encoder.cpp ****     if(motor_config->huart->hdmarx == nullptr) 
+  22:My_Top/System/encoder.cpp ****     {
+  23:My_Top/System/encoder.cpp ****         //UART 没有DMA句柄
+  24:My_Top/System/encoder.cpp ****         Error_Handler();
+  25:My_Top/System/encoder.cpp ****     }
+  26:My_Top/System/encoder.cpp ****     motor_config->huart->RxEventCallback =My_Encode_Callback; // 绑定接收回调函数
+  27:My_Top/System/encoder.cpp ****     motor_config->huart->ErrorCallback = My_Encode_ErrorCallback; // 绑定错误回调函数
+  28:My_Top/System/encoder.cpp ****     if(HAL_UARTEx_ReceiveToIdle_DMA(motor_config->huart,encoder.rx_buf,sizeof(encoder.rx_buf)) != H
+  29:My_Top/System/encoder.cpp ****     {
+  30:My_Top/System/encoder.cpp ****         Error_Handler();
+ARM GAS  /tmp/ccw0tTki.s 			page 2
+
+
+  31:My_Top/System/encoder.cpp ****     }
+  32:My_Top/System/encoder.cpp ****     __HAL_DMA_DISABLE_IT(motor_config->huart->hdmarx,DMA_IT_HT);//禁止半传输中断
+  33:My_Top/System/encoder.cpp **** }
+  34:My_Top/System/encoder.cpp **** 
+  35:My_Top/System/encoder.cpp **** 
+  36:My_Top/System/encoder.cpp **** void Encoder::My_Encode_Callback(UART_HandleTypeDef *huart,uint16_t Size) //转发回调函数
+  37:My_Top/System/encoder.cpp **** {
+  38:My_Top/System/encoder.cpp ****     for(uint8_t i=0;i<encoder_num;i++) //判断是哪个回调函数然后去转发给对应的实�
+  39:My_Top/System/encoder.cpp ****     {
+  40:My_Top/System/encoder.cpp ****         if(encoder_list[i] != nullptr &&encoder_list[i]->motor_config->huart == huart)
+  41:My_Top/System/encoder.cpp ****         {
+  42:My_Top/System/encoder.cpp ****             encoder_list[i]->Encode_Callback(huart,Size);
+  43:My_Top/System/encoder.cpp ****             return;
+  44:My_Top/System/encoder.cpp ****         }
+  45:My_Top/System/encoder.cpp ****     }
+  46:My_Top/System/encoder.cpp **** }
+  47:My_Top/System/encoder.cpp **** 
+  48:My_Top/System/encoder.cpp **** 
+  49:My_Top/System/encoder.cpp **** void Encoder::My_Encode_ErrorCallback(UART_HandleTypeDef *huart)
+  50:My_Top/System/encoder.cpp **** {
+  29              		.loc 1 50 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		.loc 1 50 1 is_stmt 0 view .LVU1
+  34 0000 38B5     		push	{r3, r4, r5, lr}
+  35              		.cfi_def_cfa_offset 16
+  36              		.cfi_offset 3, -16
+  37              		.cfi_offset 4, -12
+  38              		.cfi_offset 5, -8
+  39              		.cfi_offset 14, -4
+  40 0002 0546     		mov	r5, r0
+  51:My_Top/System/encoder.cpp ****     for(uint8_t i=0;i<encoder_num;i++)
+  41              		.loc 1 51 5 is_stmt 1 view .LVU2
+  42              	.LVL1:
+  43              	.LBB2:
+  44              		.loc 1 51 17 is_stmt 0 view .LVU3
+  45 0004 0023     		movs	r3, #0
+  46              		.loc 1 51 5 view .LVU4
+  47 0006 01E0     		b	.L2
+  48              	.LVL2:
+  49              	.L3:
+  50              	.LBB3:
+  52:My_Top/System/encoder.cpp ****     {
+  53:My_Top/System/encoder.cpp ****         Encoder *e = encoder_list[i];
+  54:My_Top/System/encoder.cpp ****         if(e == nullptr || e->motor_config->huart != huart) continue;
+  51              		.loc 1 54 61 is_stmt 1 discriminator 3 view .LVU5
+  52              	.LBE3:
+  51:My_Top/System/encoder.cpp ****     for(uint8_t i=0;i<encoder_num;i++)
+  53              		.loc 1 51 5 discriminator 2 view .LVU6
+  54 0008 0133     		adds	r3, r3, #1
+  55              	.LVL3:
+  51:My_Top/System/encoder.cpp ****     for(uint8_t i=0;i<encoder_num;i++)
+  56              		.loc 1 51 5 is_stmt 0 discriminator 2 view .LVU7
+  57 000a DBB2     		uxtb	r3, r3
+  58              	.LVL4:
+  59              	.L2:
+ARM GAS  /tmp/ccw0tTki.s 			page 3
+
+
+  51:My_Top/System/encoder.cpp ****     for(uint8_t i=0;i<encoder_num;i++)
+  60              		.loc 1 51 22 is_stmt 1 discriminator 1 view .LVU8
+  61 000c 174A     		ldr	r2, .L10
+  62 000e 127C     		ldrb	r2, [r2, #16]	@ zero_extendqisi2
+  63 0010 9A42     		cmp	r2, r3
+  64 0012 0FD9     		bls	.L1
+  65              	.LBB4:
+  53:My_Top/System/encoder.cpp ****         if(e == nullptr || e->motor_config->huart != huart) continue;
+  66              		.loc 1 53 9 view .LVU9
+  53:My_Top/System/encoder.cpp ****         if(e == nullptr || e->motor_config->huart != huart) continue;
+  67              		.loc 1 53 18 is_stmt 0 view .LVU10
+  68 0014 154A     		ldr	r2, .L10
+  69 0016 52F82340 		ldr	r4, [r2, r3, lsl #2]
+  70              	.LVL5:
+  71              		.loc 1 54 9 is_stmt 1 view .LVU11
+  72 001a 002C     		cmp	r4, #0
+  73 001c F4D0     		beq	.L3
+  74              		.loc 1 54 31 is_stmt 0 discriminator 2 view .LVU12
+  75 001e 626A     		ldr	r2, [r4, #36]
+  76              		.loc 1 54 45 discriminator 2 view .LVU13
+  77 0020 5269     		ldr	r2, [r2, #20]
+  78              		.loc 1 54 25 discriminator 2 view .LVU14
+  79 0022 AA42     		cmp	r2, r5
+  80 0024 F0D1     		bne	.L3
+  55:My_Top/System/encoder.cpp ****         e->encoder.error = 3; // UART/DMA 通信 错误
+  81              		.loc 1 55 9 is_stmt 1 view .LVU15
+  82              		.loc 1 55 26 is_stmt 0 view .LVU16
+  83 0026 0323     		movs	r3, #3
+  84              	.LVL6:
+  85              		.loc 1 55 26 view .LVU17
+  86 0028 84F82030 		strb	r3, [r4, #32]
+  56:My_Top/System/encoder.cpp **** 
+  57:My_Top/System/encoder.cpp ****         //HAL_UART_STATE_READY 接收模块空闲，可以启动新的接收
+  58:My_Top/System/encoder.cpp ****         if(huart->RxState != HAL_UART_STATE_READY) return;  // 接收仍在运行，不重启
+  87              		.loc 1 58 9 is_stmt 1 view .LVU18
+  88              		.loc 1 58 19 is_stmt 0 view .LVU19
+  89 002c D5F88C30 		ldr	r3, [r5, #140]
+  90              		.loc 1 58 9 view .LVU20
+  91 0030 202B     		cmp	r3, #32
+  92 0032 00D0     		beq	.L9
+  93              	.LVL7:
+  94              	.L1:
+  95              		.loc 1 58 9 view .LVU21
+  96              	.LBE4:
+  97              	.LBE2:
+  59:My_Top/System/encoder.cpp ****         // 清除错误标志位，接收溢出 / 噪声错误 / 帧错误 / 奇偶校验错误
+  60:My_Top/System/encoder.cpp ****         __HAL_UART_CLEAR_FLAG(huart,UART_CLEAR_OREF | UART_CLEAR_NEF | UART_CLEAR_FEF | UART_CLEAR_
+  61:My_Top/System/encoder.cpp ****         __HAL_UART_SEND_REQ(huart,UART_RXDATA_FLUSH_REQUEST); // 丢弃残留数据
+  62:My_Top/System/encoder.cpp **** 
+  63:My_Top/System/encoder.cpp ****         // 重新启动接收
+  64:My_Top/System/encoder.cpp ****         if(HAL_UARTEx_ReceiveToIdle_DMA(huart,e->encoder.rx_buf,sizeof(e->encoder.rx_buf)) == HAL_O
+  65:My_Top/System/encoder.cpp ****         {
+  66:My_Top/System/encoder.cpp ****             __HAL_DMA_DISABLE_IT(huart->hdmarx,DMA_IT_HT);
+  67:My_Top/System/encoder.cpp ****         }
+  68:My_Top/System/encoder.cpp ****         else
+  69:My_Top/System/encoder.cpp ****         {
+  70:My_Top/System/encoder.cpp ****             e->encoder.error = 4; // 接收重启失败
+ARM GAS  /tmp/ccw0tTki.s 			page 4
+
+
+  71:My_Top/System/encoder.cpp ****         }
+  72:My_Top/System/encoder.cpp **** 
+  73:My_Top/System/encoder.cpp ****         return;
+  74:My_Top/System/encoder.cpp ****     }
+  75:My_Top/System/encoder.cpp **** }
+  98              		.loc 1 75 1 view .LVU22
+  99 0034 38BD     		pop	{r3, r4, r5, pc}
+ 100              	.LVL8:
+ 101              	.L9:
+ 102              	.LBB6:
+ 103              	.LBB5:
+  60:My_Top/System/encoder.cpp ****         __HAL_UART_SEND_REQ(huart,UART_RXDATA_FLUSH_REQUEST); // 丢弃残留数据
+ 104              		.loc 1 60 9 is_stmt 1 view .LVU23
+ 105 0036 2B68     		ldr	r3, [r5]
+ 106 0038 0F22     		movs	r2, #15
+ 107 003a 1A62     		str	r2, [r3, #32]
+  61:My_Top/System/encoder.cpp **** 
+ 108              		.loc 1 61 9 view .LVU24
+ 109 003c 2A68     		ldr	r2, [r5]
+ 110 003e 9369     		ldr	r3, [r2, #24]
+ 111 0040 43F00803 		orr	r3, r3, #8
+ 112 0044 9361     		str	r3, [r2, #24]
+  64:My_Top/System/encoder.cpp ****         {
+ 113              		.loc 1 64 9 view .LVU25
+  64:My_Top/System/encoder.cpp ****         {
+ 114              		.loc 1 64 40 is_stmt 0 view .LVU26
+ 115 0046 1022     		movs	r2, #16
+ 116 0048 2146     		mov	r1, r4
+ 117 004a 2846     		mov	r0, r5
+ 118              	.LVL9:
+  64:My_Top/System/encoder.cpp ****         {
+ 119              		.loc 1 64 40 view .LVU27
+ 120 004c FFF7FEFF 		bl	HAL_UARTEx_ReceiveToIdle_DMA
+ 121              	.LVL10:
+  64:My_Top/System/encoder.cpp ****         {
+ 122              		.loc 1 64 9 discriminator 1 view .LVU28
+ 123 0050 38B9     		cbnz	r0, .L6
+  66:My_Top/System/encoder.cpp ****         }
+ 124              		.loc 1 66 13 is_stmt 1 view .LVU29
+ 125 0052 D5F88030 		ldr	r3, [r5, #128]
+ 126 0056 1A68     		ldr	r2, [r3]
+ 127 0058 1368     		ldr	r3, [r2]
+ 128 005a 23F00403 		bic	r3, r3, #4
+ 129 005e 1360     		str	r3, [r2]
+ 130 0060 E8E7     		b	.L1
+ 131              	.L6:
+  70:My_Top/System/encoder.cpp ****         }
+ 132              		.loc 1 70 13 view .LVU30
+  70:My_Top/System/encoder.cpp ****         }
+ 133              		.loc 1 70 30 is_stmt 0 view .LVU31
+ 134 0062 0423     		movs	r3, #4
+ 135 0064 84F82030 		strb	r3, [r4, #32]
+ 136 0068 E4E7     		b	.L1
+ 137              	.L11:
+ 138 006a 00BF     		.align	2
+ 139              	.L10:
+ 140 006c 00000000 		.word	.LANCHOR0
+ARM GAS  /tmp/ccw0tTki.s 			page 5
+
+
+ 141              	.LBE5:
+ 142              	.LBE6:
+ 143              		.cfi_endproc
+ 144              	.LFE1313:
+ 146              		.align	1
+ 147              		.global	_ZN7Encoder9_crc_calcEPht
+ 148              		.syntax unified
+ 149              		.thumb
+ 150              		.thumb_func
+ 152              	_ZN7Encoder9_crc_calcEPht:
+ 153              	.LVL11:
+ 154              	.LFB1310:
+   7:My_Top/System/encoder.cpp **** 
+ 155              		.loc 1 7 1 is_stmt 1 view -0
+ 156              		.cfi_startproc
+ 157              		@ args = 0, pretend = 0, frame = 0
+ 158              		@ frame_needed = 0, uses_anonymous_args = 0
+ 159              		@ link register save eliminated.
+   7:My_Top/System/encoder.cpp **** 
+ 160              		.loc 1 7 1 is_stmt 0 view .LVU33
+ 161 0070 8446     		mov	ip, r0
+   9:My_Top/System/encoder.cpp ****     while (len--)
+ 162              		.loc 1 9 5 is_stmt 1 view .LVU34
+ 163              	.LVL12:
+  10:My_Top/System/encoder.cpp ****     {
+ 164              		.loc 1 10 5 view .LVU35
+   9:My_Top/System/encoder.cpp ****     while (len--)
+ 165              		.loc 1 9 13 is_stmt 0 view .LVU36
+ 166 0072 0020     		movs	r0, #0
+ 167              	.LVL13:
+  10:My_Top/System/encoder.cpp ****     {
+ 168              		.loc 1 10 5 view .LVU37
+ 169 0074 03E0     		b	.L13
+ 170              	.LVL14:
+ 171              	.L14:
+  12:My_Top/System/encoder.cpp ****     }
+ 172              		.loc 1 12 9 is_stmt 1 view .LVU38
+  12:My_Top/System/encoder.cpp ****     }
+ 173              		.loc 1 12 23 is_stmt 0 view .LVU39
+ 174 0076 1CF80320 		ldrb	r2, [ip, r3]	@ zero_extendqisi2
+  12:My_Top/System/encoder.cpp ****     }
+ 175              		.loc 1 12 13 view .LVU40
+ 176 007a 5040     		eors	r0, r0, r2
+ 177              	.LVL15:
+  10:My_Top/System/encoder.cpp ****     {
+ 178              		.loc 1 10 15 view .LVU41
+ 179 007c 1946     		mov	r1, r3
+ 180              	.LVL16:
+ 181              	.L13:
+  10:My_Top/System/encoder.cpp ****     {
+ 182              		.loc 1 10 15 is_stmt 1 view .LVU42
+ 183 007e 4B1E     		subs	r3, r1, #1
+ 184 0080 9BB2     		uxth	r3, r3
+ 185              	.LVL17:
+  10:My_Top/System/encoder.cpp ****     {
+ 186              		.loc 1 10 15 is_stmt 0 view .LVU43
+ 187 0082 0029     		cmp	r1, #0
+ARM GAS  /tmp/ccw0tTki.s 			page 6
+
+
+ 188 0084 F7D1     		bne	.L14
+  14:My_Top/System/encoder.cpp **** }
+ 189              		.loc 1 14 5 is_stmt 1 view .LVU44
+  15:My_Top/System/encoder.cpp **** 
+ 190              		.loc 1 15 1 is_stmt 0 view .LVU45
+ 191 0086 7047     		bx	lr
+ 192              		.cfi_endproc
+ 193              	.LFE1310:
+ 195              		.align	1
+ 196              		.global	_ZN7Encoder12encoder_initEv
+ 197              		.syntax unified
+ 198              		.thumb
+ 199              		.thumb_func
+ 201              	_ZN7Encoder12encoder_initEv:
+ 202              	.LVL18:
+ 203              	.LFB1311:
+  19:My_Top/System/encoder.cpp **** 
+ 204              		.loc 1 19 1 is_stmt 1 view -0
+ 205              		.cfi_startproc
+ 206              		@ args = 0, pretend = 0, frame = 0
+ 207              		@ frame_needed = 0, uses_anonymous_args = 0
+  19:My_Top/System/encoder.cpp **** 
+ 208              		.loc 1 19 1 is_stmt 0 view .LVU47
+ 209 0088 10B5     		push	{r4, lr}
+ 210              		.cfi_def_cfa_offset 8
+ 211              		.cfi_offset 4, -8
+ 212              		.cfi_offset 14, -4
+ 213 008a 0446     		mov	r4, r0
+  21:My_Top/System/encoder.cpp ****     {
+ 214              		.loc 1 21 5 is_stmt 1 view .LVU48
+  21:My_Top/System/encoder.cpp ****     {
+ 215              		.loc 1 21 8 is_stmt 0 view .LVU49
+ 216 008c 436A     		ldr	r3, [r0, #36]
+  21:My_Top/System/encoder.cpp ****     {
+ 217              		.loc 1 21 22 view .LVU50
+ 218 008e 5B69     		ldr	r3, [r3, #20]
+  21:My_Top/System/encoder.cpp ****     {
+ 219              		.loc 1 21 29 view .LVU51
+ 220 0090 D3F88030 		ldr	r3, [r3, #128]
+  21:My_Top/System/encoder.cpp ****     {
+ 221              		.loc 1 21 5 view .LVU52
+ 222 0094 D3B1     		cbz	r3, .L19
+ 223              	.LVL19:
+ 224              	.L16:
+  26:My_Top/System/encoder.cpp ****     motor_config->huart->ErrorCallback = My_Encode_ErrorCallback; // 绑定错误回调函数
+ 225              		.loc 1 26 5 is_stmt 1 view .LVU53
+ 226 0096 636A     		ldr	r3, [r4, #36]
+  26:My_Top/System/encoder.cpp ****     motor_config->huart->ErrorCallback = My_Encode_ErrorCallback; // 绑定错误回调函数
+ 227              		.loc 1 26 19 is_stmt 0 view .LVU54
+ 228 0098 5B69     		ldr	r3, [r3, #20]
+  26:My_Top/System/encoder.cpp ****     motor_config->huart->ErrorCallback = My_Encode_ErrorCallback; // 绑定错误回调函数
+ 229              		.loc 1 26 42 view .LVU55
+ 230 009a 0F4A     		ldr	r2, .L21
+ 231 009c C3F8C020 		str	r2, [r3, #192]
+  27:My_Top/System/encoder.cpp ****     if(HAL_UARTEx_ReceiveToIdle_DMA(motor_config->huart,encoder.rx_buf,sizeof(encoder.rx_buf)) != H
+ 232              		.loc 1 27 5 is_stmt 1 view .LVU56
+ 233 00a0 636A     		ldr	r3, [r4, #36]
+ARM GAS  /tmp/ccw0tTki.s 			page 7
+
+
+  27:My_Top/System/encoder.cpp ****     if(HAL_UARTEx_ReceiveToIdle_DMA(motor_config->huart,encoder.rx_buf,sizeof(encoder.rx_buf)) != H
+ 234              		.loc 1 27 19 is_stmt 0 view .LVU57
+ 235 00a2 5B69     		ldr	r3, [r3, #20]
+  27:My_Top/System/encoder.cpp ****     if(HAL_UARTEx_ReceiveToIdle_DMA(motor_config->huart,encoder.rx_buf,sizeof(encoder.rx_buf)) != H
+ 236              		.loc 1 27 40 view .LVU58
+ 237 00a4 0D4A     		ldr	r2, .L21+4
+ 238 00a6 C3F8A420 		str	r2, [r3, #164]
+  28:My_Top/System/encoder.cpp ****     {
+ 239              		.loc 1 28 5 is_stmt 1 view .LVU59
+  28:My_Top/System/encoder.cpp ****     {
+ 240              		.loc 1 28 37 is_stmt 0 view .LVU60
+ 241 00aa 636A     		ldr	r3, [r4, #36]
+  28:My_Top/System/encoder.cpp ****     {
+ 242              		.loc 1 28 36 view .LVU61
+ 243 00ac 1022     		movs	r2, #16
+ 244 00ae 2146     		mov	r1, r4
+ 245 00b0 5869     		ldr	r0, [r3, #20]
+ 246 00b2 FFF7FEFF 		bl	HAL_UARTEx_ReceiveToIdle_DMA
+ 247              	.LVL20:
+  28:My_Top/System/encoder.cpp ****     {
+ 248              		.loc 1 28 5 discriminator 1 view .LVU62
+ 249 00b6 60B9     		cbnz	r0, .L20
+ 250              	.L17:
+  32:My_Top/System/encoder.cpp **** }
+ 251              		.loc 1 32 5 is_stmt 1 view .LVU63
+ 252 00b8 636A     		ldr	r3, [r4, #36]
+ 253 00ba 5B69     		ldr	r3, [r3, #20]
+ 254 00bc D3F88030 		ldr	r3, [r3, #128]
+ 255 00c0 1A68     		ldr	r2, [r3]
+ 256 00c2 1368     		ldr	r3, [r2]
+ 257 00c4 23F00403 		bic	r3, r3, #4
+ 258 00c8 1360     		str	r3, [r2]
+  33:My_Top/System/encoder.cpp **** 
+ 259              		.loc 1 33 1 is_stmt 0 view .LVU64
+ 260 00ca 10BD     		pop	{r4, pc}
+ 261              	.LVL21:
+ 262              	.L19:
+  24:My_Top/System/encoder.cpp ****     }
+ 263              		.loc 1 24 9 is_stmt 1 view .LVU65
+  24:My_Top/System/encoder.cpp ****     }
+ 264              		.loc 1 24 22 is_stmt 0 view .LVU66
+ 265 00cc FFF7FEFF 		bl	Error_Handler
+ 266              	.LVL22:
+  24:My_Top/System/encoder.cpp ****     }
+ 267              		.loc 1 24 22 view .LVU67
+ 268 00d0 E1E7     		b	.L16
+ 269              	.L20:
+  30:My_Top/System/encoder.cpp ****     }
+ 270              		.loc 1 30 9 is_stmt 1 view .LVU68
+  30:My_Top/System/encoder.cpp ****     }
+ 271              		.loc 1 30 22 is_stmt 0 view .LVU69
+ 272 00d2 FFF7FEFF 		bl	Error_Handler
+ 273              	.LVL23:
+ 274 00d6 EFE7     		b	.L17
+ 275              	.L22:
+ 276              		.align	2
+ 277              	.L21:
+ARM GAS  /tmp/ccw0tTki.s 			page 8
+
+
+ 278 00d8 00000000 		.word	_ZN7Encoder18My_Encode_CallbackEP20__UART_HandleTypeDeft
+ 279 00dc 00000000 		.word	_ZN7Encoder23My_Encode_ErrorCallbackEP20__UART_HandleTypeDef
+ 280              		.cfi_endproc
+ 281              	.LFE1311:
+ 283              		.align	1
+ 284              		.global	_ZN7Encoder15Encode_CallbackEP20__UART_HandleTypeDeft
+ 285              		.syntax unified
+ 286              		.thumb
+ 287              		.thumb_func
+ 289              	_ZN7Encoder15Encode_CallbackEP20__UART_HandleTypeDeft:
+ 290              	.LVL24:
+ 291              	.LFB1314:
+  76:My_Top/System/encoder.cpp **** 
+  77:My_Top/System/encoder.cpp **** 
+  78:My_Top/System/encoder.cpp **** 
+  79:My_Top/System/encoder.cpp **** void Encoder::Encode_Callback(UART_HandleTypeDef *huart,uint16_t Size)
+  80:My_Top/System/encoder.cpp **** {      
+ 292              		.loc 1 80 1 is_stmt 1 view -0
+ 293              		.cfi_startproc
+ 294              		@ args = 0, pretend = 0, frame = 0
+ 295              		@ frame_needed = 0, uses_anonymous_args = 0
+ 296              		.loc 1 80 1 is_stmt 0 view .LVU71
+ 297 00e0 38B5     		push	{r3, r4, r5, lr}
+ 298              		.cfi_def_cfa_offset 16
+ 299              		.cfi_offset 3, -16
+ 300              		.cfi_offset 4, -12
+ 301              		.cfi_offset 5, -8
+ 302              		.cfi_offset 14, -4
+  81:My_Top/System/encoder.cpp ****     if(huart != motor_config->huart) {return;}
+ 303              		.loc 1 81 5 is_stmt 1 view .LVU72
+ 304              		.loc 1 81 17 is_stmt 0 view .LVU73
+ 305 00e2 456A     		ldr	r5, [r0, #36]
+ 306              		.loc 1 81 31 view .LVU74
+ 307 00e4 6B69     		ldr	r3, [r5, #20]
+ 308              		.loc 1 81 5 view .LVU75
+ 309 00e6 8B42     		cmp	r3, r1
+ 310 00e8 00D0     		beq	.L28
+ 311              	.LVL25:
+ 312              	.L23:
+  82:My_Top/System/encoder.cpp **** 
+  83:My_Top/System/encoder.cpp ****     float temp = 0;
+  84:My_Top/System/encoder.cpp ****     if(Size != sizeof(encoder_msg_t)) //长度校验
+  85:My_Top/System/encoder.cpp ****     {
+  86:My_Top/System/encoder.cpp ****         encoder.error = 1;
+  87:My_Top/System/encoder.cpp ****         HAL_UARTEx_ReceiveToIdle_DMA(motor_config->huart,encoder.rx_buf,sizeof(encoder.rx_buf));//�
+  88:My_Top/System/encoder.cpp ****         __HAL_DMA_DISABLE_IT(motor_config->huart->hdmarx,DMA_IT_HT);//禁止半传输中断
+  89:My_Top/System/encoder.cpp ****         return;
+  90:My_Top/System/encoder.cpp ****     }
+  91:My_Top/System/encoder.cpp **** 
+  92:My_Top/System/encoder.cpp ****     encoder_msg_t *msg =(encoder_msg_t *)encoder.rx_buf;
+  93:My_Top/System/encoder.cpp ****     
+  94:My_Top/System/encoder.cpp **** 
+  95:My_Top/System/encoder.cpp ****     if(_crc_calc(encoder.rx_buf,Size-1)!= msg->CRC_VAL)//CRC 校验
+  96:My_Top/System/encoder.cpp ****     {
+  97:My_Top/System/encoder.cpp ****         encoder.error = 2;
+  98:My_Top/System/encoder.cpp ****         HAL_UARTEx_ReceiveToIdle_DMA(motor_config->huart,encoder.rx_buf,sizeof(encoder.rx_buf)); //
+  99:My_Top/System/encoder.cpp ****         __HAL_DMA_DISABLE_IT(motor_config->huart->hdmarx,DMA_IT_HT); //禁止半传输中断
+ARM GAS  /tmp/ccw0tTki.s 			page 9
+
+
+ 100:My_Top/System/encoder.cpp ****         return;
+ 101:My_Top/System/encoder.cpp ****     }
+ 102:My_Top/System/encoder.cpp **** 
+ 103:My_Top/System/encoder.cpp ****     encoder.single_turn =       //提取单圈原始值（3字节拼合）
+ 104:My_Top/System/encoder.cpp ****             (uint32_t)msg->AS0 |
+ 105:My_Top/System/encoder.cpp ****             ((uint32_t)msg->AS1 << 8) |
+ 106:My_Top/System/encoder.cpp ****             ((uint32_t)msg->AS2 << 16);
+ 107:My_Top/System/encoder.cpp **** 
+ 108:My_Top/System/encoder.cpp **** 
+ 109:My_Top/System/encoder.cpp ****     encoder.theta =(float)encoder.single_turn *M_2PI /ENCODER_PRECISION; //转换为弧度
+ 110:My_Top/System/encoder.cpp **** 
+ 111:My_Top/System/encoder.cpp ****     encoder.error = 0;
+ 112:My_Top/System/encoder.cpp **** 
+ 113:My_Top/System/encoder.cpp ****     encoder.rcv_cnt++;
+ 114:My_Top/System/encoder.cpp **** 
+ 115:My_Top/System/encoder.cpp **** 
+ 116:My_Top/System/encoder.cpp ****     HAL_UARTEx_ReceiveToIdle_DMA(motor_config->huart,encoder.rx_buf,sizeof(encoder.rx_buf)); //重�
+ 117:My_Top/System/encoder.cpp ****     __HAL_DMA_DISABLE_IT(motor_config->huart->hdmarx,DMA_IT_HT); //禁止半传输中断
+ 118:My_Top/System/encoder.cpp **** }
+ 313              		.loc 1 118 1 view .LVU76
+ 314 00ea 38BD     		pop	{r3, r4, r5, pc}
+ 315              	.LVL26:
+ 316              	.L28:
+ 317              		.loc 1 118 1 view .LVU77
+ 318 00ec 0446     		mov	r4, r0
+  83:My_Top/System/encoder.cpp ****     if(Size != sizeof(encoder_msg_t)) //长度校验
+ 319              		.loc 1 83 5 is_stmt 1 view .LVU78
+ 320              	.LVL27:
+  84:My_Top/System/encoder.cpp ****     {
+ 321              		.loc 1 84 5 view .LVU79
+ 322 00ee 062A     		cmp	r2, #6
+ 323 00f0 18D1     		bne	.L29
+  92:My_Top/System/encoder.cpp ****     
+ 324              		.loc 1 92 5 view .LVU80
+ 325              	.LVL28:
+  95:My_Top/System/encoder.cpp ****     {
+ 326              		.loc 1 95 5 view .LVU81
+  95:My_Top/System/encoder.cpp ****     {
+ 327              		.loc 1 95 17 is_stmt 0 view .LVU82
+ 328 00f2 013A     		subs	r2, r2, #1
+ 329              	.LVL29:
+  95:My_Top/System/encoder.cpp ****     {
+ 330              		.loc 1 95 17 view .LVU83
+ 331 00f4 91B2     		uxth	r1, r2
+ 332              	.LVL30:
+  95:My_Top/System/encoder.cpp ****     {
+ 333              		.loc 1 95 17 view .LVU84
+ 334 00f6 FFF7FEFF 		bl	_ZN7Encoder9_crc_calcEPht
+ 335              	.LVL31:
+  95:My_Top/System/encoder.cpp ****     {
+ 336              		.loc 1 95 48 discriminator 1 view .LVU85
+ 337 00fa 6379     		ldrb	r3, [r4, #5]	@ zero_extendqisi2
+  95:My_Top/System/encoder.cpp ****     {
+ 338              		.loc 1 95 5 discriminator 1 view .LVU86
+ 339 00fc 9842     		cmp	r0, r3
+ 340 00fe 23D0     		beq	.L26
+  97:My_Top/System/encoder.cpp ****         HAL_UARTEx_ReceiveToIdle_DMA(motor_config->huart,encoder.rx_buf,sizeof(encoder.rx_buf)); //
+ARM GAS  /tmp/ccw0tTki.s 			page 10
+
+
+ 341              		.loc 1 97 9 is_stmt 1 view .LVU87
+  97:My_Top/System/encoder.cpp ****         HAL_UARTEx_ReceiveToIdle_DMA(motor_config->huart,encoder.rx_buf,sizeof(encoder.rx_buf)); //
+ 342              		.loc 1 97 23 is_stmt 0 view .LVU88
+ 343 0100 0223     		movs	r3, #2
+ 344 0102 84F82030 		strb	r3, [r4, #32]
+  98:My_Top/System/encoder.cpp ****         __HAL_DMA_DISABLE_IT(motor_config->huart->hdmarx,DMA_IT_HT); //禁止半传输中断
+ 345              		.loc 1 98 9 is_stmt 1 view .LVU89
+  98:My_Top/System/encoder.cpp ****         __HAL_DMA_DISABLE_IT(motor_config->huart->hdmarx,DMA_IT_HT); //禁止半传输中断
+ 346              		.loc 1 98 37 is_stmt 0 view .LVU90
+ 347 0106 1022     		movs	r2, #16
+ 348 0108 2146     		mov	r1, r4
+ 349 010a 6869     		ldr	r0, [r5, #20]
+ 350 010c FFF7FEFF 		bl	HAL_UARTEx_ReceiveToIdle_DMA
+ 351              	.LVL32:
+  99:My_Top/System/encoder.cpp ****         return;
+ 352              		.loc 1 99 9 is_stmt 1 view .LVU91
+ 353 0110 636A     		ldr	r3, [r4, #36]
+ 354 0112 5B69     		ldr	r3, [r3, #20]
+ 355 0114 D3F88030 		ldr	r3, [r3, #128]
+ 356 0118 1A68     		ldr	r2, [r3]
+ 357 011a 1368     		ldr	r3, [r2]
+ 358 011c 23F00403 		bic	r3, r3, #4
+ 359 0120 1360     		str	r3, [r2]
+ 100:My_Top/System/encoder.cpp ****     }
+ 360              		.loc 1 100 9 view .LVU92
+ 361 0122 E2E7     		b	.L23
+ 362              	.LVL33:
+ 363              	.L29:
+  86:My_Top/System/encoder.cpp ****         HAL_UARTEx_ReceiveToIdle_DMA(motor_config->huart,encoder.rx_buf,sizeof(encoder.rx_buf));//�
+ 364              		.loc 1 86 9 view .LVU93
+  86:My_Top/System/encoder.cpp ****         HAL_UARTEx_ReceiveToIdle_DMA(motor_config->huart,encoder.rx_buf,sizeof(encoder.rx_buf));//�
+ 365              		.loc 1 86 23 is_stmt 0 view .LVU94
+ 366 0124 0123     		movs	r3, #1
+ 367 0126 80F82030 		strb	r3, [r0, #32]
+  87:My_Top/System/encoder.cpp ****         __HAL_DMA_DISABLE_IT(motor_config->huart->hdmarx,DMA_IT_HT);//禁止半传输中断
+ 368              		.loc 1 87 9 is_stmt 1 view .LVU95
+  87:My_Top/System/encoder.cpp ****         __HAL_DMA_DISABLE_IT(motor_config->huart->hdmarx,DMA_IT_HT);//禁止半传输中断
+ 369              		.loc 1 87 37 is_stmt 0 view .LVU96
+ 370 012a 1022     		movs	r2, #16
+ 371              	.LVL34:
+  87:My_Top/System/encoder.cpp ****         __HAL_DMA_DISABLE_IT(motor_config->huart->hdmarx,DMA_IT_HT);//禁止半传输中断
+ 372              		.loc 1 87 37 view .LVU97
+ 373 012c 0146     		mov	r1, r0
+ 374              	.LVL35:
+  87:My_Top/System/encoder.cpp ****         __HAL_DMA_DISABLE_IT(motor_config->huart->hdmarx,DMA_IT_HT);//禁止半传输中断
+ 375              		.loc 1 87 37 view .LVU98
+ 376 012e 6869     		ldr	r0, [r5, #20]
+ 377              	.LVL36:
+  87:My_Top/System/encoder.cpp ****         __HAL_DMA_DISABLE_IT(motor_config->huart->hdmarx,DMA_IT_HT);//禁止半传输中断
+ 378              		.loc 1 87 37 view .LVU99
+ 379 0130 FFF7FEFF 		bl	HAL_UARTEx_ReceiveToIdle_DMA
+ 380              	.LVL37:
+  88:My_Top/System/encoder.cpp ****         return;
+ 381              		.loc 1 88 9 is_stmt 1 view .LVU100
+ 382 0134 636A     		ldr	r3, [r4, #36]
+ 383 0136 5B69     		ldr	r3, [r3, #20]
+ 384 0138 D3F88030 		ldr	r3, [r3, #128]
+ARM GAS  /tmp/ccw0tTki.s 			page 11
+
+
+ 385 013c 1A68     		ldr	r2, [r3]
+ 386 013e 1368     		ldr	r3, [r2]
+ 387 0140 23F00403 		bic	r3, r3, #4
+ 388 0144 1360     		str	r3, [r2]
+  89:My_Top/System/encoder.cpp ****     }
+ 389              		.loc 1 89 9 view .LVU101
+ 390 0146 D0E7     		b	.L23
+ 391              	.LVL38:
+ 392              	.L26:
+ 103:My_Top/System/encoder.cpp ****             (uint32_t)msg->AS0 |
+ 393              		.loc 1 103 5 view .LVU102
+ 104:My_Top/System/encoder.cpp ****             ((uint32_t)msg->AS1 << 8) |
+ 394              		.loc 1 104 28 is_stmt 0 view .LVU103
+ 395 0148 A378     		ldrb	r3, [r4, #2]	@ zero_extendqisi2
+ 105:My_Top/System/encoder.cpp ****             ((uint32_t)msg->AS2 << 16);
+ 396              		.loc 1 105 29 view .LVU104
+ 397 014a E278     		ldrb	r2, [r4, #3]	@ zero_extendqisi2
+ 104:My_Top/System/encoder.cpp ****             ((uint32_t)msg->AS1 << 8) |
+ 398              		.loc 1 104 32 view .LVU105
+ 399 014c 43EA0223 		orr	r3, r3, r2, lsl #8
+ 106:My_Top/System/encoder.cpp **** 
+ 400              		.loc 1 106 29 view .LVU106
+ 401 0150 2279     		ldrb	r2, [r4, #4]	@ zero_extendqisi2
+ 105:My_Top/System/encoder.cpp ****             ((uint32_t)msg->AS2 << 16);
+ 402              		.loc 1 105 39 view .LVU107
+ 403 0152 43EA0243 		orr	r3, r3, r2, lsl #16
+ 103:My_Top/System/encoder.cpp ****             (uint32_t)msg->AS0 |
+ 404              		.loc 1 103 25 view .LVU108
+ 405 0156 6361     		str	r3, [r4, #20]
+ 109:My_Top/System/encoder.cpp **** 
+ 406              		.loc 1 109 5 is_stmt 1 view .LVU109
+ 109:My_Top/System/encoder.cpp **** 
+ 407              		.loc 1 109 20 is_stmt 0 view .LVU110
+ 408 0158 07EE903A 		vmov	s15, r3	@ int
+ 409 015c F8EE677A 		vcvt.f32.u32	s15, s15
+ 109:My_Top/System/encoder.cpp **** 
+ 410              		.loc 1 109 47 view .LVU111
+ 411 0160 9FED0F7A 		vldr.32	s14, .L30
+ 412 0164 67EE877A 		vmul.f32	s15, s15, s14
+ 109:My_Top/System/encoder.cpp **** 
+ 413              		.loc 1 109 54 view .LVU112
+ 414 0168 9FED0E7A 		vldr.32	s14, .L30+4
+ 415 016c 67EE877A 		vmul.f32	s15, s15, s14
+ 109:My_Top/System/encoder.cpp **** 
+ 416              		.loc 1 109 19 view .LVU113
+ 417 0170 C4ED067A 		vstr.32	s15, [r4, #24]
+ 111:My_Top/System/encoder.cpp **** 
+ 418              		.loc 1 111 5 is_stmt 1 view .LVU114
+ 111:My_Top/System/encoder.cpp **** 
+ 419              		.loc 1 111 19 is_stmt 0 view .LVU115
+ 420 0174 0023     		movs	r3, #0
+ 421 0176 84F82030 		strb	r3, [r4, #32]
+ 113:My_Top/System/encoder.cpp **** 
+ 422              		.loc 1 113 5 is_stmt 1 view .LVU116
+ 113:My_Top/System/encoder.cpp **** 
+ 423              		.loc 1 113 13 is_stmt 0 view .LVU117
+ 424 017a E369     		ldr	r3, [r4, #28]
+ARM GAS  /tmp/ccw0tTki.s 			page 12
+
+
+ 113:My_Top/System/encoder.cpp **** 
+ 425              		.loc 1 113 20 view .LVU118
+ 426 017c 0133     		adds	r3, r3, #1
+ 427 017e E361     		str	r3, [r4, #28]
+ 116:My_Top/System/encoder.cpp ****     __HAL_DMA_DISABLE_IT(motor_config->huart->hdmarx,DMA_IT_HT); //禁止半传输中断
+ 428              		.loc 1 116 5 is_stmt 1 view .LVU119
+ 116:My_Top/System/encoder.cpp ****     __HAL_DMA_DISABLE_IT(motor_config->huart->hdmarx,DMA_IT_HT); //禁止半传输中断
+ 429              		.loc 1 116 33 is_stmt 0 view .LVU120
+ 430 0180 1022     		movs	r2, #16
+ 431 0182 2146     		mov	r1, r4
+ 432 0184 6869     		ldr	r0, [r5, #20]
+ 433 0186 FFF7FEFF 		bl	HAL_UARTEx_ReceiveToIdle_DMA
+ 434              	.LVL39:
+ 117:My_Top/System/encoder.cpp **** }
+ 435              		.loc 1 117 5 is_stmt 1 view .LVU121
+ 436 018a 636A     		ldr	r3, [r4, #36]
+ 437 018c 5B69     		ldr	r3, [r3, #20]
+ 438 018e D3F88030 		ldr	r3, [r3, #128]
+ 439 0192 1A68     		ldr	r2, [r3]
+ 440 0194 1368     		ldr	r3, [r2]
+ 441 0196 23F00403 		bic	r3, r3, #4
+ 442 019a 1360     		str	r3, [r2]
+ 443 019c A5E7     		b	.L23
+ 444              	.L31:
+ 445 019e 00BF     		.align	2
+ 446              	.L30:
+ 447 01a0 DB0FC940 		.word	1086918619
+ 448 01a4 00008035 		.word	897581056
+ 449              		.cfi_endproc
+ 450              	.LFE1314:
+ 452              		.align	1
+ 453              		.global	_ZN7Encoder18My_Encode_CallbackEP20__UART_HandleTypeDeft
+ 454              		.syntax unified
+ 455              		.thumb
+ 456              		.thumb_func
+ 458              	_ZN7Encoder18My_Encode_CallbackEP20__UART_HandleTypeDeft:
+ 459              	.LVL40:
+ 460              	.LFB1312:
+  37:My_Top/System/encoder.cpp ****     for(uint8_t i=0;i<encoder_num;i++) //判断是哪个回调函数然后去转发给对应的实�
+ 461              		.loc 1 37 1 view -0
+ 462              		.cfi_startproc
+ 463              		@ args = 0, pretend = 0, frame = 0
+ 464              		@ frame_needed = 0, uses_anonymous_args = 0
+  37:My_Top/System/encoder.cpp ****     for(uint8_t i=0;i<encoder_num;i++) //判断是哪个回调函数然后去转发给对应的实�
+ 465              		.loc 1 37 1 is_stmt 0 view .LVU123
+ 466 01a8 10B5     		push	{r4, lr}
+ 467              		.cfi_def_cfa_offset 8
+ 468              		.cfi_offset 4, -8
+ 469              		.cfi_offset 14, -4
+ 470 01aa 8646     		mov	lr, r0
+  38:My_Top/System/encoder.cpp ****     {
+ 471              		.loc 1 38 5 is_stmt 1 view .LVU124
+ 472              	.LVL41:
+ 473              	.LBB7:
+  38:My_Top/System/encoder.cpp ****     {
+ 474              		.loc 1 38 17 is_stmt 0 view .LVU125
+ 475 01ac 0023     		movs	r3, #0
+ARM GAS  /tmp/ccw0tTki.s 			page 13
+
+
+  38:My_Top/System/encoder.cpp ****     {
+ 476              		.loc 1 38 5 view .LVU126
+ 477 01ae 01E0     		b	.L33
+ 478              	.LVL42:
+ 479              	.L34:
+  38:My_Top/System/encoder.cpp ****     {
+ 480              		.loc 1 38 5 is_stmt 1 discriminator 2 view .LVU127
+ 481 01b0 0133     		adds	r3, r3, #1
+ 482              	.LVL43:
+  38:My_Top/System/encoder.cpp ****     {
+ 483              		.loc 1 38 5 is_stmt 0 discriminator 2 view .LVU128
+ 484 01b2 DBB2     		uxtb	r3, r3
+ 485              	.LVL44:
+ 486              	.L33:
+  38:My_Top/System/encoder.cpp ****     {
+ 487              		.loc 1 38 22 is_stmt 1 discriminator 1 view .LVU129
+ 488 01b4 094C     		ldr	r4, .L38
+ 489 01b6 94F810C0 		ldrb	ip, [r4, #16]	@ zero_extendqisi2
+ 490 01ba 9C45     		cmp	ip, r3
+ 491 01bc 0CD9     		bls	.L32
+  40:My_Top/System/encoder.cpp ****         {
+ 492              		.loc 1 40 9 view .LVU130
+  40:My_Top/System/encoder.cpp ****         {
+ 493              		.loc 1 40 26 is_stmt 0 view .LVU131
+ 494 01be 074C     		ldr	r4, .L38
+ 495 01c0 54F82300 		ldr	r0, [r4, r3, lsl #2]
+  40:My_Top/System/encoder.cpp ****         {
+ 496              		.loc 1 40 9 view .LVU132
+ 497 01c4 0028     		cmp	r0, #0
+ 498 01c6 F3D0     		beq	.L34
+  40:My_Top/System/encoder.cpp ****         {
+ 499              		.loc 1 40 58 discriminator 1 view .LVU133
+ 500 01c8 446A     		ldr	r4, [r0, #36]
+  40:My_Top/System/encoder.cpp ****         {
+ 501              		.loc 1 40 72 discriminator 1 view .LVU134
+ 502 01ca 6469     		ldr	r4, [r4, #20]
+  40:My_Top/System/encoder.cpp ****         {
+ 503              		.loc 1 40 39 discriminator 1 view .LVU135
+ 504 01cc 7445     		cmp	r4, lr
+ 505 01ce EFD1     		bne	.L34
+  42:My_Top/System/encoder.cpp ****             return;
+ 506              		.loc 1 42 13 is_stmt 1 view .LVU136
+  42:My_Top/System/encoder.cpp ****             return;
+ 507              		.loc 1 42 45 is_stmt 0 view .LVU137
+ 508 01d0 0A46     		mov	r2, r1
+ 509 01d2 7146     		mov	r1, lr
+ 510              	.LVL45:
+  42:My_Top/System/encoder.cpp ****             return;
+ 511              		.loc 1 42 45 view .LVU138
+ 512 01d4 FFF7FEFF 		bl	_ZN7Encoder15Encode_CallbackEP20__UART_HandleTypeDeft
+ 513              	.LVL46:
+  43:My_Top/System/encoder.cpp ****         }
+ 514              		.loc 1 43 13 is_stmt 1 view .LVU139
+ 515              	.L32:
+  43:My_Top/System/encoder.cpp ****         }
+ 516              		.loc 1 43 13 is_stmt 0 view .LVU140
+ 517              	.LBE7:
+ARM GAS  /tmp/ccw0tTki.s 			page 14
+
+
+  46:My_Top/System/encoder.cpp **** 
+ 518              		.loc 1 46 1 view .LVU141
+ 519 01d8 10BD     		pop	{r4, pc}
+ 520              	.L39:
+ 521 01da 00BF     		.align	2
+ 522              	.L38:
+ 523 01dc 00000000 		.word	.LANCHOR0
+ 524              		.cfi_endproc
+ 525              	.LFE1312:
+ 527              		.align	1
+ 528              		.global	_ZN7Encoder19encoder_request_posEv
+ 529              		.syntax unified
+ 530              		.thumb
+ 531              		.thumb_func
+ 533              	_ZN7Encoder19encoder_request_posEv:
+ 534              	.LVL47:
+ 535              	.LFB1315:
+ 119:My_Top/System/encoder.cpp **** 
+ 120:My_Top/System/encoder.cpp **** 
+ 121:My_Top/System/encoder.cpp **** 
+ 122:My_Top/System/encoder.cpp **** // ============================================================
+ 123:My_Top/System/encoder.cpp **** // 发送位置请求命令
+ 124:My_Top/System/encoder.cpp **** // ============================================================
+ 125:My_Top/System/encoder.cpp **** 
+ 126:My_Top/System/encoder.cpp **** void Encoder::encoder_request_pos()
+ 127:My_Top/System/encoder.cpp **** {
+ 536              		.loc 1 127 1 is_stmt 1 view -0
+ 537              		.cfi_startproc
+ 538              		@ args = 0, pretend = 0, frame = 0
+ 539              		@ frame_needed = 0, uses_anonymous_args = 0
+ 540              		.loc 1 127 1 is_stmt 0 view .LVU143
+ 541 01e0 08B5     		push	{r3, lr}
+ 542              		.cfi_def_cfa_offset 8
+ 543              		.cfi_offset 3, -8
+ 544              		.cfi_offset 14, -4
+ 128:My_Top/System/encoder.cpp ****     // if (motor_config != &M1_PWM) return; //只对M1_PWM发送请求
+ 129:My_Top/System/encoder.cpp ****     encoder.tx_buf[0] = ENCODER_CMD_REQUEST_POS;
+ 545              		.loc 1 129 5 is_stmt 1 view .LVU144
+ 546              		.loc 1 129 23 is_stmt 0 view .LVU145
+ 547 01e2 0223     		movs	r3, #2
+ 548 01e4 0374     		strb	r3, [r0, #16]
+ 130:My_Top/System/encoder.cpp ****     HAL_UART_Transmit_DMA(motor_config->huart,encoder.tx_buf,sizeof(encoder.tx_buf));
+ 549              		.loc 1 130 5 is_stmt 1 view .LVU146
+ 550              		.loc 1 130 27 is_stmt 0 view .LVU147
+ 551 01e6 436A     		ldr	r3, [r0, #36]
+ 552              		.loc 1 130 26 view .LVU148
+ 553 01e8 0122     		movs	r2, #1
+ 554 01ea 00F11001 		add	r1, r0, #16
+ 555 01ee 5869     		ldr	r0, [r3, #20]
+ 556              	.LVL48:
+ 557              		.loc 1 130 26 view .LVU149
+ 558 01f0 FFF7FEFF 		bl	HAL_UART_Transmit_DMA
+ 559              	.LVL49:
+ 131:My_Top/System/encoder.cpp **** }
+ 560              		.loc 1 131 1 view .LVU150
+ 561 01f4 08BD     		pop	{r3, pc}
+ 562              		.cfi_endproc
+ARM GAS  /tmp/ccw0tTki.s 			page 15
+
+
+ 563              	.LFE1315:
+ 565              		.align	1
+ 566              		.global	_ZN7Encoder18Get_Encoder_RadianEv
+ 567              		.syntax unified
+ 568              		.thumb
+ 569              		.thumb_func
+ 571              	_ZN7Encoder18Get_Encoder_RadianEv:
+ 572              	.LVL50:
+ 573              	.LFB1316:
+ 132:My_Top/System/encoder.cpp **** 
+ 133:My_Top/System/encoder.cpp **** 
+ 134:My_Top/System/encoder.cpp **** float Encoder::Get_Encoder_Radian() //获取编码器弧度
+ 135:My_Top/System/encoder.cpp **** {
+ 574              		.loc 1 135 1 is_stmt 1 view -0
+ 575              		.cfi_startproc
+ 576              		@ args = 0, pretend = 0, frame = 0
+ 577              		@ frame_needed = 0, uses_anonymous_args = 0
+ 578              		@ link register save eliminated.
+ 136:My_Top/System/encoder.cpp **** 
+ 137:My_Top/System/encoder.cpp ****     float rad =encoder.theta;
+ 579              		.loc 1 137 5 view .LVU152
+ 138:My_Top/System/encoder.cpp **** 
+ 139:My_Top/System/encoder.cpp ****     return rad;
+ 580              		.loc 1 139 5 view .LVU153
+ 140:My_Top/System/encoder.cpp **** }
+ 581              		.loc 1 140 1 is_stmt 0 view .LVU154
+ 582 01f6 90ED060A 		vldr.32	s0, [r0, #24]
+ 583 01fa 7047     		bx	lr
+ 584              		.cfi_endproc
+ 585              	.LFE1316:
+ 587              		.global	_ZN7Encoder11encoder_numE
+ 588              		.global	_ZN7Encoder12encoder_listE
+ 589              		.bss
+ 590              		.align	2
+ 591              		.set	.LANCHOR0,. + 0
+ 594              	_ZN7Encoder12encoder_listE:
+ 595 0000 00000000 		.space	16
+ 595      00000000 
+ 595      00000000 
+ 595      00000000 
+ 598              	_ZN7Encoder11encoder_numE:
+ 599 0010 00       		.space	1
+ 600              		.text
+ 601              	.Letext0:
+ 602              		.file 2 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/machine/_default_types.h"
+ 603              		.file 3 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/sys/_stdint.h"
+ 604              		.file 4 "Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g474xx.h"
+ 605              		.file 5 "Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h"
+ 606              		.file 6 "Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h"
+ 607              		.file 7 "Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h"
+ 608              		.file 8 "Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h"
+ 609              		.file 9 "Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h"
+ 610              		.file 10 "Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h"
+ 611              		.file 11 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/cmath"
+ 612              		.file 12 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/type_traits"
+ 613              		.file 13 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/debug/debug.h"
+ 614              		.file 14 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/bits/std_abs.h"
+ARM GAS  /tmp/ccw0tTki.s 			page 16
+
+
+ 615              		.file 15 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/bits/predefined_ops.h"
+ 616              		.file 16 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/math.h"
+ 617              		.file 17 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/arm-none-eabi/thumb/v7e-m+f
+ 618              		.file 18 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/math.h"
+ 619              		.file 19 "My_Top/System/bsp.hpp"
+ 620              		.file 20 "My_Top/System/encoder.hpp"
+ 621              		.file 21 "Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h"
+ 622              		.file 22 "Core/Inc/main.h"
+ARM GAS  /tmp/ccw0tTki.s 			page 17
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 encoder.cpp
+     /tmp/ccw0tTki.s:20     .text:00000000 $t
+     /tmp/ccw0tTki.s:26     .text:00000000 _ZN7Encoder23My_Encode_ErrorCallbackEP20__UART_HandleTypeDef
+     /tmp/ccw0tTki.s:140    .text:0000006c $d
+     /tmp/ccw0tTki.s:146    .text:00000070 $t
+     /tmp/ccw0tTki.s:152    .text:00000070 _ZN7Encoder9_crc_calcEPht
+     /tmp/ccw0tTki.s:201    .text:00000088 _ZN7Encoder12encoder_initEv
+     /tmp/ccw0tTki.s:278    .text:000000d8 $d
+     /tmp/ccw0tTki.s:458    .text:000001a8 _ZN7Encoder18My_Encode_CallbackEP20__UART_HandleTypeDeft
+     /tmp/ccw0tTki.s:283    .text:000000e0 $t
+     /tmp/ccw0tTki.s:289    .text:000000e0 _ZN7Encoder15Encode_CallbackEP20__UART_HandleTypeDeft
+     /tmp/ccw0tTki.s:447    .text:000001a0 $d
+     /tmp/ccw0tTki.s:452    .text:000001a8 $t
+     /tmp/ccw0tTki.s:523    .text:000001dc $d
+     /tmp/ccw0tTki.s:527    .text:000001e0 $t
+     /tmp/ccw0tTki.s:533    .text:000001e0 _ZN7Encoder19encoder_request_posEv
+     /tmp/ccw0tTki.s:571    .text:000001f6 _ZN7Encoder18Get_Encoder_RadianEv
+     /tmp/ccw0tTki.s:598    .bss:00000010 _ZN7Encoder11encoder_numE
+     /tmp/ccw0tTki.s:594    .bss:00000000 _ZN7Encoder12encoder_listE
+     /tmp/ccw0tTki.s:590    .bss:00000000 $d
+
+UNDEFINED SYMBOLS
+HAL_UARTEx_ReceiveToIdle_DMA
+Error_Handler
+HAL_UART_Transmit_DMA

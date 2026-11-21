@@ -1,0 +1,787 @@
+ARM GAS  /tmp/ccp03nOB.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"current_read.cpp"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "My_Top/System/current_read.cpp"
+  20              		.align	1
+  21              		.global	_ZN12PhaseCurrent17ADC_Injected_InitEv
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	_ZN12PhaseCurrent17ADC_Injected_InitEv:
+  27              	.LVL0:
+  28              	.LFB1310:
+   1:My_Top/System/current_read.cpp **** #include "current_read.hpp"
+   2:My_Top/System/current_read.cpp **** 
+   3:My_Top/System/current_read.cpp **** 
+   4:My_Top/System/current_read.cpp **** void PhaseCurrent::ADC_Injected_Init()
+   5:My_Top/System/current_read.cpp **** {
+  29              		.loc 1 5 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		.loc 1 5 1 is_stmt 0 view .LVU1
+  34 0000 10B5     		push	{r4, lr}
+  35              		.cfi_def_cfa_offset 8
+  36              		.cfi_offset 4, -8
+  37              		.cfi_offset 14, -4
+  38 0002 0446     		mov	r4, r0
+   6:My_Top/System/current_read.cpp ****     filter_ia.init(0.75);
+  39              		.loc 1 6 5 is_stmt 1 view .LVU2
+  40              		.loc 1 6 19 is_stmt 0 view .LVU3
+  41 0004 B6EE080A 		vmov.f32	s0, #7.5e-1
+  42 0008 3830     		adds	r0, r0, #56
+  43              	.LVL1:
+  44              		.loc 1 6 19 view .LVU4
+  45 000a FFF7FEFF 		bl	_ZN13LowpassFilter4initEf
+  46              	.LVL2:
+   7:My_Top/System/current_read.cpp ****     filter_ib.init(0.75);
+  47              		.loc 1 7 5 is_stmt 1 view .LVU5
+  48              		.loc 1 7 19 is_stmt 0 view .LVU6
+  49 000e B6EE080A 		vmov.f32	s0, #7.5e-1
+  50 0012 04F14000 		add	r0, r4, #64
+  51 0016 FFF7FEFF 		bl	_ZN13LowpassFilter4initEf
+ARM GAS  /tmp/ccp03nOB.s 			page 2
+
+
+  52              	.LVL3:
+   8:My_Top/System/current_read.cpp ****     filter_ic.init(0.75);
+  53              		.loc 1 8 5 is_stmt 1 view .LVU7
+  54              		.loc 1 8 19 is_stmt 0 view .LVU8
+  55 001a B6EE080A 		vmov.f32	s0, #7.5e-1
+  56 001e 04F14800 		add	r0, r4, #72
+  57 0022 FFF7FEFF 		bl	_ZN13LowpassFilter4initEf
+  58              	.LVL4:
+   9:My_Top/System/current_read.cpp ****     avg_filter_ia.init(10);
+  59              		.loc 1 9 5 is_stmt 1 view .LVU9
+  60              		.loc 1 9 23 is_stmt 0 view .LVU10
+  61 0026 0A21     		movs	r1, #10
+  62 0028 04F15000 		add	r0, r4, #80
+  63 002c FFF7FEFF 		bl	_ZN9AvgFilter4initEh
+  64              	.LVL5:
+  10:My_Top/System/current_read.cpp ****     avg_filter_ib.init(10);
+  65              		.loc 1 10 5 is_stmt 1 view .LVU11
+  66              		.loc 1 10 23 is_stmt 0 view .LVU12
+  67 0030 0A21     		movs	r1, #10
+  68 0032 04F16C00 		add	r0, r4, #108
+  69 0036 FFF7FEFF 		bl	_ZN9AvgFilter4initEh
+  70              	.LVL6:
+  11:My_Top/System/current_read.cpp ****     avg_filter_ic.init(10);
+  71              		.loc 1 11 5 is_stmt 1 view .LVU13
+  72              		.loc 1 11 23 is_stmt 0 view .LVU14
+  73 003a 0A21     		movs	r1, #10
+  74 003c 04F18800 		add	r0, r4, #136
+  75 0040 FFF7FEFF 		bl	_ZN9AvgFilter4initEh
+  76              	.LVL7:
+  12:My_Top/System/current_read.cpp ****     if (HAL_ADCEx_InjectedStart(motor_config->hadc) != HAL_OK)                       // 开始 注�
+  77              		.loc 1 12 5 is_stmt 1 view .LVU15
+  78              		.loc 1 12 33 is_stmt 0 view .LVU16
+  79 0044 636B     		ldr	r3, [r4, #52]
+  80              		.loc 1 12 32 view .LVU17
+  81 0046 9869     		ldr	r0, [r3, #24]
+  82 0048 FFF7FEFF 		bl	HAL_ADCEx_InjectedStart
+  83              	.LVL8:
+  84              		.loc 1 12 5 discriminator 1 view .LVU18
+  85 004c 00B9     		cbnz	r0, .L4
+  86              	.L1:
+  13:My_Top/System/current_read.cpp ****     {
+  14:My_Top/System/current_read.cpp ****         Error_Handler();
+  15:My_Top/System/current_read.cpp ****     }
+  16:My_Top/System/current_read.cpp **** }
+  87              		.loc 1 16 1 view .LVU19
+  88 004e 10BD     		pop	{r4, pc}
+  89              	.LVL9:
+  90              	.L4:
+  14:My_Top/System/current_read.cpp ****     }
+  91              		.loc 1 14 9 is_stmt 1 view .LVU20
+  14:My_Top/System/current_read.cpp ****     }
+  92              		.loc 1 14 22 is_stmt 0 view .LVU21
+  93 0050 FFF7FEFF 		bl	Error_Handler
+  94              	.LVL10:
+  95              		.loc 1 16 1 view .LVU22
+  96 0054 FBE7     		b	.L1
+  97              		.cfi_endproc
+ARM GAS  /tmp/ccp03nOB.s 			page 3
+
+
+  98              	.LFE1310:
+ 100              		.align	1
+ 101              		.global	_ZN12PhaseCurrent19Current_CalibrationEv
+ 102              		.syntax unified
+ 103              		.thumb
+ 104              		.thumb_func
+ 106              	_ZN12PhaseCurrent19Current_CalibrationEv:
+ 107              	.LVL11:
+ 108              	.LFB1311:
+  17:My_Top/System/current_read.cpp **** 
+  18:My_Top/System/current_read.cpp **** void PhaseCurrent::Current_Calibration()//电流零点校准
+  19:My_Top/System/current_read.cpp **** {
+ 109              		.loc 1 19 1 is_stmt 1 view -0
+ 110              		.cfi_startproc
+ 111              		@ args = 0, pretend = 0, frame = 16
+ 112              		@ frame_needed = 0, uses_anonymous_args = 0
+ 113              		.loc 1 19 1 is_stmt 0 view .LVU24
+ 114 0056 70B5     		push	{r4, r5, r6, lr}
+ 115              		.cfi_def_cfa_offset 16
+ 116              		.cfi_offset 4, -16
+ 117              		.cfi_offset 5, -12
+ 118              		.cfi_offset 6, -8
+ 119              		.cfi_offset 14, -4
+ 120 0058 2DED028B 		vpush.64	{d8}
+ 121              		.cfi_def_cfa_offset 24
+ 122              		.cfi_offset 80, -24
+ 123              		.cfi_offset 81, -20
+ 124 005c 84B0     		sub	sp, sp, #16
+ 125              		.cfi_def_cfa_offset 40
+ 126 005e 0446     		mov	r4, r0
+  20:My_Top/System/current_read.cpp ****      // 条件：电机不通电（PWM 全为 0，驱动器使能但无输出）
+  21:My_Top/System/current_read.cpp ****     //   → 相电流 = 0
+  22:My_Top/System/current_read.cpp ****     //   → 此时 ADC 读到的值就是 offset
+  23:My_Top/System/current_read.cpp ****     uint32_t adc_val[3] = {0};
+ 127              		.loc 1 23 5 is_stmt 1 view .LVU25
+ 128              		.loc 1 23 14 is_stmt 0 view .LVU26
+ 129 0060 0023     		movs	r3, #0
+ 130 0062 0193     		str	r3, [sp, #4]
+ 131 0064 0293     		str	r3, [sp, #8]
+ 132 0066 0393     		str	r3, [sp, #12]
+  24:My_Top/System/current_read.cpp ****     uint32_t JDR1_Temp = 0, JDR2_Temp = 0, JDR3_Temp = 0;
+ 133              		.loc 1 24 5 is_stmt 1 view .LVU27
+ 134              	.LVL12:
+  25:My_Top/System/current_read.cpp ****     __HAL_TIM_SET_COMPARE(motor_config->htim, motor_config->ch_hin1, (uint32_t)500); // 设置占�
+ 135              		.loc 1 25 5 view .LVU28
+ 136 0068 426B     		ldr	r2, [r0, #52]
+ 137 006a 9368     		ldr	r3, [r2, #8]
+ 138 006c 102B     		cmp	r3, #16
+ 139 006e 28D8     		bhi	.L6
+ 140 0070 DFE803F0 		tbb	[pc, r3]
+ 141              	.L8:
+ 142 0074 09       		.byte	(.L12-.L8)/2
+ 143 0075 27       		.byte	(.L6-.L8)/2
+ 144 0076 27       		.byte	(.L6-.L8)/2
+ 145 0077 27       		.byte	(.L6-.L8)/2
+ 146 0078 0F       		.byte	(.L11-.L8)/2
+ 147 0079 27       		.byte	(.L6-.L8)/2
+ARM GAS  /tmp/ccp03nOB.s 			page 4
+
+
+ 148 007a 27       		.byte	(.L6-.L8)/2
+ 149 007b 27       		.byte	(.L6-.L8)/2
+ 150 007c 15       		.byte	(.L10-.L8)/2
+ 151 007d 27       		.byte	(.L6-.L8)/2
+ 152 007e 27       		.byte	(.L6-.L8)/2
+ 153 007f 27       		.byte	(.L6-.L8)/2
+ 154 0080 1B       		.byte	(.L9-.L8)/2
+ 155 0081 27       		.byte	(.L6-.L8)/2
+ 156 0082 27       		.byte	(.L6-.L8)/2
+ 157 0083 27       		.byte	(.L6-.L8)/2
+ 158 0084 21       		.byte	(.L7-.L8)/2
+ 159 0085 00       		.p2align 1
+ 160              	.L12:
+ 161              		.loc 1 25 5 is_stmt 0 discriminator 1 view .LVU29
+ 162 0086 1368     		ldr	r3, [r2]
+ 163 0088 1B68     		ldr	r3, [r3]
+ 164 008a 4FF4FA72 		mov	r2, #500
+ 165 008e 5A63     		str	r2, [r3, #52]
+ 166 0090 1CE0     		b	.L13
+ 167              	.L11:
+ 168              		.loc 1 25 5 discriminator 3 view .LVU30
+ 169 0092 1368     		ldr	r3, [r2]
+ 170 0094 1B68     		ldr	r3, [r3]
+ 171 0096 4FF4FA72 		mov	r2, #500
+ 172 009a 9A63     		str	r2, [r3, #56]
+ 173 009c 16E0     		b	.L13
+ 174              	.L10:
+ 175              		.loc 1 25 5 discriminator 5 view .LVU31
+ 176 009e 1368     		ldr	r3, [r2]
+ 177 00a0 1B68     		ldr	r3, [r3]
+ 178 00a2 4FF4FA72 		mov	r2, #500
+ 179 00a6 DA63     		str	r2, [r3, #60]
+ 180 00a8 10E0     		b	.L13
+ 181              	.L9:
+ 182              		.loc 1 25 5 discriminator 7 view .LVU32
+ 183 00aa 1368     		ldr	r3, [r2]
+ 184 00ac 1B68     		ldr	r3, [r3]
+ 185 00ae 4FF4FA72 		mov	r2, #500
+ 186 00b2 1A64     		str	r2, [r3, #64]
+ 187 00b4 0AE0     		b	.L13
+ 188              	.L7:
+ 189              		.loc 1 25 5 discriminator 9 view .LVU33
+ 190 00b6 1368     		ldr	r3, [r2]
+ 191 00b8 1B68     		ldr	r3, [r3]
+ 192 00ba 4FF4FA72 		mov	r2, #500
+ 193 00be 9A64     		str	r2, [r3, #72]
+ 194 00c0 04E0     		b	.L13
+ 195              	.L6:
+ 196              		.loc 1 25 5 discriminator 10 view .LVU34
+ 197 00c2 1368     		ldr	r3, [r2]
+ 198 00c4 1B68     		ldr	r3, [r3]
+ 199 00c6 4FF4FA72 		mov	r2, #500
+ 200 00ca DA64     		str	r2, [r3, #76]
+ 201              	.L13:
+  26:My_Top/System/current_read.cpp ****     __HAL_TIM_SET_COMPARE(motor_config->htim, motor_config->ch_hin2, (uint32_t)500);
+ 202              		.loc 1 26 5 is_stmt 1 view .LVU35
+ 203 00cc 626B     		ldr	r2, [r4, #52]
+ARM GAS  /tmp/ccp03nOB.s 			page 5
+
+
+ 204 00ce D368     		ldr	r3, [r2, #12]
+ 205 00d0 102B     		cmp	r3, #16
+ 206 00d2 28D8     		bhi	.L14
+ 207 00d4 DFE803F0 		tbb	[pc, r3]
+ 208              	.L16:
+ 209 00d8 09       		.byte	(.L20-.L16)/2
+ 210 00d9 27       		.byte	(.L14-.L16)/2
+ 211 00da 27       		.byte	(.L14-.L16)/2
+ 212 00db 27       		.byte	(.L14-.L16)/2
+ 213 00dc 0F       		.byte	(.L19-.L16)/2
+ 214 00dd 27       		.byte	(.L14-.L16)/2
+ 215 00de 27       		.byte	(.L14-.L16)/2
+ 216 00df 27       		.byte	(.L14-.L16)/2
+ 217 00e0 15       		.byte	(.L18-.L16)/2
+ 218 00e1 27       		.byte	(.L14-.L16)/2
+ 219 00e2 27       		.byte	(.L14-.L16)/2
+ 220 00e3 27       		.byte	(.L14-.L16)/2
+ 221 00e4 1B       		.byte	(.L17-.L16)/2
+ 222 00e5 27       		.byte	(.L14-.L16)/2
+ 223 00e6 27       		.byte	(.L14-.L16)/2
+ 224 00e7 27       		.byte	(.L14-.L16)/2
+ 225 00e8 21       		.byte	(.L15-.L16)/2
+ 226 00e9 00       		.p2align 1
+ 227              	.L20:
+ 228              		.loc 1 26 5 is_stmt 0 discriminator 1 view .LVU36
+ 229 00ea 1368     		ldr	r3, [r2]
+ 230 00ec 1B68     		ldr	r3, [r3]
+ 231 00ee 4FF4FA72 		mov	r2, #500
+ 232 00f2 5A63     		str	r2, [r3, #52]
+ 233 00f4 1CE0     		b	.L21
+ 234              	.L19:
+ 235              		.loc 1 26 5 discriminator 3 view .LVU37
+ 236 00f6 1368     		ldr	r3, [r2]
+ 237 00f8 1B68     		ldr	r3, [r3]
+ 238 00fa 4FF4FA72 		mov	r2, #500
+ 239 00fe 9A63     		str	r2, [r3, #56]
+ 240 0100 16E0     		b	.L21
+ 241              	.L18:
+ 242              		.loc 1 26 5 discriminator 5 view .LVU38
+ 243 0102 1368     		ldr	r3, [r2]
+ 244 0104 1B68     		ldr	r3, [r3]
+ 245 0106 4FF4FA72 		mov	r2, #500
+ 246 010a DA63     		str	r2, [r3, #60]
+ 247 010c 10E0     		b	.L21
+ 248              	.L17:
+ 249              		.loc 1 26 5 discriminator 7 view .LVU39
+ 250 010e 1368     		ldr	r3, [r2]
+ 251 0110 1B68     		ldr	r3, [r3]
+ 252 0112 4FF4FA72 		mov	r2, #500
+ 253 0116 1A64     		str	r2, [r3, #64]
+ 254 0118 0AE0     		b	.L21
+ 255              	.L15:
+ 256              		.loc 1 26 5 discriminator 9 view .LVU40
+ 257 011a 1368     		ldr	r3, [r2]
+ 258 011c 1B68     		ldr	r3, [r3]
+ 259 011e 4FF4FA72 		mov	r2, #500
+ 260 0122 9A64     		str	r2, [r3, #72]
+ARM GAS  /tmp/ccp03nOB.s 			page 6
+
+
+ 261 0124 04E0     		b	.L21
+ 262              	.L14:
+ 263              		.loc 1 26 5 discriminator 10 view .LVU41
+ 264 0126 1368     		ldr	r3, [r2]
+ 265 0128 1B68     		ldr	r3, [r3]
+ 266 012a 4FF4FA72 		mov	r2, #500
+ 267 012e DA64     		str	r2, [r3, #76]
+ 268              	.L21:
+  27:My_Top/System/current_read.cpp ****     __HAL_TIM_SET_COMPARE(motor_config->htim, motor_config->ch_hin3, (uint32_t)500);
+ 269              		.loc 1 27 5 is_stmt 1 view .LVU42
+ 270 0130 626B     		ldr	r2, [r4, #52]
+ 271 0132 1369     		ldr	r3, [r2, #16]
+ 272 0134 102B     		cmp	r3, #16
+ 273 0136 28D8     		bhi	.L22
+ 274 0138 DFE803F0 		tbb	[pc, r3]
+ 275              	.L24:
+ 276 013c 09       		.byte	(.L28-.L24)/2
+ 277 013d 27       		.byte	(.L22-.L24)/2
+ 278 013e 27       		.byte	(.L22-.L24)/2
+ 279 013f 27       		.byte	(.L22-.L24)/2
+ 280 0140 0F       		.byte	(.L27-.L24)/2
+ 281 0141 27       		.byte	(.L22-.L24)/2
+ 282 0142 27       		.byte	(.L22-.L24)/2
+ 283 0143 27       		.byte	(.L22-.L24)/2
+ 284 0144 15       		.byte	(.L26-.L24)/2
+ 285 0145 27       		.byte	(.L22-.L24)/2
+ 286 0146 27       		.byte	(.L22-.L24)/2
+ 287 0147 27       		.byte	(.L22-.L24)/2
+ 288 0148 1B       		.byte	(.L25-.L24)/2
+ 289 0149 27       		.byte	(.L22-.L24)/2
+ 290 014a 27       		.byte	(.L22-.L24)/2
+ 291 014b 27       		.byte	(.L22-.L24)/2
+ 292 014c 21       		.byte	(.L23-.L24)/2
+ 293 014d 00       		.p2align 1
+ 294              	.L28:
+ 295              		.loc 1 27 5 is_stmt 0 discriminator 1 view .LVU43
+ 296 014e 1368     		ldr	r3, [r2]
+ 297 0150 1B68     		ldr	r3, [r3]
+ 298 0152 4FF4FA72 		mov	r2, #500
+ 299 0156 5A63     		str	r2, [r3, #52]
+ 300 0158 1CE0     		b	.L29
+ 301              	.L27:
+ 302              		.loc 1 27 5 discriminator 3 view .LVU44
+ 303 015a 1368     		ldr	r3, [r2]
+ 304 015c 1B68     		ldr	r3, [r3]
+ 305 015e 4FF4FA72 		mov	r2, #500
+ 306 0162 9A63     		str	r2, [r3, #56]
+ 307 0164 16E0     		b	.L29
+ 308              	.L26:
+ 309              		.loc 1 27 5 discriminator 5 view .LVU45
+ 310 0166 1368     		ldr	r3, [r2]
+ 311 0168 1B68     		ldr	r3, [r3]
+ 312 016a 4FF4FA72 		mov	r2, #500
+ 313 016e DA63     		str	r2, [r3, #60]
+ 314 0170 10E0     		b	.L29
+ 315              	.L25:
+ 316              		.loc 1 27 5 discriminator 7 view .LVU46
+ARM GAS  /tmp/ccp03nOB.s 			page 7
+
+
+ 317 0172 1368     		ldr	r3, [r2]
+ 318 0174 1B68     		ldr	r3, [r3]
+ 319 0176 4FF4FA72 		mov	r2, #500
+ 320 017a 1A64     		str	r2, [r3, #64]
+ 321 017c 0AE0     		b	.L29
+ 322              	.L23:
+ 323              		.loc 1 27 5 discriminator 9 view .LVU47
+ 324 017e 1368     		ldr	r3, [r2]
+ 325 0180 1B68     		ldr	r3, [r3]
+ 326 0182 4FF4FA72 		mov	r2, #500
+ 327 0186 9A64     		str	r2, [r3, #72]
+ 328 0188 04E0     		b	.L29
+ 329              	.L22:
+ 330              		.loc 1 27 5 discriminator 10 view .LVU48
+ 331 018a 1368     		ldr	r3, [r2]
+ 332 018c 1B68     		ldr	r3, [r3]
+ 333 018e 4FF4FA72 		mov	r2, #500
+ 334 0192 DA64     		str	r2, [r3, #76]
+ 335              	.L29:
+  28:My_Top/System/current_read.cpp **** 
+  29:My_Top/System/current_read.cpp ****     JDR1_Temp = motor_config->hadc->Instance->JDR1; // 读注入组的ADC的3个通道
+ 336              		.loc 1 29 5 is_stmt 1 view .LVU49
+ 337              		.loc 1 29 17 is_stmt 0 view .LVU50
+ 338 0194 636B     		ldr	r3, [r4, #52]
+ 339              		.loc 1 29 31 view .LVU51
+ 340 0196 9B69     		ldr	r3, [r3, #24]
+ 341              		.loc 1 29 37 view .LVU52
+ 342 0198 1B68     		ldr	r3, [r3]
+ 343              		.loc 1 29 15 view .LVU53
+ 344 019a D3F88000 		ldr	r0, [r3, #128]
+ 345              	.LVL13:
+  30:My_Top/System/current_read.cpp ****     JDR2_Temp = motor_config->hadc->Instance->JDR2;
+ 346              		.loc 1 30 5 is_stmt 1 view .LVU54
+ 347              		.loc 1 30 15 is_stmt 0 view .LVU55
+ 348 019e D3F88460 		ldr	r6, [r3, #132]
+ 349              	.LVL14:
+  31:My_Top/System/current_read.cpp ****     JDR3_Temp = motor_config->hadc->Instance->JDR3;
+ 350              		.loc 1 31 5 is_stmt 1 view .LVU56
+ 351              		.loc 1 31 15 is_stmt 0 view .LVU57
+ 352 01a2 D3F88850 		ldr	r5, [r3, #136]
+ 353              	.LVL15:
+  32:My_Top/System/current_read.cpp **** 
+  33:My_Top/System/current_read.cpp **** 
+  34:My_Top/System/current_read.cpp **** 
+  35:My_Top/System/current_read.cpp ****     Zero_IA = (double)(JDR1_Temp) * MOTOR_ADC_RAW_TO_CURR_GAIN; // 取最后一次的值
+ 354              		.loc 1 35 5 is_stmt 1 view .LVU58
+ 355              		.loc 1 35 15 is_stmt 0 view .LVU59
+ 356 01a6 FFF7FEFF 		bl	__aeabi_ui2d
+ 357              	.LVL16:
+ 358              		.loc 1 35 35 view .LVU60
+ 359 01aa 0022     		movs	r2, #0
+ 360 01ac 1B4B     		ldr	r3, .L31
+ 361 01ae FFF7FEFF 		bl	__aeabi_dmul
+ 362              	.LVL17:
+ 363 01b2 FFF7FEFF 		bl	__aeabi_d2f
+ 364              	.LVL18:
+ 365 01b6 08EE100A 		vmov	s16, r0
+ARM GAS  /tmp/ccp03nOB.s 			page 8
+
+
+ 366              		.loc 1 35 13 view .LVU61
+ 367 01ba E061     		str	r0, [r4, #28]	@ float
+  36:My_Top/System/current_read.cpp ****     Zero_IB = (double)(JDR2_Temp) * MOTOR_ADC_RAW_TO_CURR_GAIN; // 取最后一次的值
+ 368              		.loc 1 36 5 is_stmt 1 view .LVU62
+ 369              		.loc 1 36 15 is_stmt 0 view .LVU63
+ 370 01bc 3046     		mov	r0, r6
+ 371 01be FFF7FEFF 		bl	__aeabi_ui2d
+ 372              	.LVL19:
+ 373              		.loc 1 36 35 view .LVU64
+ 374 01c2 0022     		movs	r2, #0
+ 375 01c4 154B     		ldr	r3, .L31
+ 376 01c6 FFF7FEFF 		bl	__aeabi_dmul
+ 377              	.LVL20:
+ 378 01ca FFF7FEFF 		bl	__aeabi_d2f
+ 379              	.LVL21:
+ 380              		.loc 1 36 13 view .LVU65
+ 381 01ce 2062     		str	r0, [r4, #32]	@ float
+  37:My_Top/System/current_read.cpp ****     Zero_IC = (double)(JDR3_Temp) * MOTOR_ADC_RAW_TO_CURR_GAIN; // 取最后一次的值
+ 382              		.loc 1 37 5 is_stmt 1 view .LVU66
+ 383              		.loc 1 37 15 is_stmt 0 view .LVU67
+ 384 01d0 2846     		mov	r0, r5
+ 385 01d2 FFF7FEFF 		bl	__aeabi_ui2d
+ 386              	.LVL22:
+ 387              		.loc 1 37 35 view .LVU68
+ 388 01d6 0022     		movs	r2, #0
+ 389 01d8 104B     		ldr	r3, .L31
+ 390 01da FFF7FEFF 		bl	__aeabi_dmul
+ 391              	.LVL23:
+ 392 01de FFF7FEFF 		bl	__aeabi_d2f
+ 393              	.LVL24:
+ 394              		.loc 1 37 13 view .LVU69
+ 395 01e2 6062     		str	r0, [r4, #36]	@ float
+  38:My_Top/System/current_read.cpp **** 
+  39:My_Top/System/current_read.cpp ****     Zero_IA_avg = avg_filter_ia.filter(Zero_IA); // 平均值滤波
+ 396              		.loc 1 39 5 is_stmt 1 view .LVU70
+ 397              		.loc 1 39 39 is_stmt 0 view .LVU71
+ 398 01e4 B0EE480A 		vmov.f32	s0, s16
+ 399 01e8 04F15000 		add	r0, r4, #80
+ 400 01ec FFF7FEFF 		bl	_ZN9AvgFilter6filterEf
+ 401              	.LVL25:
+ 402              		.loc 1 39 17 discriminator 1 view .LVU72
+ 403 01f0 84ED0A0A 		vstr.32	s0, [r4, #40]
+  40:My_Top/System/current_read.cpp ****     Zero_IB_avg = avg_filter_ib.filter(Zero_IB); // 平均值滤波
+ 404              		.loc 1 40 5 is_stmt 1 view .LVU73
+ 405              		.loc 1 40 39 is_stmt 0 view .LVU74
+ 406 01f4 94ED080A 		vldr.32	s0, [r4, #32]
+ 407 01f8 04F16C00 		add	r0, r4, #108
+ 408 01fc FFF7FEFF 		bl	_ZN9AvgFilter6filterEf
+ 409              	.LVL26:
+ 410              		.loc 1 40 17 discriminator 1 view .LVU75
+ 411 0200 84ED0B0A 		vstr.32	s0, [r4, #44]
+  41:My_Top/System/current_read.cpp ****     Zero_IC_avg = avg_filter_ic.filter(Zero_IC); // 平均值滤波
+ 412              		.loc 1 41 5 is_stmt 1 view .LVU76
+ 413              		.loc 1 41 39 is_stmt 0 view .LVU77
+ 414 0204 94ED090A 		vldr.32	s0, [r4, #36]
+ 415 0208 04F18800 		add	r0, r4, #136
+ 416 020c FFF7FEFF 		bl	_ZN9AvgFilter6filterEf
+ARM GAS  /tmp/ccp03nOB.s 			page 9
+
+
+ 417              	.LVL27:
+ 418              		.loc 1 41 17 discriminator 1 view .LVU78
+ 419 0210 84ED0C0A 		vstr.32	s0, [r4, #48]
+  42:My_Top/System/current_read.cpp **** }
+ 420              		.loc 1 42 1 view .LVU79
+ 421 0214 04B0     		add	sp, sp, #16
+ 422              		.cfi_def_cfa_offset 24
+ 423              		@ sp needed
+ 424 0216 BDEC028B 		vldm	sp!, {d8}
+ 425              		.cfi_restore 80
+ 426              		.cfi_restore 81
+ 427              		.cfi_def_cfa_offset 16
+ 428 021a 70BD     		pop	{r4, r5, r6, pc}
+ 429              	.LVL28:
+ 430              	.L32:
+ 431              		.loc 1 42 1 view .LVU80
+ 432              		.align	2
+ 433              	.L31:
+ 434 021c 0080703F 		.word	1064337408
+ 435              		.cfi_endproc
+ 436              	.LFE1311:
+ 438              		.align	1
+ 439              		.global	_ZN12PhaseCurrent14Update_CurrentEv
+ 440              		.syntax unified
+ 441              		.thumb
+ 442              		.thumb_func
+ 444              	_ZN12PhaseCurrent14Update_CurrentEv:
+ 445              	.LVL29:
+ 446              	.LFB1312:
+  43:My_Top/System/current_read.cpp **** 
+  44:My_Top/System/current_read.cpp **** 
+  45:My_Top/System/current_read.cpp **** void PhaseCurrent::Update_Current() // 更新电机电流
+  46:My_Top/System/current_read.cpp **** {
+ 447              		.loc 1 46 1 is_stmt 1 view -0
+ 448              		.cfi_startproc
+ 449              		@ args = 0, pretend = 0, frame = 16
+ 450              		@ frame_needed = 0, uses_anonymous_args = 0
+ 451              		@ link register save eliminated.
+ 452              		.loc 1 46 1 is_stmt 0 view .LVU82
+ 453 0220 10B4     		push	{r4}
+ 454              		.cfi_def_cfa_offset 4
+ 455              		.cfi_offset 4, -4
+ 456 0222 85B0     		sub	sp, sp, #20
+ 457              		.cfi_def_cfa_offset 24
+  47:My_Top/System/current_read.cpp ****     uint32_t adc_val[3] = {0};
+ 458              		.loc 1 47 5 is_stmt 1 view .LVU83
+ 459              		.loc 1 47 14 is_stmt 0 view .LVU84
+ 460 0224 0023     		movs	r3, #0
+ 461 0226 0193     		str	r3, [sp, #4]
+ 462 0228 0293     		str	r3, [sp, #8]
+ 463 022a 0393     		str	r3, [sp, #12]
+  48:My_Top/System/current_read.cpp ****     uint32_t vm = 0;
+ 464              		.loc 1 48 5 is_stmt 1 view .LVU85
+ 465              	.LVL30:
+  49:My_Top/System/current_read.cpp ****     float _I_noise = 0;
+ 466              		.loc 1 49 5 view .LVU86
+  50:My_Top/System/current_read.cpp ****     adc_val[0] = motor_config->hadc->Instance->JDR1; // 读注入组的ADC的3个通道
+ARM GAS  /tmp/ccp03nOB.s 			page 10
+
+
+ 467              		.loc 1 50 5 view .LVU87
+ 468              		.loc 1 50 18 is_stmt 0 view .LVU88
+ 469 022c 436B     		ldr	r3, [r0, #52]
+ 470              		.loc 1 50 32 view .LVU89
+ 471 022e 9B69     		ldr	r3, [r3, #24]
+ 472              		.loc 1 50 38 view .LVU90
+ 473 0230 1C68     		ldr	r4, [r3]
+ 474              		.loc 1 50 48 view .LVU91
+ 475 0232 D4F88010 		ldr	r1, [r4, #128]
+ 476              		.loc 1 50 16 view .LVU92
+ 477 0236 0191     		str	r1, [sp, #4]
+  51:My_Top/System/current_read.cpp ****     adc_val[1] = motor_config->hadc->Instance->JDR2;
+ 478              		.loc 1 51 5 is_stmt 1 view .LVU93
+ 479              		.loc 1 51 48 is_stmt 0 view .LVU94
+ 480 0238 D4F88420 		ldr	r2, [r4, #132]
+ 481              		.loc 1 51 16 view .LVU95
+ 482 023c 0292     		str	r2, [sp, #8]
+  52:My_Top/System/current_read.cpp ****     adc_val[2] = motor_config->hadc->Instance->JDR3;
+ 483              		.loc 1 52 5 is_stmt 1 view .LVU96
+ 484              		.loc 1 52 48 is_stmt 0 view .LVU97
+ 485 023e D4F88830 		ldr	r3, [r4, #136]
+ 486              		.loc 1 52 16 view .LVU98
+ 487 0242 0393     		str	r3, [sp, #12]
+  53:My_Top/System/current_read.cpp ****     vm = motor_config->hadc->Instance->JDR4;//未配置通道4
+ 488              		.loc 1 53 5 is_stmt 1 view .LVU99
+ 489              		.loc 1 53 8 is_stmt 0 view .LVU100
+ 490 0244 D4ED237A 		vldr.32	s15, [r4, #140]	@ int
+ 491              	.LVL31:
+  54:My_Top/System/current_read.cpp **** 
+  55:My_Top/System/current_read.cpp ****     Primitive_UA = adc_val[0]; // 原始电压A相 0-4096
+ 492              		.loc 1 55 5 is_stmt 1 view .LVU101
+ 493              		.loc 1 55 18 is_stmt 0 view .LVU102
+ 494 0248 C0F8A410 		str	r1, [r0, #164]
+  56:My_Top/System/current_read.cpp ****     Primitive_UB = adc_val[1]; // 原始电压B相
+ 495              		.loc 1 56 5 is_stmt 1 view .LVU103
+ 496              		.loc 1 56 18 is_stmt 0 view .LVU104
+ 497 024c C0F8A820 		str	r2, [r0, #168]
+  57:My_Top/System/current_read.cpp ****     Primitive_UC = adc_val[2]; // 原始电压C相
+ 498              		.loc 1 57 5 is_stmt 1 view .LVU105
+ 499              		.loc 1 57 18 is_stmt 0 view .LVU106
+ 500 0250 C0F8AC30 		str	r3, [r0, #172]
+  58:My_Top/System/current_read.cpp ****     VM = (float)vm*MOTOR_VM_GAIN ; //
+ 501              		.loc 1 58 5 is_stmt 1 view .LVU107
+ 502              		.loc 1 58 10 is_stmt 0 view .LVU108
+ 503 0254 F8EE677A 		vcvt.f32.u32	s15, s15
+ 504              	.LVL32:
+ 505              		.loc 1 58 19 view .LVU109
+ 506 0258 9FED2A7A 		vldr.32	s14, .L35
+ 507 025c 67EE877A 		vmul.f32	s15, s15, s14
+ 508              		.loc 1 58 8 view .LVU110
+ 509 0260 C0ED037A 		vstr.32	s15, [r0, #12]
+  59:My_Top/System/current_read.cpp **** 
+  60:My_Top/System/current_read.cpp ****     Primitive_IA = (float)Primitive_UA * MOTOR_ADC_RAW_TO_CURR_GAIN; // 原始电流大小 7.955
+ 510              		.loc 1 60 5 is_stmt 1 view .LVU111
+ 511              		.loc 1 60 20 is_stmt 0 view .LVU112
+ 512 0264 07EE901A 		vmov	s15, r1	@ int
+ 513 0268 F8EE676A 		vcvt.f32.u32	s13, s15
+ARM GAS  /tmp/ccp03nOB.s 			page 11
+
+
+ 514              		.loc 1 60 40 view .LVU113
+ 515 026c 9FED266A 		vldr.32	s12, .L35+4
+ 516 0270 66EE866A 		vmul.f32	s13, s13, s12
+ 517              		.loc 1 60 18 view .LVU114
+ 518 0274 C0ED2C6A 		vstr.32	s13, [r0, #176]
+  61:My_Top/System/current_read.cpp ****     Primitive_IB = (float)Primitive_UB * MOTOR_ADC_RAW_TO_CURR_GAIN;
+ 519              		.loc 1 61 5 is_stmt 1 view .LVU115
+ 520              		.loc 1 61 20 is_stmt 0 view .LVU116
+ 521 0278 07EE902A 		vmov	s15, r2	@ int
+ 522 027c B8EE677A 		vcvt.f32.u32	s14, s15
+ 523              		.loc 1 61 40 view .LVU117
+ 524 0280 27EE067A 		vmul.f32	s14, s14, s12
+ 525              		.loc 1 61 18 view .LVU118
+ 526 0284 80ED2D7A 		vstr.32	s14, [r0, #180]
+  62:My_Top/System/current_read.cpp ****     Primitive_IC = (float)Primitive_UC * MOTOR_ADC_RAW_TO_CURR_GAIN;
+ 527              		.loc 1 62 5 is_stmt 1 view .LVU119
+ 528              		.loc 1 62 20 is_stmt 0 view .LVU120
+ 529 0288 07EE903A 		vmov	s15, r3	@ int
+ 530 028c F8EE677A 		vcvt.f32.u32	s15, s15
+ 531              		.loc 1 62 40 view .LVU121
+ 532 0290 67EE867A 		vmul.f32	s15, s15, s12
+ 533              		.loc 1 62 18 view .LVU122
+ 534 0294 C0ED2E7A 		vstr.32	s15, [r0, #184]
+  63:My_Top/System/current_read.cpp **** 
+  64:My_Top/System/current_read.cpp ****     Zero_Offset_IA = Primitive_IA - Zero_IA_avg; // 零点偏移电流大小
+ 535              		.loc 1 64 5 is_stmt 1 view .LVU123
+ 536              		.loc 1 64 37 is_stmt 0 view .LVU124
+ 537 0298 90ED0A6A 		vldr.32	s12, [r0, #40]
+ 538              		.loc 1 64 35 view .LVU125
+ 539 029c 76EEC66A 		vsub.f32	s13, s13, s12
+ 540              		.loc 1 64 20 view .LVU126
+ 541 02a0 C0ED2F6A 		vstr.32	s13, [r0, #188]
+  65:My_Top/System/current_read.cpp ****     Zero_Offset_IB = Primitive_IB - Zero_IB_avg;
+ 542              		.loc 1 65 5 is_stmt 1 view .LVU127
+ 543              		.loc 1 65 37 is_stmt 0 view .LVU128
+ 544 02a4 90ED0B6A 		vldr.32	s12, [r0, #44]
+ 545              		.loc 1 65 35 view .LVU129
+ 546 02a8 37EE467A 		vsub.f32	s14, s14, s12
+ 547              		.loc 1 65 20 view .LVU130
+ 548 02ac 80ED307A 		vstr.32	s14, [r0, #192]
+  66:My_Top/System/current_read.cpp ****     Zero_Offset_IC = Primitive_IC - Zero_IC_avg;
+ 549              		.loc 1 66 5 is_stmt 1 view .LVU131
+ 550              		.loc 1 66 37 is_stmt 0 view .LVU132
+ 551 02b0 90ED0C6A 		vldr.32	s12, [r0, #48]
+ 552              		.loc 1 66 35 view .LVU133
+ 553 02b4 77EEC67A 		vsub.f32	s15, s15, s12
+ 554              		.loc 1 66 20 view .LVU134
+ 555 02b8 C0ED317A 		vstr.32	s15, [r0, #196]
+  67:My_Top/System/current_read.cpp **** 
+  68:My_Top/System/current_read.cpp ****     // Zero_Offset_IA = Zero_IA_avg - Primitive_IA; // 零点偏移电流大小
+  69:My_Top/System/current_read.cpp ****     // Zero_Offset_IB = Zero_IB_avg - Primitive_IB;
+  70:My_Top/System/current_read.cpp ****     // Zero_Offset_IC = Zero_IC_avg - Primitive_IC;
+  71:My_Top/System/current_read.cpp **** 
+  72:My_Top/System/current_read.cpp ****     _I_noise = (Zero_Offset_IA + Zero_Offset_IB + Zero_Offset_IC) / 3.0f; // 求出三相电流之�
+ 556              		.loc 1 72 5 is_stmt 1 view .LVU135
+ 557              		.loc 1 72 32 is_stmt 0 view .LVU136
+ 558 02bc 76EE875A 		vadd.f32	s11, s13, s14
+ARM GAS  /tmp/ccp03nOB.s 			page 12
+
+
+ 559              		.loc 1 72 49 view .LVU137
+ 560 02c0 77EEA55A 		vadd.f32	s11, s15, s11
+ 561              		.loc 1 72 14 view .LVU138
+ 562 02c4 B0EE085A 		vmov.f32	s10, #3.0e+0
+ 563 02c8 85EE856A 		vdiv.f32	s12, s11, s10
+ 564              	.LVL33:
+  73:My_Top/System/current_read.cpp ****     Zero_Offset_IA -= _I_noise;                                                                    
+ 565              		.loc 1 73 5 is_stmt 1 view .LVU139
+ 566              		.loc 1 73 20 is_stmt 0 view .LVU140
+ 567 02cc 76EEC66A 		vsub.f32	s13, s13, s12
+ 568 02d0 C0ED2F6A 		vstr.32	s13, [r0, #188]
+  74:My_Top/System/current_read.cpp ****     Zero_Offset_IB -= _I_noise;
+ 569              		.loc 1 74 5 is_stmt 1 view .LVU141
+ 570              		.loc 1 74 20 is_stmt 0 view .LVU142
+ 571 02d4 37EE467A 		vsub.f32	s14, s14, s12
+ 572 02d8 80ED307A 		vstr.32	s14, [r0, #192]
+  75:My_Top/System/current_read.cpp ****     Zero_Offset_IC -= _I_noise;
+ 573              		.loc 1 75 5 is_stmt 1 view .LVU143
+ 574              		.loc 1 75 20 is_stmt 0 view .LVU144
+ 575 02dc 77EEC67A 		vsub.f32	s15, s15, s12
+ 576 02e0 C0ED317A 		vstr.32	s15, [r0, #196]
+  76:My_Top/System/current_read.cpp **** 
+  77:My_Top/System/current_read.cpp ****     IA = Zero_Offset_IA;
+ 577              		.loc 1 77 5 is_stmt 1 view .LVU145
+ 578              		.loc 1 77 8 is_stmt 0 view .LVU146
+ 579 02e4 C0ED006A 		vstr.32	s13, [r0]
+  78:My_Top/System/current_read.cpp ****     IB = Zero_Offset_IB;
+ 580              		.loc 1 78 5 is_stmt 1 view .LVU147
+ 581              		.loc 1 78 8 is_stmt 0 view .LVU148
+ 582 02e8 80ED017A 		vstr.32	s14, [r0, #4]
+  79:My_Top/System/current_read.cpp ****     IC = Zero_Offset_IC;
+ 583              		.loc 1 79 5 is_stmt 1 view .LVU149
+ 584              		.loc 1 79 8 is_stmt 0 view .LVU150
+ 585 02ec C0ED027A 		vstr.32	s15, [r0, #8]
+  80:My_Top/System/current_read.cpp **** 
+  81:My_Top/System/current_read.cpp ****     // IA_filtered = filter_ia.filter(IA); // 对零点偏移电流进行低通滤波
+  82:My_Top/System/current_read.cpp ****     // IB_filtered = filter_ib.filter(IB); // 对零点偏移电流进行低通滤波
+  83:My_Top/System/current_read.cpp ****     // IC_filtered = filter_ic.filter(IC); // 对零点偏移电流进行低通滤波
+  84:My_Top/System/current_read.cpp ****     IA_filtered = Zero_Offset_IA;
+ 586              		.loc 1 84 5 is_stmt 1 view .LVU151
+ 587              		.loc 1 84 17 is_stmt 0 view .LVU152
+ 588 02f0 C0ED046A 		vstr.32	s13, [r0, #16]
+  85:My_Top/System/current_read.cpp ****     IB_filtered = Zero_Offset_IB;
+ 589              		.loc 1 85 5 is_stmt 1 view .LVU153
+ 590              		.loc 1 85 17 is_stmt 0 view .LVU154
+ 591 02f4 80ED057A 		vstr.32	s14, [r0, #20]
+  86:My_Top/System/current_read.cpp ****     IC_filtered = Zero_Offset_IC;
+ 592              		.loc 1 86 5 is_stmt 1 view .LVU155
+ 593              		.loc 1 86 17 is_stmt 0 view .LVU156
+ 594 02f8 C0ED067A 		vstr.32	s15, [r0, #24]
+  87:My_Top/System/current_read.cpp **** 
+  88:My_Top/System/current_read.cpp **** }
+ 595              		.loc 1 88 1 view .LVU157
+ 596 02fc 05B0     		add	sp, sp, #20
+ 597              		.cfi_def_cfa_offset 4
+ 598              		@ sp needed
+ 599 02fe 5DF8044B 		ldr	r4, [sp], #4
+ARM GAS  /tmp/ccp03nOB.s 			page 13
+
+
+ 600              		.cfi_restore 4
+ 601              		.cfi_def_cfa_offset 0
+ 602 0302 7047     		bx	lr
+ 603              	.L36:
+ 604              		.align	2
+ 605              	.L35:
+ 606 0304 F88E1D3C 		.word	1008570104
+ 607 0308 0000843B 		.word	998506496
+ 608              		.cfi_endproc
+ 609              	.LFE1312:
+ 611              	.Letext0:
+ 612              		.file 2 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/machine/_default_types.h"
+ 613              		.file 3 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/sys/_stdint.h"
+ 614              		.file 4 "Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g474xx.h"
+ 615              		.file 5 "Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h"
+ 616              		.file 6 "Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h"
+ 617              		.file 7 "Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h"
+ 618              		.file 8 "Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h"
+ 619              		.file 9 "Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h"
+ 620              		.file 10 "Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h"
+ 621              		.file 11 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/cmath"
+ 622              		.file 12 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/type_traits"
+ 623              		.file 13 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/debug/debug.h"
+ 624              		.file 14 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/bits/std_abs.h"
+ 625              		.file 15 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/bits/predefined_ops.h"
+ 626              		.file 16 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/math.h"
+ 627              		.file 17 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/arm-none-eabi/thumb/v7e-m+f
+ 628              		.file 18 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/math.h"
+ 629              		.file 19 "Lib/compute/ex_math.hpp"
+ 630              		.file 20 "My_Top/System/bsp.hpp"
+ 631              		.file 21 "My_Top/System/current_read.hpp"
+ 632              		.file 22 "Core/Inc/main.h"
+ 633              		.file 23 "Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h"
+ARM GAS  /tmp/ccp03nOB.s 			page 14
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 current_read.cpp
+     /tmp/ccp03nOB.s:20     .text:00000000 $t
+     /tmp/ccp03nOB.s:26     .text:00000000 _ZN12PhaseCurrent17ADC_Injected_InitEv
+     /tmp/ccp03nOB.s:106    .text:00000056 _ZN12PhaseCurrent19Current_CalibrationEv
+     /tmp/ccp03nOB.s:142    .text:00000074 $d
+     /tmp/ccp03nOB.s:209    .text:000000d8 $d
+     /tmp/ccp03nOB.s:276    .text:0000013c $d
+     /tmp/ccp03nOB.s:434    .text:0000021c $d
+     /tmp/ccp03nOB.s:438    .text:00000220 $t
+     /tmp/ccp03nOB.s:444    .text:00000220 _ZN12PhaseCurrent14Update_CurrentEv
+     /tmp/ccp03nOB.s:606    .text:00000304 $d
+     /tmp/ccp03nOB.s:159    .text:00000085 $d
+     /tmp/ccp03nOB.s:159    .text:00000086 $t
+     /tmp/ccp03nOB.s:226    .text:000000e9 $d
+     /tmp/ccp03nOB.s:226    .text:000000ea $t
+     /tmp/ccp03nOB.s:293    .text:0000014d $d
+     /tmp/ccp03nOB.s:293    .text:0000014e $t
+
+UNDEFINED SYMBOLS
+_ZN13LowpassFilter4initEf
+_ZN9AvgFilter4initEh
+HAL_ADCEx_InjectedStart
+Error_Handler
+__aeabi_ui2d
+__aeabi_dmul
+__aeabi_d2f
+_ZN9AvgFilter6filterEf

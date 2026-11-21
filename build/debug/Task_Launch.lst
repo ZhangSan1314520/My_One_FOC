@@ -1,0 +1,343 @@
+ARM GAS  /tmp/ccqRSYFn.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"Task_Launch.cpp"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "My_Top/Task/Task_Launch.cpp"
+  20              		.section	.rodata.str1.4,"aMS",%progbits,1
+  21              		.align	2
+  22              	.LC0:
+  23 0000 53797374 		.ascii	"SystemInit\000"
+  23      656D496E 
+  23      697400
+  24 000b 00       		.align	2
+  25              	.LC1:
+  26 000c 5461736B 		.ascii	"Task_VofaRx\000"
+  26      5F566F66 
+  26      61527800 
+  27              		.align	2
+  28              	.LC2:
+  29 0018 5461736B 		.ascii	"Task_CLI\000"
+  29      5F434C49 
+  29      00
+  30 0021 000000   		.align	2
+  31              	.LC3:
+  32 0024 4D6F746F 		.ascii	"MotorPub\000"
+  32      72507562 
+  32      00
+  33 002d 000000   		.align	2
+  34              	.LC4:
+  35 0030 566F6661 		.ascii	"VofaTx\000"
+  35      547800
+  36 0037 00       		.align	2
+  37              	.LC5:
+  38 0038 54657374 		.ascii	"Test\000"
+  38      00
+  39              		.text
+  40              		.align	1
+  41              		.global	_Z12MC_TaskStartv
+  42              		.syntax unified
+  43              		.thumb
+  44              		.thumb_func
+  46              	_Z12MC_TaskStartv:
+  47              	.LFB1324:
+   1:My_Top/Task/Task_Launch.cpp **** 
+ARM GAS  /tmp/ccqRSYFn.s 			page 2
+
+
+   2:My_Top/Task/Task_Launch.cpp **** /* FreeRTOS includes */
+   3:My_Top/Task/Task_Launch.cpp **** #include "cmsis_os2.h"
+   4:My_Top/Task/Task_Launch.cpp **** #include "FreeRTOS.h"
+   5:My_Top/Task/Task_Launch.cpp **** #include "task.h"
+   6:My_Top/Task/Task_Launch.cpp **** #include "timers.h"
+   7:My_Top/Task/Task_Launch.cpp **** #include "MC_Serial.hpp"
+   8:My_Top/Task/Task_Launch.cpp **** #include "queue.h"
+   9:My_Top/Task/Task_Launch.cpp **** #include "My_Vofa.hpp"
+  10:My_Top/Task/Task_Launch.cpp **** 
+  11:My_Top/Task/Task_Launch.cpp **** 
+  12:My_Top/Task/Task_Launch.cpp **** /* Task Handle */
+  13:My_Top/Task/Task_Launch.cpp **** TaskHandle_t SystemInitHandle;
+  14:My_Top/Task/Task_Launch.cpp **** TaskHandle_t TestHandle;
+  15:My_Top/Task/Task_Launch.cpp **** TaskHandle_t Task_VofaRxHandle;
+  16:My_Top/Task/Task_Launch.cpp **** TaskHandle_t  DroneCANHandle;
+  17:My_Top/Task/Task_Launch.cpp **** TaskHandle_t MotorPubHandle;
+  18:My_Top/Task/Task_Launch.cpp **** TaskHandle_t CLIHandle;
+  19:My_Top/Task/Task_Launch.cpp **** TaskHandle_t VofaTxHandle;
+  20:My_Top/Task/Task_Launch.cpp **** 
+  21:My_Top/Task/Task_Launch.cpp **** 
+  22:My_Top/Task/Task_Launch.cpp **** /* Task Function */
+  23:My_Top/Task/Task_Launch.cpp **** extern void Task_SystemInit(void *argument);
+  24:My_Top/Task/Task_Launch.cpp **** extern void Task_Test(void *argument);
+  25:My_Top/Task/Task_Launch.cpp **** extern void Task_VofaRx(void *argument);
+  26:My_Top/Task/Task_Launch.cpp **** extern void Task_CLI(void *argument);
+  27:My_Top/Task/Task_Launch.cpp **** extern void Task_DroneCAN(void *argument);
+  28:My_Top/Task/Task_Launch.cpp **** extern void Task_MotorPublish(void *argument);
+  29:My_Top/Task/Task_Launch.cpp **** extern void Task_VofaTx(void *argument);
+  30:My_Top/Task/Task_Launch.cpp **** QueueHandle_t vofaRxQueue;   // VOFA接收队列句柄
+  31:My_Top/Task/Task_Launch.cpp **** 
+  32:My_Top/Task/Task_Launch.cpp **** 
+  33:My_Top/Task/Task_Launch.cpp **** void MC_TaskStart(void)
+  34:My_Top/Task/Task_Launch.cpp **** {
+  48              		.loc 1 34 1 view -0
+  49              		.cfi_startproc
+  50              		@ args = 0, pretend = 0, frame = 0
+  51              		@ frame_needed = 0, uses_anonymous_args = 0
+  52 0000 30B5     		push	{r4, r5, lr}
+  53              		.cfi_def_cfa_offset 12
+  54              		.cfi_offset 4, -12
+  55              		.cfi_offset 5, -8
+  56              		.cfi_offset 14, -4
+  57 0002 83B0     		sub	sp, sp, #12
+  58              		.cfi_def_cfa_offset 24
+  35:My_Top/Task/Task_Launch.cpp **** 
+  36:My_Top/Task/Task_Launch.cpp ****     /* 创建 VOFA 接收队列：队列长度 8，每项一帧数据 */
+  37:My_Top/Task/Task_Launch.cpp ****     vofaRxQueue = xQueueCreate(8, sizeof(VofaRxFrame_t));
+  59              		.loc 1 37 5 view .LVU1
+  60              		.loc 1 37 19 is_stmt 0 view .LVU2
+  61 0004 0022     		movs	r2, #0
+  62 0006 8221     		movs	r1, #130
+  63 0008 0820     		movs	r0, #8
+  64 000a FFF7FEFF 		bl	xQueueGenericCreate
+  65              	.LVL0:
+  66              		.loc 1 37 17 discriminator 1 view .LVU3
+  67 000e 244C     		ldr	r4, .L3
+  68 0010 2346     		mov	r3, r4
+ARM GAS  /tmp/ccqRSYFn.s 			page 3
+
+
+  69 0012 43F8040B 		str	r0, [r3], #4
+  38:My_Top/Task/Task_Launch.cpp **** 
+  39:My_Top/Task/Task_Launch.cpp ****     /* Task 创建 */
+  40:My_Top/Task/Task_Launch.cpp ****     xTaskCreate(Task_SystemInit, "SystemInit", 256, NULL, osPriorityHigh, &SystemInitHandle); //系
+  70              		.loc 1 40 5 is_stmt 1 view .LVU4
+  71              		.loc 1 40 16 is_stmt 0 view .LVU5
+  72 0016 0193     		str	r3, [sp, #4]
+  73 0018 2823     		movs	r3, #40
+  74 001a 0093     		str	r3, [sp]
+  75 001c 0023     		movs	r3, #0
+  76 001e 4FF48072 		mov	r2, #256
+  77 0022 2049     		ldr	r1, .L3+4
+  78 0024 2048     		ldr	r0, .L3+8
+  79 0026 FFF7FEFF 		bl	xTaskCreate
+  80              	.LVL1:
+  41:My_Top/Task/Task_Launch.cpp ****     xTaskCreate(Task_VofaRx, "Task_VofaRx", 256, NULL, osPriorityNormal, &Task_VofaRxHandle); //Vof
+  81              		.loc 1 41 5 is_stmt 1 view .LVU6
+  82              		.loc 1 41 16 is_stmt 0 view .LVU7
+  83 002a 04F10803 		add	r3, r4, #8
+  84 002e 0193     		str	r3, [sp, #4]
+  85 0030 1825     		movs	r5, #24
+  86 0032 0095     		str	r5, [sp]
+  87 0034 0023     		movs	r3, #0
+  88 0036 4FF48072 		mov	r2, #256
+  89 003a 1C49     		ldr	r1, .L3+12
+  90 003c 1C48     		ldr	r0, .L3+16
+  91 003e FFF7FEFF 		bl	xTaskCreate
+  92              	.LVL2:
+  42:My_Top/Task/Task_Launch.cpp ****     xTaskCreate(Task_CLI, "Task_CLI", 256, NULL, osPriorityNormal, &CLIHandle); //CLI任务
+  93              		.loc 1 42 5 is_stmt 1 view .LVU8
+  94              		.loc 1 42 16 is_stmt 0 view .LVU9
+  95 0042 04F10C03 		add	r3, r4, #12
+  96 0046 0193     		str	r3, [sp, #4]
+  97 0048 0095     		str	r5, [sp]
+  98 004a 0023     		movs	r3, #0
+  99 004c 4FF48072 		mov	r2, #256
+ 100 0050 1849     		ldr	r1, .L3+20
+ 101 0052 1948     		ldr	r0, .L3+24
+ 102 0054 FFF7FEFF 		bl	xTaskCreate
+ 103              	.LVL3:
+  43:My_Top/Task/Task_Launch.cpp ****     // xTaskCreate(Task_DroneCAN, "Task_DroneCAN", 256, NULL, osPriorityNormal, &DroneCANHandle); /
+  44:My_Top/Task/Task_Launch.cpp ****     xTaskCreate(Task_MotorPublish, "MotorPub", 256, NULL, osPriorityLow4, &MotorPubHandle); //uorb�
+ 104              		.loc 1 44 5 is_stmt 1 view .LVU10
+ 105              		.loc 1 44 16 is_stmt 0 view .LVU11
+ 106 0058 04F11003 		add	r3, r4, #16
+ 107 005c 0193     		str	r3, [sp, #4]
+ 108 005e 0C25     		movs	r5, #12
+ 109 0060 0095     		str	r5, [sp]
+ 110 0062 0023     		movs	r3, #0
+ 111 0064 4FF48072 		mov	r2, #256
+ 112 0068 1449     		ldr	r1, .L3+28
+ 113 006a 1548     		ldr	r0, .L3+32
+ 114 006c FFF7FEFF 		bl	xTaskCreate
+ 115              	.LVL4:
+  45:My_Top/Task/Task_Launch.cpp ****     xTaskCreate(Task_VofaTx,"VofaTx",  512, NULL, osPriorityLow4, &VofaTxHandle); //Vofa发送任�
+ 116              		.loc 1 45 5 is_stmt 1 view .LVU12
+ 117              		.loc 1 45 16 is_stmt 0 view .LVU13
+ARM GAS  /tmp/ccqRSYFn.s 			page 4
+
+
+ 118 0070 04F11403 		add	r3, r4, #20
+ 119 0074 0193     		str	r3, [sp, #4]
+ 120 0076 0095     		str	r5, [sp]
+ 121 0078 0023     		movs	r3, #0
+ 122 007a 4FF40072 		mov	r2, #512
+ 123 007e 1149     		ldr	r1, .L3+36
+ 124 0080 1148     		ldr	r0, .L3+40
+ 125 0082 FFF7FEFF 		bl	xTaskCreate
+ 126              	.LVL5:
+  46:My_Top/Task/Task_Launch.cpp **** 
+  47:My_Top/Task/Task_Launch.cpp ****     xTaskCreate(Task_Test, "Test", 256, NULL, osPriorityLow, &TestHandle); //测试任务 
+ 127              		.loc 1 47 5 is_stmt 1 view .LVU14
+ 128              		.loc 1 47 16 is_stmt 0 view .LVU15
+ 129 0086 1834     		adds	r4, r4, #24
+ 130 0088 0194     		str	r4, [sp, #4]
+ 131 008a 0823     		movs	r3, #8
+ 132 008c 0093     		str	r3, [sp]
+ 133 008e 0023     		movs	r3, #0
+ 134 0090 4FF48072 		mov	r2, #256
+ 135 0094 0D49     		ldr	r1, .L3+44
+ 136 0096 0E48     		ldr	r0, .L3+48
+ 137 0098 FFF7FEFF 		bl	xTaskCreate
+ 138              	.LVL6:
+  48:My_Top/Task/Task_Launch.cpp **** }
+ 139              		.loc 1 48 1 view .LVU16
+ 140 009c 03B0     		add	sp, sp, #12
+ 141              		.cfi_def_cfa_offset 12
+ 142              		@ sp needed
+ 143 009e 30BD     		pop	{r4, r5, pc}
+ 144              	.L4:
+ 145              		.align	2
+ 146              	.L3:
+ 147 00a0 00000000 		.word	.LANCHOR0
+ 148 00a4 00000000 		.word	.LC0
+ 149 00a8 00000000 		.word	_Z15Task_SystemInitPv
+ 150 00ac 0C000000 		.word	.LC1
+ 151 00b0 00000000 		.word	_Z11Task_VofaRxPv
+ 152 00b4 18000000 		.word	.LC2
+ 153 00b8 00000000 		.word	_Z8Task_CLIPv
+ 154 00bc 24000000 		.word	.LC3
+ 155 00c0 00000000 		.word	_Z17Task_MotorPublishPv
+ 156 00c4 30000000 		.word	.LC4
+ 157 00c8 00000000 		.word	_Z11Task_VofaTxPv
+ 158 00cc 38000000 		.word	.LC5
+ 159 00d0 00000000 		.word	_Z9Task_TestPv
+ 160              		.cfi_endproc
+ 161              	.LFE1324:
+ 163              		.align	1
+ 164              		.global	MC_ScheduleStart
+ 165              		.syntax unified
+ 166              		.thumb
+ 167              		.thumb_func
+ 169              	MC_ScheduleStart:
+ 170              	.LFB1325:
+  49:My_Top/Task/Task_Launch.cpp **** 
+  50:My_Top/Task/Task_Launch.cpp **** extern "C" void MC_ScheduleStart(void)
+  51:My_Top/Task/Task_Launch.cpp **** {
+ARM GAS  /tmp/ccqRSYFn.s 			page 5
+
+
+ 171              		.loc 1 51 1 is_stmt 1 view -0
+ 172              		.cfi_startproc
+ 173              		@ args = 0, pretend = 0, frame = 0
+ 174              		@ frame_needed = 0, uses_anonymous_args = 0
+ 175 00d4 08B5     		push	{r3, lr}
+ 176              		.cfi_def_cfa_offset 8
+ 177              		.cfi_offset 3, -8
+ 178              		.cfi_offset 14, -4
+  52:My_Top/Task/Task_Launch.cpp ****     MC_TaskStart();//开始任务
+ 179              		.loc 1 52 5 view .LVU18
+ 180              		.loc 1 52 17 is_stmt 0 view .LVU19
+ 181 00d6 FFF7FEFF 		bl	_Z12MC_TaskStartv
+ 182              	.LVL7:
+  53:My_Top/Task/Task_Launch.cpp **** }
+ 183              		.loc 1 53 1 view .LVU20
+ 184 00da 08BD     		pop	{r3, pc}
+ 185              		.cfi_endproc
+ 186              	.LFE1325:
+ 188              		.global	vofaRxQueue
+ 189              		.global	VofaTxHandle
+ 190              		.global	CLIHandle
+ 191              		.global	MotorPubHandle
+ 192              		.global	DroneCANHandle
+ 193              		.global	Task_VofaRxHandle
+ 194              		.global	TestHandle
+ 195              		.global	SystemInitHandle
+ 196              		.bss
+ 197              		.align	2
+ 198              		.set	.LANCHOR0,. + 0
+ 201              	vofaRxQueue:
+ 202 0000 00000000 		.space	4
+ 205              	SystemInitHandle:
+ 206 0004 00000000 		.space	4
+ 209              	Task_VofaRxHandle:
+ 210 0008 00000000 		.space	4
+ 213              	CLIHandle:
+ 214 000c 00000000 		.space	4
+ 217              	MotorPubHandle:
+ 218 0010 00000000 		.space	4
+ 221              	VofaTxHandle:
+ 222 0014 00000000 		.space	4
+ 225              	TestHandle:
+ 226 0018 00000000 		.space	4
+ 229              	DroneCANHandle:
+ 230 001c 00000000 		.space	4
+ 231              		.text
+ 232              	.Letext0:
+ 233              		.file 2 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/machine/_default_types.h"
+ 234              		.file 3 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/sys/_stdint.h"
+ 235              		.file 4 "/opt/arm-gnu-toolchain-14.2/lib/gcc/arm-none-eabi/14.2.1/include/stddef.h"
+ 236              		.file 5 "Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h"
+ 237              		.file 6 "Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h"
+ 238              		.file 7 "Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h"
+ 239              		.file 8 "Middlewares/Third_Party/FreeRTOS/Source/include/task.h"
+ 240              		.file 9 "Middlewares/Third_Party/FreeRTOS/Source/include/queue.h"
+ 241              		.file 10 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/cmath"
+ 242              		.file 11 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/type_traits"
+ARM GAS  /tmp/ccqRSYFn.s 			page 6
+
+
+ 243              		.file 12 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/debug/debug.h"
+ 244              		.file 13 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/bits/std_abs.h"
+ 245              		.file 14 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/cstdlib"
+ 246              		.file 15 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/bits/predefined_ops.h"
+ 247              		.file 16 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/math.h"
+ 248              		.file 17 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/stdlib.h"
+ 249              		.file 18 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/arm-none-eabi/thumb/v7e-m+f
+ 250              		.file 19 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/math.h"
+ 251              		.file 20 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/stdlib.h"
+ 252              		.file 21 "My_Top/MC/My_Vofa.hpp"
+ARM GAS  /tmp/ccqRSYFn.s 			page 7
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 Task_Launch.cpp
+     /tmp/ccqRSYFn.s:21     .rodata.str1.4:00000000 $d
+     /tmp/ccqRSYFn.s:40     .text:00000000 $t
+     /tmp/ccqRSYFn.s:46     .text:00000000 _Z12MC_TaskStartv
+     /tmp/ccqRSYFn.s:147    .text:000000a0 $d
+     /tmp/ccqRSYFn.s:163    .text:000000d4 $t
+     /tmp/ccqRSYFn.s:169    .text:000000d4 MC_ScheduleStart
+     /tmp/ccqRSYFn.s:201    .bss:00000000 vofaRxQueue
+     /tmp/ccqRSYFn.s:221    .bss:00000014 VofaTxHandle
+     /tmp/ccqRSYFn.s:213    .bss:0000000c CLIHandle
+     /tmp/ccqRSYFn.s:217    .bss:00000010 MotorPubHandle
+     /tmp/ccqRSYFn.s:229    .bss:0000001c DroneCANHandle
+     /tmp/ccqRSYFn.s:209    .bss:00000008 Task_VofaRxHandle
+     /tmp/ccqRSYFn.s:225    .bss:00000018 TestHandle
+     /tmp/ccqRSYFn.s:205    .bss:00000004 SystemInitHandle
+     /tmp/ccqRSYFn.s:197    .bss:00000000 $d
+
+UNDEFINED SYMBOLS
+xQueueGenericCreate
+xTaskCreate
+_Z15Task_SystemInitPv
+_Z11Task_VofaRxPv
+_Z8Task_CLIPv
+_Z17Task_MotorPublishPv
+_Z11Task_VofaTxPv
+_Z9Task_TestPv

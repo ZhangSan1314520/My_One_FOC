@@ -1,0 +1,408 @@
+ARM GAS  /tmp/ccueNTql.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"Task_MotorPublish.cpp"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "My_Top/Task/Task_MotorPublish.cpp"
+  20              		.align	1
+  21              		.syntax unified
+  22              		.thumb
+  23              		.thumb_func
+  25              	_ZL10fill_telemP13motor_telem_tP9FOC_Motor:
+  26              	.LVL0:
+  27              	.LFB1365:
+   1:My_Top/Task/Task_MotorPublish.cpp **** #include "FreeRTOS.h"
+   2:My_Top/Task/Task_MotorPublish.cpp **** #include "task.h"
+   3:My_Top/Task/Task_MotorPublish.cpp **** #include "uorb.hpp"
+   4:My_Top/Task/Task_MotorPublish.cpp **** #include "task_topics.h"
+   5:My_Top/Task/Task_MotorPublish.cpp **** #include "FocMotor_ClosedLoop.hpp"
+   6:My_Top/Task/Task_MotorPublish.cpp **** 
+   7:My_Top/Task/Task_MotorPublish.cpp **** static void fill_telem(motor_telem_t *dst, FOC_Motor *m) // 电机数据填充转存
+   8:My_Top/Task/Task_MotorPublish.cpp **** {
+  28              		.loc 1 8 1 view -0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32              		@ link register save eliminated.
+   9:My_Top/Task/Task_MotorPublish.cpp **** 
+  10:My_Top/Task/Task_MotorPublish.cpp ****     // 实际位置/速度
+  11:My_Top/Task/Task_MotorPublish.cpp ****     dst->theta_zero = m->theta_zero; //电角度零位
+  33              		.loc 1 11 5 view .LVU1
+  34              		.loc 1 11 26 is_stmt 0 view .LVU2
+  35 0000 8B6A     		ldr	r3, [r1, #40]	@ float
+  36              		.loc 1 11 21 view .LVU3
+  37 0002 4360     		str	r3, [r0, #4]	@ float
+  12:My_Top/Task/Task_MotorPublish.cpp ****     dst->theta = m->theta; //电机电角度
+  38              		.loc 1 12 5 is_stmt 1 view .LVU4
+  39              		.loc 1 12 21 is_stmt 0 view .LVU5
+  40 0004 CB6A     		ldr	r3, [r1, #44]	@ float
+  41              		.loc 1 12 16 view .LVU6
+  42 0006 0360     		str	r3, [r0]	@ float
+  13:My_Top/Task/Task_MotorPublish.cpp ****     dst->theta_no_offic = m->theta_no_offic; //电机未偏移的原始弧度
+  43              		.loc 1 13 5 is_stmt 1 view .LVU7
+  44              		.loc 1 13 30 is_stmt 0 view .LVU8
+  45 0008 0B6B     		ldr	r3, [r1, #48]	@ float
+ARM GAS  /tmp/ccueNTql.s 			page 2
+
+
+  46              		.loc 1 13 25 view .LVU9
+  47 000a 8360     		str	r3, [r0, #8]	@ float
+  14:My_Top/Task/Task_MotorPublish.cpp ****     dst->theta_m = m->theta_m;                //电机原始弧度
+  48              		.loc 1 14 5 is_stmt 1 view .LVU10
+  49              		.loc 1 14 23 is_stmt 0 view .LVU11
+  50 000c 4B6B     		ldr	r3, [r1, #52]	@ float
+  51              		.loc 1 14 18 view .LVU12
+  52 000e C360     		str	r3, [r0, #12]	@ float
+  15:My_Top/Task/Task_MotorPublish.cpp ****     dst->theta_m_speed = m->theta_m_speed;        //电机原始弧度速度
+  53              		.loc 1 15 5 is_stmt 1 view .LVU13
+  54              		.loc 1 15 29 is_stmt 0 view .LVU14
+  55 0010 8B6B     		ldr	r3, [r1, #56]	@ float
+  56              		.loc 1 15 24 view .LVU15
+  57 0012 0361     		str	r3, [r0, #16]	@ float
+  16:My_Top/Task/Task_MotorPublish.cpp ****     dst->theta_deg_final = m->theta_deg_final;        //最终的电机角度 (度)
+  58              		.loc 1 16 5 is_stmt 1 view .LVU16
+  59              		.loc 1 16 31 is_stmt 0 view .LVU17
+  60 0014 4B6C     		ldr	r3, [r1, #68]	@ float
+  61              		.loc 1 16 26 view .LVU18
+  62 0016 4361     		str	r3, [r0, #20]	@ float
+  17:My_Top/Task/Task_MotorPublish.cpp ****     dst->reg_final = m->reg_final;              //最终的电机角度 (弧度)
+  63              		.loc 1 17 5 is_stmt 1 view .LVU19
+  64              		.loc 1 17 25 is_stmt 0 view .LVU20
+  65 0018 0B6C     		ldr	r3, [r1, #64]	@ float
+  66              		.loc 1 17 20 view .LVU21
+  67 001a 8361     		str	r3, [r0, #24]	@ float
+  18:My_Top/Task/Task_MotorPublish.cpp ****     dst->filtered_speed = m->filtered_speed; //滤波后的速度
+  68              		.loc 1 18 5 is_stmt 1 view .LVU22
+  69              		.loc 1 18 30 is_stmt 0 view .LVU23
+  70 001c CB6B     		ldr	r3, [r1, #60]	@ float
+  71              		.loc 1 18 25 view .LVU24
+  72 001e C361     		str	r3, [r0, #28]	@ float
+  19:My_Top/Task/Task_MotorPublish.cpp ****     dst->Angular_velocity_final = m->Angular_velocity_final; //最终的角速度
+  73              		.loc 1 19 5 is_stmt 1 view .LVU25
+  74              		.loc 1 19 38 is_stmt 0 view .LVU26
+  75 0020 8B6C     		ldr	r3, [r1, #72]	@ float
+  76              		.loc 1 19 33 view .LVU27
+  77 0022 0362     		str	r3, [r0, #32]	@ float
+  20:My_Top/Task/Task_MotorPublish.cpp ****     dst->Now_Id = m->Now_Id; //实际Id
+  78              		.loc 1 20 5 is_stmt 1 view .LVU28
+  79              		.loc 1 20 22 is_stmt 0 view .LVU29
+  80 0024 4B6D     		ldr	r3, [r1, #84]	@ float
+  81              		.loc 1 20 17 view .LVU30
+  82 0026 4362     		str	r3, [r0, #36]	@ float
+  21:My_Top/Task/Task_MotorPublish.cpp ****     dst->Now_Iq = m->Now_Iq; //实际Iq
+  83              		.loc 1 21 5 is_stmt 1 view .LVU31
+  84              		.loc 1 21 22 is_stmt 0 view .LVU32
+  85 0028 8B6D     		ldr	r3, [r1, #88]	@ float
+  86              		.loc 1 21 17 view .LVU33
+  87 002a 8362     		str	r3, [r0, #40]	@ float
+  22:My_Top/Task/Task_MotorPublish.cpp ****     dst->u_d = m->u_d; //输出ud轴电压
+  88              		.loc 1 22 5 is_stmt 1 view .LVU34
+  89              		.loc 1 22 19 is_stmt 0 view .LVU35
+  90 002c 0B68     		ldr	r3, [r1]	@ float
+  91              		.loc 1 22 14 view .LVU36
+  92 002e C362     		str	r3, [r0, #44]	@ float
+  23:My_Top/Task/Task_MotorPublish.cpp ****     dst->u_q = m->u_q; //输出q轴电压
+ARM GAS  /tmp/ccueNTql.s 			page 3
+
+
+  93              		.loc 1 23 5 is_stmt 1 view .LVU37
+  94              		.loc 1 23 19 is_stmt 0 view .LVU38
+  95 0030 4B68     		ldr	r3, [r1, #4]	@ float
+  96              		.loc 1 23 14 view .LVU39
+  97 0032 0363     		str	r3, [r0, #48]	@ float
+  24:My_Top/Task/Task_MotorPublish.cpp **** 
+  25:My_Top/Task/Task_MotorPublish.cpp ****     // 目标位置/速度
+  26:My_Top/Task/Task_MotorPublish.cpp ****     dst->_target_location2 = m->_target_location2;      //目标位置 (度)
+  98              		.loc 1 26 5 is_stmt 1 view .LVU40
+  99              		.loc 1 26 33 is_stmt 0 view .LVU41
+ 100 0034 8B6E     		ldr	r3, [r1, #104]	@ float
+ 101              		.loc 1 26 28 view .LVU42
+ 102 0036 4363     		str	r3, [r0, #52]	@ float
+  27:My_Top/Task/Task_MotorPublish.cpp ****     dst->_target_speed = m->_target_speed;          //目标速度
+ 103              		.loc 1 27 5 is_stmt 1 view .LVU43
+ 104              		.loc 1 27 29 is_stmt 0 view .LVU44
+ 105 0038 4B6E     		ldr	r3, [r1, #100]	@ float
+ 106              		.loc 1 27 24 view .LVU45
+ 107 003a 8363     		str	r3, [r0, #56]	@ float
+  28:My_Top/Task/Task_MotorPublish.cpp ****     dst->_target_Id = m->_target_Id;      //目标Id
+ 108              		.loc 1 28 5 is_stmt 1 view .LVU46
+ 109              		.loc 1 28 26 is_stmt 0 view .LVU47
+ 110 003c CB6D     		ldr	r3, [r1, #92]	@ float
+ 111              		.loc 1 28 21 view .LVU48
+ 112 003e C363     		str	r3, [r0, #60]	@ float
+  29:My_Top/Task/Task_MotorPublish.cpp ****     dst->_target_Iq = m->_target_Iq;      //目标Iq
+ 113              		.loc 1 29 5 is_stmt 1 view .LVU49
+ 114              		.loc 1 29 26 is_stmt 0 view .LVU50
+ 115 0040 0B6E     		ldr	r3, [r1, #96]	@ float
+ 116              		.loc 1 29 21 view .LVU51
+ 117 0042 0364     		str	r3, [r0, #64]	@ float
+  30:My_Top/Task/Task_MotorPublish.cpp **** 
+  31:My_Top/Task/Task_MotorPublish.cpp ****     //ABC相占空比
+  32:My_Top/Task/Task_MotorPublish.cpp ****     dst->motor_duty_a = m->motor_duty_a;       //电机占空比
+ 118              		.loc 1 32 5 is_stmt 1 view .LVU52
+ 119              		.loc 1 32 28 is_stmt 0 view .LVU53
+ 120 0044 D1F89830 		ldr	r3, [r1, #152]	@ float
+ 121              		.loc 1 32 23 view .LVU54
+ 122 0048 4364     		str	r3, [r0, #68]	@ float
+  33:My_Top/Task/Task_MotorPublish.cpp ****     dst->motor_duty_b = m->motor_duty_b;
+ 123              		.loc 1 33 5 is_stmt 1 view .LVU55
+ 124              		.loc 1 33 28 is_stmt 0 view .LVU56
+ 125 004a D1F89C30 		ldr	r3, [r1, #156]	@ float
+ 126              		.loc 1 33 23 view .LVU57
+ 127 004e 8364     		str	r3, [r0, #72]	@ float
+  34:My_Top/Task/Task_MotorPublish.cpp ****     dst->motor_duty_c = m->motor_duty_c;
+ 128              		.loc 1 34 5 is_stmt 1 view .LVU58
+ 129              		.loc 1 34 28 is_stmt 0 view .LVU59
+ 130 0050 D1F8A030 		ldr	r3, [r1, #160]	@ float
+ 131              		.loc 1 34 23 view .LVU60
+ 132 0054 C364     		str	r3, [r0, #76]	@ float
+  35:My_Top/Task/Task_MotorPublish.cpp **** 
+  36:My_Top/Task/Task_MotorPublish.cpp ****     dst->_IA = m->_IA;       //电机三相电流
+ 133              		.loc 1 36 5 is_stmt 1 view .LVU61
+ 134              		.loc 1 36 19 is_stmt 0 view .LVU62
+ 135 0056 0B69     		ldr	r3, [r1, #16]	@ float
+ 136              		.loc 1 36 14 view .LVU63
+ARM GAS  /tmp/ccueNTql.s 			page 4
+
+
+ 137 0058 0365     		str	r3, [r0, #80]	@ float
+  37:My_Top/Task/Task_MotorPublish.cpp ****     dst->_IB = m->_IB;
+ 138              		.loc 1 37 5 is_stmt 1 view .LVU64
+ 139              		.loc 1 37 19 is_stmt 0 view .LVU65
+ 140 005a 4B69     		ldr	r3, [r1, #20]	@ float
+ 141              		.loc 1 37 14 view .LVU66
+ 142 005c 4365     		str	r3, [r0, #84]	@ float
+  38:My_Top/Task/Task_MotorPublish.cpp ****     dst->_IC = m->_IC;
+ 143              		.loc 1 38 5 is_stmt 1 view .LVU67
+ 144              		.loc 1 38 19 is_stmt 0 view .LVU68
+ 145 005e 8B69     		ldr	r3, [r1, #24]	@ float
+ 146              		.loc 1 38 14 view .LVU69
+ 147 0060 8365     		str	r3, [r0, #88]	@ float
+  39:My_Top/Task/Task_MotorPublish.cpp **** 
+  40:My_Top/Task/Task_MotorPublish.cpp ****     dst->Zero_IA = m->_phase_current->Zero_IA;       //电机三相电流零点偏移
+ 148              		.loc 1 40 5 is_stmt 1 view .LVU70
+ 149              		.loc 1 40 23 is_stmt 0 view .LVU71
+ 150 0062 CB6F     		ldr	r3, [r1, #124]
+ 151              		.loc 1 40 39 view .LVU72
+ 152 0064 DB69     		ldr	r3, [r3, #28]	@ float
+ 153              		.loc 1 40 18 view .LVU73
+ 154 0066 C365     		str	r3, [r0, #92]	@ float
+  41:My_Top/Task/Task_MotorPublish.cpp ****     dst->Zero_IB = m->_phase_current->Zero_IB;
+ 155              		.loc 1 41 5 is_stmt 1 view .LVU74
+ 156              		.loc 1 41 23 is_stmt 0 view .LVU75
+ 157 0068 CB6F     		ldr	r3, [r1, #124]
+ 158              		.loc 1 41 39 view .LVU76
+ 159 006a 1B6A     		ldr	r3, [r3, #32]	@ float
+ 160              		.loc 1 41 18 view .LVU77
+ 161 006c 0366     		str	r3, [r0, #96]	@ float
+  42:My_Top/Task/Task_MotorPublish.cpp ****     dst->Zero_IC = m->_phase_current->Zero_IC;
+ 162              		.loc 1 42 5 is_stmt 1 view .LVU78
+ 163              		.loc 1 42 23 is_stmt 0 view .LVU79
+ 164 006e CB6F     		ldr	r3, [r1, #124]
+ 165              		.loc 1 42 39 view .LVU80
+ 166 0070 5B6A     		ldr	r3, [r3, #36]	@ float
+ 167              		.loc 1 42 18 view .LVU81
+ 168 0072 4366     		str	r3, [r0, #100]	@ float
+  43:My_Top/Task/Task_MotorPublish.cpp **** 
+  44:My_Top/Task/Task_MotorPublish.cpp ****     dst->Zero_IA_avg = m->_phase_current->Zero_IA_avg;       //电机三相电流零点偏移平均
+ 169              		.loc 1 44 5 is_stmt 1 view .LVU82
+ 170              		.loc 1 44 27 is_stmt 0 view .LVU83
+ 171 0074 CB6F     		ldr	r3, [r1, #124]
+ 172              		.loc 1 44 43 view .LVU84
+ 173 0076 9B6A     		ldr	r3, [r3, #40]	@ float
+ 174              		.loc 1 44 22 view .LVU85
+ 175 0078 8366     		str	r3, [r0, #104]	@ float
+  45:My_Top/Task/Task_MotorPublish.cpp ****     dst->Zero_IB_avg = m->_phase_current->Zero_IB_avg;
+ 176              		.loc 1 45 5 is_stmt 1 view .LVU86
+ 177              		.loc 1 45 27 is_stmt 0 view .LVU87
+ 178 007a CB6F     		ldr	r3, [r1, #124]
+ 179              		.loc 1 45 43 view .LVU88
+ 180 007c DB6A     		ldr	r3, [r3, #44]	@ float
+ 181              		.loc 1 45 22 view .LVU89
+ 182 007e C366     		str	r3, [r0, #108]	@ float
+  46:My_Top/Task/Task_MotorPublish.cpp ****     dst->Zero_IC_avg = m->_phase_current->Zero_IC_avg;
+ 183              		.loc 1 46 5 is_stmt 1 view .LVU90
+ARM GAS  /tmp/ccueNTql.s 			page 5
+
+
+ 184              		.loc 1 46 27 is_stmt 0 view .LVU91
+ 185 0080 CB6F     		ldr	r3, [r1, #124]
+ 186              		.loc 1 46 43 view .LVU92
+ 187 0082 1B6B     		ldr	r3, [r3, #48]	@ float
+ 188              		.loc 1 46 22 view .LVU93
+ 189 0084 0367     		str	r3, [r0, #112]	@ float
+  47:My_Top/Task/Task_MotorPublish.cpp **** 
+  48:My_Top/Task/Task_MotorPublish.cpp **** 
+  49:My_Top/Task/Task_MotorPublish.cpp **** }
+ 190              		.loc 1 49 1 view .LVU94
+ 191 0086 7047     		bx	lr
+ 192              		.cfi_endproc
+ 193              	.LFE1365:
+ 195              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 196              		.align	2
+ 197              	.LC0:
+ 198 0000 6D6F746F 		.ascii	"motor_telem\000"
+ 198      725F7465 
+ 198      6C656D00 
+ 199              		.text
+ 200              		.align	1
+ 201              		.global	_Z17Task_MotorPublishPv
+ 202              		.syntax unified
+ 203              		.thumb
+ 204              		.thumb_func
+ 206              	_Z17Task_MotorPublishPv:
+ 207              	.LVL1:
+ 208              	.LFB1366:
+  50:My_Top/Task/Task_MotorPublish.cpp **** 
+  51:My_Top/Task/Task_MotorPublish.cpp **** void Task_MotorPublish(void *argument)
+  52:My_Top/Task/Task_MotorPublish.cpp **** {
+ 209              		.loc 1 52 1 is_stmt 1 view -0
+ 210              		.cfi_startproc
+ 211              		@ args = 0, pretend = 0, frame = 488
+ 212              		@ frame_needed = 0, uses_anonymous_args = 0
+ 213              		.loc 1 52 1 is_stmt 0 view .LVU96
+ 214 0088 30B5     		push	{r4, r5, lr}
+ 215              		.cfi_def_cfa_offset 12
+ 216              		.cfi_offset 4, -12
+ 217              		.cfi_offset 5, -8
+ 218              		.cfi_offset 14, -4
+ 219 008a FBB0     		sub	sp, sp, #492
+ 220              		.cfi_def_cfa_offset 504
+  53:My_Top/Task/Task_MotorPublish.cpp ****     uorb_handle_t topic = uorb_advertise(UORB_TOPIC_MOTOR, sizeof(motor_telem_t) * 4); //注册发�
+ 221              		.loc 1 53 5 is_stmt 1 view .LVU97
+ 222              		.loc 1 53 41 is_stmt 0 view .LVU98
+ 223 008c 4FF4F071 		mov	r1, #480
+ 224 0090 0D48     		ldr	r0, .L5
+ 225              	.LVL2:
+ 226              		.loc 1 53 41 view .LVU99
+ 227 0092 FFF7FEFF 		bl	uorb_advertise
+ 228              	.LVL3:
+ 229 0096 0546     		mov	r5, r0
+ 230              	.LVL4:
+  54:My_Top/Task/Task_MotorPublish.cpp ****     motor_telem_t buf[4] = {0}; // 发布数据缓冲区
+ 231              		.loc 1 54 5 is_stmt 1 view .LVU100
+ 232              		.loc 1 54 19 is_stmt 0 view .LVU101
+ARM GAS  /tmp/ccueNTql.s 			page 6
+
+
+ 233 0098 4FF4F072 		mov	r2, #480
+ 234 009c 0021     		movs	r1, #0
+ 235 009e 02A8     		add	r0, sp, #8
+ 236              	.LVL5:
+ 237              		.loc 1 54 19 view .LVU102
+ 238 00a0 FFF7FEFF 		bl	memset
+ 239              	.LVL6:
+  55:My_Top/Task/Task_MotorPublish.cpp ****     TickType_t last_wake_time=xTaskGetTickCount(); //获取当前系统时间戳
+ 240              		.loc 1 55 5 is_stmt 1 view .LVU103
+ 241              		.loc 1 55 48 is_stmt 0 view .LVU104
+ 242 00a4 FFF7FEFF 		bl	xTaskGetTickCount
+ 243              	.LVL7:
+ 244              		.loc 1 55 49 discriminator 1 view .LVU105
+ 245 00a8 0190     		str	r0, [sp, #4]
+ 246              	.L3:
+  56:My_Top/Task/Task_MotorPublish.cpp ****     while (1)
+ 247              		.loc 1 56 5 is_stmt 1 view .LVU106
+  57:My_Top/Task/Task_MotorPublish.cpp ****     {
+  58:My_Top/Task/Task_MotorPublish.cpp ****         fill_telem(&buf[0], &M1);
+ 248              		.loc 1 58 9 view .LVU107
+ 249              		.loc 1 58 19 is_stmt 0 view .LVU108
+ 250 00aa 02AC     		add	r4, sp, #8
+ 251 00ac 0749     		ldr	r1, .L5+4
+ 252 00ae 2046     		mov	r0, r4
+ 253 00b0 FFF7A6FF 		bl	_ZL10fill_telemP13motor_telem_tP9FOC_Motor
+ 254              	.LVL8:
+  59:My_Top/Task/Task_MotorPublish.cpp **** 
+  60:My_Top/Task/Task_MotorPublish.cpp ****         uorb_publish(topic, buf);//发布数据 (没有指定给谁发，放在公共区域里)
+ 255              		.loc 1 60 9 is_stmt 1 view .LVU109
+ 256              		.loc 1 60 21 is_stmt 0 view .LVU110
+ 257 00b4 2146     		mov	r1, r4
+ 258 00b6 2846     		mov	r0, r5
+ 259 00b8 FFF7FEFF 		bl	uorb_publish
+ 260              	.LVL9:
+  61:My_Top/Task/Task_MotorPublish.cpp ****         //运行耗时10us左右   
+  62:My_Top/Task/Task_MotorPublish.cpp ****         vTaskDelayUntil(&last_wake_time,pdMS_TO_TICKS(5)); //严格按5ms发布一次
+ 261              		.loc 1 62 9 is_stmt 1 discriminator 1 view .LVU111
+ 262              		.loc 1 62 24 is_stmt 0 discriminator 1 view .LVU112
+ 263 00bc 0521     		movs	r1, #5
+ 264 00be 01A8     		add	r0, sp, #4
+ 265 00c0 FFF7FEFF 		bl	vTaskDelayUntil
+ 266              	.LVL10:
+  56:My_Top/Task/Task_MotorPublish.cpp ****     {
+ 267              		.loc 1 56 5 is_stmt 1 view .LVU113
+ 268 00c4 F1E7     		b	.L3
+ 269              	.L6:
+ 270 00c6 00BF     		.align	2
+ 271              	.L5:
+ 272 00c8 00000000 		.word	.LC0
+ 273 00cc 00000000 		.word	M1
+ 274              		.cfi_endproc
+ 275              	.LFE1366:
+ 277              	.Letext0:
+ 278              		.file 2 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/machine/_default_types.h"
+ 279              		.file 3 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/sys/_stdint.h"
+ 280              		.file 4 "Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h"
+ 281              		.file 5 "Lib/uorb/uorb.hpp"
+ARM GAS  /tmp/ccueNTql.s 			page 7
+
+
+ 282              		.file 6 "My_Top/Task/task_topics.h"
+ 283              		.file 7 "Lib/compute/pid/pid.hpp"
+ 284              		.file 8 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/cmath"
+ 285              		.file 9 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/type_traits"
+ 286              		.file 10 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/debug/debug.h"
+ 287              		.file 11 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/bits/std_abs.h"
+ 288              		.file 12 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/bits/predefined_ops.h"
+ 289              		.file 13 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/math.h"
+ 290              		.file 14 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/arm-none-eabi/thumb/v7e-m+f
+ 291              		.file 15 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/math.h"
+ 292              		.file 16 "Lib/compute/ex_math.hpp"
+ 293              		.file 17 "Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g474xx.h"
+ 294              		.file 18 "Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h"
+ 295              		.file 19 "Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h"
+ 296              		.file 20 "Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h"
+ 297              		.file 21 "Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h"
+ 298              		.file 22 "Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h"
+ 299              		.file 23 "Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h"
+ 300              		.file 24 "My_Top/System/bsp.hpp"
+ 301              		.file 25 "Lib/compute/pid/pll.hpp"
+ 302              		.file 26 "Lib/compute/pid/foc_math.hpp"
+ 303              		.file 27 "Lib/compute/pid/LQR.hpp"
+ 304              		.file 28 "My_Top/System/current_read.hpp"
+ 305              		.file 29 "My_Top/System/encoder.hpp"
+ 306              		.file 30 "Lib/compute/wave/wave_generator.hpp"
+ 307              		.file 31 "My_Top/Motor_Control/FocMotor_ClosedLoop.hpp"
+ 308              		.file 32 "Middlewares/Third_Party/FreeRTOS/Source/include/task.h"
+ARM GAS  /tmp/ccueNTql.s 			page 8
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 Task_MotorPublish.cpp
+     /tmp/ccueNTql.s:20     .text:00000000 $t
+     /tmp/ccueNTql.s:25     .text:00000000 _ZL10fill_telemP13motor_telem_tP9FOC_Motor
+     /tmp/ccueNTql.s:196    .rodata.str1.4:00000000 $d
+     /tmp/ccueNTql.s:206    .text:00000088 _Z17Task_MotorPublishPv
+     /tmp/ccueNTql.s:272    .text:000000c8 $d
+
+UNDEFINED SYMBOLS
+uorb_advertise
+memset
+xTaskGetTickCount
+uorb_publish
+vTaskDelayUntil
+M1

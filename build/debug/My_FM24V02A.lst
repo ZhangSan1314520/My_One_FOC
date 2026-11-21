@@ -1,0 +1,542 @@
+ARM GAS  /tmp/ccvUETav.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"My_FM24V02A.cpp"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "My_Top/EEPROM/My_FM24V02A.cpp"
+  20              		.align	1
+  21              		.global	_ZN11My_FM24V02A5writeEtPht
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	_ZN11My_FM24V02A5writeEtPht:
+  27              	.LVL0:
+  28              	.LFB1310:
+   1:My_Top/EEPROM/My_FM24V02A.cpp **** #include "My_FM24V02A.hpp"
+   2:My_Top/EEPROM/My_FM24V02A.cpp **** 
+   3:My_Top/EEPROM/My_FM24V02A.cpp **** My_FM24V02A FM24V02A0 ={};
+   4:My_Top/EEPROM/My_FM24V02A.cpp **** FOC_Motor_Params Motor_Params1; //写入参数结构体
+   5:My_Top/EEPROM/My_FM24V02A.cpp **** HAL_StatusTypeDef My_FM24V02A::write(uint16_t address, uint8_t *data, uint16_t size)
+   6:My_Top/EEPROM/My_FM24V02A.cpp **** {
+  29              		.loc 1 6 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+   7:My_Top/EEPROM/My_FM24V02A.cpp ****     if((address+size) > FM24V02A_ADDRESS_MAX) return HAL_ERROR;
+  33              		.loc 1 7 5 view .LVU1
+  34              		.loc 1 7 16 is_stmt 0 view .LVU2
+  35 0000 C818     		adds	r0, r1, r3
+  36              	.LVL1:
+  37              		.loc 1 7 5 view .LVU3
+  38 0002 B0F5004F 		cmp	r0, #32768
+  39 0006 01DB     		blt	.L8
+  40              		.loc 1 7 54 discriminator 1 view .LVU4
+  41 0008 0120     		movs	r0, #1
+   8:My_Top/EEPROM/My_FM24V02A.cpp ****     return HAL_I2C_Mem_Write(EEPROM_hi2c,FM24V02A_ADDRESS|0x00, address,I2C_MEMADD_SIZE_16BIT,data,
+   9:My_Top/EEPROM/My_FM24V02A.cpp **** }
+  42              		.loc 1 9 1 view .LVU5
+  43 000a 7047     		bx	lr
+  44              	.L8:
+   6:My_Top/EEPROM/My_FM24V02A.cpp ****     if((address+size) > FM24V02A_ADDRESS_MAX) return HAL_ERROR;
+  45              		.loc 1 6 1 view .LVU6
+  46 000c 00B5     		push	{lr}
+  47              		.cfi_def_cfa_offset 4
+  48              		.cfi_offset 14, -4
+ARM GAS  /tmp/ccvUETav.s 			page 2
+
+
+  49 000e 85B0     		sub	sp, sp, #20
+  50              		.cfi_def_cfa_offset 24
+   8:My_Top/EEPROM/My_FM24V02A.cpp ****     return HAL_I2C_Mem_Write(EEPROM_hi2c,FM24V02A_ADDRESS|0x00, address,I2C_MEMADD_SIZE_16BIT,data,
+  51              		.loc 1 8 5 is_stmt 1 view .LVU7
+   8:My_Top/EEPROM/My_FM24V02A.cpp ****     return HAL_I2C_Mem_Write(EEPROM_hi2c,FM24V02A_ADDRESS|0x00, address,I2C_MEMADD_SIZE_16BIT,data,
+  52              		.loc 1 8 29 is_stmt 0 view .LVU8
+  53 0010 6420     		movs	r0, #100
+  54 0012 0290     		str	r0, [sp, #8]
+  55 0014 0193     		str	r3, [sp, #4]
+  56 0016 0092     		str	r2, [sp]
+  57 0018 0223     		movs	r3, #2
+  58              	.LVL2:
+   8:My_Top/EEPROM/My_FM24V02A.cpp ****     return HAL_I2C_Mem_Write(EEPROM_hi2c,FM24V02A_ADDRESS|0x00, address,I2C_MEMADD_SIZE_16BIT,data,
+  59              		.loc 1 8 29 view .LVU9
+  60 001a 0A46     		mov	r2, r1
+  61              	.LVL3:
+   8:My_Top/EEPROM/My_FM24V02A.cpp ****     return HAL_I2C_Mem_Write(EEPROM_hi2c,FM24V02A_ADDRESS|0x00, address,I2C_MEMADD_SIZE_16BIT,data,
+  62              		.loc 1 8 29 view .LVU10
+  63 001c A021     		movs	r1, #160
+  64              	.LVL4:
+   8:My_Top/EEPROM/My_FM24V02A.cpp ****     return HAL_I2C_Mem_Write(EEPROM_hi2c,FM24V02A_ADDRESS|0x00, address,I2C_MEMADD_SIZE_16BIT,data,
+  65              		.loc 1 8 29 view .LVU11
+  66 001e 0348     		ldr	r0, .L9
+  67 0020 FFF7FEFF 		bl	HAL_I2C_Mem_Write
+  68              	.LVL5:
+  69              		.loc 1 9 1 view .LVU12
+  70 0024 05B0     		add	sp, sp, #20
+  71              		.cfi_def_cfa_offset 4
+  72              		@ sp needed
+  73 0026 5DF804FB 		ldr	pc, [sp], #4
+  74              	.L10:
+  75 002a 00BF     		.align	2
+  76              	.L9:
+  77 002c 00000000 		.word	hi2c1
+  78              		.cfi_endproc
+  79              	.LFE1310:
+  81              		.align	1
+  82              		.global	_ZN11My_FM24V02A4readEtPht
+  83              		.syntax unified
+  84              		.thumb
+  85              		.thumb_func
+  87              	_ZN11My_FM24V02A4readEtPht:
+  88              	.LVL6:
+  89              	.LFB1311:
+  10:My_Top/EEPROM/My_FM24V02A.cpp **** 
+  11:My_Top/EEPROM/My_FM24V02A.cpp **** HAL_StatusTypeDef My_FM24V02A::read(uint16_t address, uint8_t *data, uint16_t size)
+  12:My_Top/EEPROM/My_FM24V02A.cpp **** {
+  90              		.loc 1 12 1 is_stmt 1 view -0
+  91              		.cfi_startproc
+  92              		@ args = 0, pretend = 0, frame = 0
+  93              		@ frame_needed = 0, uses_anonymous_args = 0
+  13:My_Top/EEPROM/My_FM24V02A.cpp ****     if((address+size) > FM24V02A_ADDRESS_MAX) return HAL_ERROR;
+  94              		.loc 1 13 5 view .LVU14
+  95              		.loc 1 13 16 is_stmt 0 view .LVU15
+  96 0030 C818     		adds	r0, r1, r3
+  97              	.LVL7:
+  98              		.loc 1 13 5 view .LVU16
+ARM GAS  /tmp/ccvUETav.s 			page 3
+
+
+  99 0032 B0F5004F 		cmp	r0, #32768
+ 100 0036 01DB     		blt	.L18
+ 101              		.loc 1 13 54 discriminator 1 view .LVU17
+ 102 0038 0120     		movs	r0, #1
+  14:My_Top/EEPROM/My_FM24V02A.cpp ****     return HAL_I2C_Mem_Read(EEPROM_hi2c,FM24V02A_ADDRESS|0x01, address,I2C_MEMADD_SIZE_16BIT,data, 
+  15:My_Top/EEPROM/My_FM24V02A.cpp **** }
+ 103              		.loc 1 15 1 view .LVU18
+ 104 003a 7047     		bx	lr
+ 105              	.L18:
+  12:My_Top/EEPROM/My_FM24V02A.cpp ****     if((address+size) > FM24V02A_ADDRESS_MAX) return HAL_ERROR;
+ 106              		.loc 1 12 1 view .LVU19
+ 107 003c 00B5     		push	{lr}
+ 108              		.cfi_def_cfa_offset 4
+ 109              		.cfi_offset 14, -4
+ 110 003e 85B0     		sub	sp, sp, #20
+ 111              		.cfi_def_cfa_offset 24
+  14:My_Top/EEPROM/My_FM24V02A.cpp ****     return HAL_I2C_Mem_Read(EEPROM_hi2c,FM24V02A_ADDRESS|0x01, address,I2C_MEMADD_SIZE_16BIT,data, 
+ 112              		.loc 1 14 5 is_stmt 1 view .LVU20
+  14:My_Top/EEPROM/My_FM24V02A.cpp ****     return HAL_I2C_Mem_Read(EEPROM_hi2c,FM24V02A_ADDRESS|0x01, address,I2C_MEMADD_SIZE_16BIT,data, 
+ 113              		.loc 1 14 28 is_stmt 0 view .LVU21
+ 114 0040 6420     		movs	r0, #100
+ 115 0042 0290     		str	r0, [sp, #8]
+ 116 0044 0193     		str	r3, [sp, #4]
+ 117 0046 0092     		str	r2, [sp]
+ 118 0048 0223     		movs	r3, #2
+ 119              	.LVL8:
+  14:My_Top/EEPROM/My_FM24V02A.cpp ****     return HAL_I2C_Mem_Read(EEPROM_hi2c,FM24V02A_ADDRESS|0x01, address,I2C_MEMADD_SIZE_16BIT,data, 
+ 120              		.loc 1 14 28 view .LVU22
+ 121 004a 0A46     		mov	r2, r1
+ 122              	.LVL9:
+  14:My_Top/EEPROM/My_FM24V02A.cpp ****     return HAL_I2C_Mem_Read(EEPROM_hi2c,FM24V02A_ADDRESS|0x01, address,I2C_MEMADD_SIZE_16BIT,data, 
+ 123              		.loc 1 14 28 view .LVU23
+ 124 004c A121     		movs	r1, #161
+ 125              	.LVL10:
+  14:My_Top/EEPROM/My_FM24V02A.cpp ****     return HAL_I2C_Mem_Read(EEPROM_hi2c,FM24V02A_ADDRESS|0x01, address,I2C_MEMADD_SIZE_16BIT,data, 
+ 126              		.loc 1 14 28 view .LVU24
+ 127 004e 0348     		ldr	r0, .L19
+ 128 0050 FFF7FEFF 		bl	HAL_I2C_Mem_Read
+ 129              	.LVL11:
+ 130              		.loc 1 15 1 view .LVU25
+ 131 0054 05B0     		add	sp, sp, #20
+ 132              		.cfi_def_cfa_offset 4
+ 133              		@ sp needed
+ 134 0056 5DF804FB 		ldr	pc, [sp], #4
+ 135              	.L20:
+ 136 005a 00BF     		.align	2
+ 137              	.L19:
+ 138 005c 00000000 		.word	hi2c1
+ 139              		.cfi_endproc
+ 140              	.LFE1311:
+ 142              		.align	1
+ 143              		.global	_ZN11My_FM24V02A7read_idEPht
+ 144              		.syntax unified
+ 145              		.thumb
+ 146              		.thumb_func
+ 148              	_ZN11My_FM24V02A7read_idEPht:
+ 149              	.LVL12:
+ARM GAS  /tmp/ccvUETav.s 			page 4
+
+
+ 150              	.LFB1312:
+  16:My_Top/EEPROM/My_FM24V02A.cpp **** 
+  17:My_Top/EEPROM/My_FM24V02A.cpp **** 
+  18:My_Top/EEPROM/My_FM24V02A.cpp **** HAL_StatusTypeDef My_FM24V02A::read_id(uint8_t *data, uint16_t size)
+  19:My_Top/EEPROM/My_FM24V02A.cpp **** {
+ 151              		.loc 1 19 1 is_stmt 1 view -0
+ 152              		.cfi_startproc
+ 153              		@ args = 0, pretend = 0, frame = 0
+ 154              		@ frame_needed = 0, uses_anonymous_args = 0
+ 155              		.loc 1 19 1 is_stmt 0 view .LVU27
+ 156 0060 00B5     		push	{lr}
+ 157              		.cfi_def_cfa_offset 4
+ 158              		.cfi_offset 14, -4
+ 159 0062 85B0     		sub	sp, sp, #20
+ 160              		.cfi_def_cfa_offset 24
+  20:My_Top/EEPROM/My_FM24V02A.cpp ****     //0x1f 0x17 0x00 0x90 
+  21:My_Top/EEPROM/My_FM24V02A.cpp ****     return HAL_I2C_Mem_Read(EEPROM_hi2c,FM24V02A_ADDRESS|0x01, FM24V02A_ID,I2C_MEMADD_SIZE_16BIT,da
+ 161              		.loc 1 21 5 is_stmt 1 view .LVU28
+ 162              		.loc 1 21 28 is_stmt 0 view .LVU29
+ 163 0064 6423     		movs	r3, #100
+ 164 0066 0293     		str	r3, [sp, #8]
+ 165 0068 0192     		str	r2, [sp, #4]
+ 166 006a 0091     		str	r1, [sp]
+ 167 006c 0223     		movs	r3, #2
+ 168 006e F722     		movs	r2, #247
+ 169              	.LVL13:
+ 170              		.loc 1 21 28 view .LVU30
+ 171 0070 A121     		movs	r1, #161
+ 172              	.LVL14:
+ 173              		.loc 1 21 28 view .LVU31
+ 174 0072 0348     		ldr	r0, .L23
+ 175              	.LVL15:
+ 176              		.loc 1 21 28 view .LVU32
+ 177 0074 FFF7FEFF 		bl	HAL_I2C_Mem_Read
+ 178              	.LVL16:
+  22:My_Top/EEPROM/My_FM24V02A.cpp **** }
+ 179              		.loc 1 22 1 view .LVU33
+ 180 0078 05B0     		add	sp, sp, #20
+ 181              		.cfi_def_cfa_offset 4
+ 182              		@ sp needed
+ 183 007a 5DF804FB 		ldr	pc, [sp], #4
+ 184              	.L24:
+ 185 007e 00BF     		.align	2
+ 186              	.L23:
+ 187 0080 00000000 		.word	hi2c1
+ 188              		.cfi_endproc
+ 189              	.LFE1312:
+ 191              		.align	1
+ 192              		.global	_ZN11My_FM24V02A17read_motor_paramsEt
+ 193              		.syntax unified
+ 194              		.thumb
+ 195              		.thumb_func
+ 197              	_ZN11My_FM24V02A17read_motor_paramsEt:
+ 198              	.LVL17:
+ 199              	.LFB1313:
+  23:My_Top/EEPROM/My_FM24V02A.cpp **** 
+  24:My_Top/EEPROM/My_FM24V02A.cpp **** 
+ARM GAS  /tmp/ccvUETav.s 			page 5
+
+
+  25:My_Top/EEPROM/My_FM24V02A.cpp **** FOC_Motor_Params My_FM24V02A::read_motor_params(uint16_t address)
+  26:My_Top/EEPROM/My_FM24V02A.cpp **** {
+ 200              		.loc 1 26 1 is_stmt 1 view -0
+ 201              		.cfi_startproc
+ 202              		@ args = 0, pretend = 0, frame = 200
+ 203              		@ frame_needed = 0, uses_anonymous_args = 0
+ 204              		.loc 1 26 1 is_stmt 0 view .LVU35
+ 205 0084 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 206              		.cfi_def_cfa_offset 24
+ 207              		.cfi_offset 4, -24
+ 208              		.cfi_offset 5, -20
+ 209              		.cfi_offset 6, -16
+ 210              		.cfi_offset 7, -12
+ 211              		.cfi_offset 8, -8
+ 212              		.cfi_offset 14, -4
+ 213 0088 B2B0     		sub	sp, sp, #200
+ 214              		.cfi_def_cfa_offset 224
+ 215 008a 0446     		mov	r4, r0
+ 216 008c 0E46     		mov	r6, r1
+ 217 008e 1746     		mov	r7, r2
+  27:My_Top/EEPROM/My_FM24V02A.cpp ****     uint8_t rx_data[200]; //接受缓冲区
+ 218              		.loc 1 27 5 is_stmt 1 view .LVU36
+  28:My_Top/EEPROM/My_FM24V02A.cpp ****     FOC_Motor_Params Motor_Params_rx = {};//接受缓冲区
+ 219              		.loc 1 28 5 view .LVU37
+ 220              		.loc 1 28 22 is_stmt 0 view .LVU38
+ 221 0090 5025     		movs	r5, #80
+ 222 0092 2A46     		mov	r2, r5
+ 223              	.LVL18:
+ 224              		.loc 1 28 22 view .LVU39
+ 225 0094 0E49     		ldr	r1, .L29
+ 226              	.LVL19:
+ 227              		.loc 1 28 22 view .LVU40
+ 228 0096 FFF7FEFF 		bl	memcpy
+ 229              	.LVL20:
+  29:My_Top/EEPROM/My_FM24V02A.cpp ****     memset(&Motor_Params_rx, 0, sizeof(Motor_Params_rx)); //清空接受缓冲区
+ 230              		.loc 1 29 5 is_stmt 1 view .LVU41
+ 231              		.loc 1 29 11 is_stmt 0 view .LVU42
+ 232 009a 2A46     		mov	r2, r5
+ 233 009c 0021     		movs	r1, #0
+ 234 009e 2046     		mov	r0, r4
+ 235 00a0 FFF7FEFF 		bl	memset
+ 236              	.LVL21:
+  30:My_Top/EEPROM/My_FM24V02A.cpp ****     HAL_StatusTypeDef res = read(address, rx_data, sizeof(Motor_Params_rx));
+ 237              		.loc 1 30 5 is_stmt 1 view .LVU43
+ 238              		.loc 1 30 33 is_stmt 0 view .LVU44
+ 239 00a4 2B46     		mov	r3, r5
+ 240 00a6 6A46     		mov	r2, sp
+ 241 00a8 3946     		mov	r1, r7
+ 242 00aa 3046     		mov	r0, r6
+ 243 00ac FFF7FEFF 		bl	_ZN11My_FM24V02A4readEtPht
+ 244              	.LVL22:
+ 245 00b0 0646     		mov	r6, r0
+ 246              	.LVL23:
+  31:My_Top/EEPROM/My_FM24V02A.cpp ****     memcpy(&Motor_Params_rx,rx_data, sizeof(Motor_Params_rx));
+ 247              		.loc 1 31 5 is_stmt 1 view .LVU45
+ 248              		.loc 1 31 11 is_stmt 0 view .LVU46
+ 249 00b2 2A46     		mov	r2, r5
+ARM GAS  /tmp/ccvUETav.s 			page 6
+
+
+ 250 00b4 6946     		mov	r1, sp
+ 251 00b6 2046     		mov	r0, r4
+ 252 00b8 FFF7FEFF 		bl	memcpy
+ 253              	.LVL24:
+  32:My_Top/EEPROM/My_FM24V02A.cpp **** 
+  33:My_Top/EEPROM/My_FM24V02A.cpp ****     if(res != HAL_OK || Motor_Params_rx.write_flag != FM24V02A_flag_data)//读取失败 或没写�
+ 254              		.loc 1 33 5 is_stmt 1 view .LVU47
+ 255 00bc 16B9     		cbnz	r6, .L26
+ 256              		.loc 1 33 41 is_stmt 0 discriminator 1 view .LVU48
+ 257 00be 2378     		ldrb	r3, [r4]	@ zero_extendqisi2
+ 258              		.loc 1 33 22 discriminator 1 view .LVU49
+ 259 00c0 652B     		cmp	r3, #101
+ 260 00c2 01D0     		beq	.L25
+ 261              	.L26:
+  34:My_Top/EEPROM/My_FM24V02A.cpp ****     {
+  35:My_Top/EEPROM/My_FM24V02A.cpp ****         Motor_Params_rx.write_flag = 0x00;
+ 262              		.loc 1 35 9 is_stmt 1 view .LVU50
+ 263              		.loc 1 35 36 is_stmt 0 view .LVU51
+ 264 00c4 0023     		movs	r3, #0
+ 265 00c6 2370     		strb	r3, [r4]
+  36:My_Top/EEPROM/My_FM24V02A.cpp ****         return Motor_Params_rx;
+ 266              		.loc 1 36 9 is_stmt 1 view .LVU52
+ 267              	.L25:
+  37:My_Top/EEPROM/My_FM24V02A.cpp ****     }
+  38:My_Top/EEPROM/My_FM24V02A.cpp ****     
+  39:My_Top/EEPROM/My_FM24V02A.cpp ****     return Motor_Params_rx;
+  40:My_Top/EEPROM/My_FM24V02A.cpp **** }
+ 268              		.loc 1 40 1 is_stmt 0 view .LVU53
+ 269 00c8 2046     		mov	r0, r4
+ 270 00ca 32B0     		add	sp, sp, #200
+ 271              		.cfi_def_cfa_offset 24
+ 272              		@ sp needed
+ 273 00cc BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 274              	.LVL25:
+ 275              	.L30:
+ 276              		.loc 1 40 1 view .LVU54
+ 277              		.align	2
+ 278              	.L29:
+ 279 00d0 00000000 		.word	.LANCHOR0
+ 280              		.cfi_endproc
+ 281              	.LFE1313:
+ 283              		.align	1
+ 284              		.global	_ZN11My_FM24V02A18write_motor_paramsEt16FOC_Motor_Params
+ 285              		.syntax unified
+ 286              		.thumb
+ 287              		.thumb_func
+ 289              	_ZN11My_FM24V02A18write_motor_paramsEt16FOC_Motor_Params:
+ 290              	.LVL26:
+ 291              	.LFB1314:
+  41:My_Top/EEPROM/My_FM24V02A.cpp **** 
+  42:My_Top/EEPROM/My_FM24V02A.cpp **** 
+  43:My_Top/EEPROM/My_FM24V02A.cpp **** HAL_StatusTypeDef My_FM24V02A::write_motor_params(uint16_t address, FOC_Motor_Params Motor_Params_t
+  44:My_Top/EEPROM/My_FM24V02A.cpp **** {
+ 292              		.loc 1 44 1 is_stmt 1 view -0
+ 293              		.cfi_startproc
+ 294              		@ args = 80, pretend = 8, frame = 200
+ 295              		@ frame_needed = 0, uses_anonymous_args = 0
+ARM GAS  /tmp/ccvUETav.s 			page 7
+
+
+ 296              		.loc 1 44 1 is_stmt 0 view .LVU56
+ 297 00d4 82B0     		sub	sp, sp, #8
+ 298              		.cfi_def_cfa_offset 8
+ 299 00d6 F0B5     		push	{r4, r5, r6, r7, lr}
+ 300              		.cfi_def_cfa_offset 28
+ 301              		.cfi_offset 4, -28
+ 302              		.cfi_offset 5, -24
+ 303              		.cfi_offset 6, -20
+ 304              		.cfi_offset 7, -16
+ 305              		.cfi_offset 14, -12
+ 306 00d8 B3B0     		sub	sp, sp, #204
+ 307              		.cfi_def_cfa_offset 232
+ 308 00da 0446     		mov	r4, r0
+ 309 00dc 0D46     		mov	r5, r1
+ 310 00de 38A9     		add	r1, sp, #224
+ 311              	.LVL27:
+ 312              		.loc 1 44 1 view .LVU57
+ 313 00e0 81E80C00 		stm	r1, {r2, r3}
+  45:My_Top/EEPROM/My_FM24V02A.cpp ****     uint8_t tx_data[200]; //发送缓冲区
+ 314              		.loc 1 45 5 is_stmt 1 view .LVU58
+  46:My_Top/EEPROM/My_FM24V02A.cpp ****     Motor_Params_tx.write_flag = FM24V02A_flag_data;
+ 315              		.loc 1 46 5 view .LVU59
+ 316              		.loc 1 46 32 is_stmt 0 view .LVU60
+ 317 00e4 6523     		movs	r3, #101
+ 318 00e6 8DF8E030 		strb	r3, [sp, #224]
+  47:My_Top/EEPROM/My_FM24V02A.cpp ****     memcpy(tx_data, &Motor_Params_tx, sizeof(Motor_Params_tx));
+ 319              		.loc 1 47 5 is_stmt 1 view .LVU61
+ 320              		.loc 1 47 11 is_stmt 0 view .LVU62
+ 321 00ea 5027     		movs	r7, #80
+ 322 00ec 3A46     		mov	r2, r7
+ 323 00ee 6846     		mov	r0, sp
+ 324              	.LVL28:
+ 325              		.loc 1 47 11 view .LVU63
+ 326 00f0 FFF7FEFF 		bl	memcpy
+ 327              	.LVL29:
+  48:My_Top/EEPROM/My_FM24V02A.cpp ****     HAL_StatusTypeDef res = write(address, tx_data, sizeof(Motor_Params_tx));
+ 328              		.loc 1 48 5 is_stmt 1 view .LVU64
+ 329              		.loc 1 48 34 is_stmt 0 view .LVU65
+ 330 00f4 3B46     		mov	r3, r7
+ 331 00f6 6A46     		mov	r2, sp
+ 332 00f8 2946     		mov	r1, r5
+ 333 00fa 2046     		mov	r0, r4
+ 334 00fc FFF7FEFF 		bl	_ZN11My_FM24V02A5writeEtPht
+ 335              	.LVL30:
+  49:My_Top/EEPROM/My_FM24V02A.cpp ****     return res;
+ 336              		.loc 1 49 5 is_stmt 1 view .LVU66
+  50:My_Top/EEPROM/My_FM24V02A.cpp **** }
+ 337              		.loc 1 50 1 is_stmt 0 view .LVU67
+ 338 0100 33B0     		add	sp, sp, #204
+ 339              		.cfi_def_cfa_offset 28
+ 340              		@ sp needed
+ 341 0102 BDE8F040 		pop	{r4, r5, r6, r7, lr}
+ 342              		.cfi_restore 14
+ 343              		.cfi_restore 7
+ 344              		.cfi_restore 6
+ 345              		.cfi_restore 5
+ 346              		.cfi_restore 4
+ARM GAS  /tmp/ccvUETav.s 			page 8
+
+
+ 347              		.cfi_def_cfa_offset 8
+ 348              	.LVL31:
+ 349              		.loc 1 50 1 view .LVU68
+ 350 0106 02B0     		add	sp, sp, #8
+ 351              		.cfi_def_cfa_offset 0
+ 352 0108 7047     		bx	lr
+ 353              		.cfi_endproc
+ 354              	.LFE1314:
+ 356              		.global	Motor_Params1
+ 357              		.global	FM24V02A0
+ 358              		.section	.rodata
+ 359              		.align	2
+ 360              		.set	.LANCHOR0,. + 0
+ 361              	.LC0:
+ 362 0000 00       		.byte	0
+ 363 0001 000000   		.space	3
+ 364 0004 00000000 		.word	0
+ 365 0008 0000B4C2 		.word	-1028390912
+ 366 000c 0000B442 		.word	1119092736
+ 367 0010 0000B443 		.word	1135869952
+ 368 0014 0000A040 		.word	1084227584
+ 369 0018 CDCC4C3F 		.word	1061997773
+ 370 001c 00004843 		.word	1128792064
+ 371 0020 00000000 		.word	0
+ 372 0024 00000041 		.word	1090519040
+ 373 0028 00000000 		.word	0
+ 374 002c 00000000 		.word	0
+ 375 0030 CDCCCC3E 		.word	1053609165
+ 376 0034 0000C843 		.word	1137180672
+ 377 0038 00000000 		.word	0
+ 378 003c CDCCCC3E 		.word	1053609165
+ 379 0040 0000C843 		.word	1137180672
+ 380 0044 00000000 		.word	0
+ 381 0048 0000A041 		.word	1101004800
+ 382 004c 00       		.byte	0
+ 383 004d 000000   		.space	3
+ 384              		.data
+ 385              		.align	2
+ 388              	Motor_Params1:
+ 389 0000 00       		.byte	0
+ 390 0001 000000   		.space	3
+ 391 0004 00000000 		.word	0
+ 392 0008 0000B4C2 		.word	-1028390912
+ 393 000c 0000B442 		.word	1119092736
+ 394 0010 0000B443 		.word	1135869952
+ 395 0014 0000A040 		.word	1084227584
+ 396 0018 CDCC4C3F 		.word	1061997773
+ 397 001c 00004843 		.word	1128792064
+ 398 0020 00000000 		.word	0
+ 399 0024 00000041 		.word	1090519040
+ 400 0028 00000000 		.word	0
+ 401 002c 00000000 		.word	0
+ 402 0030 CDCCCC3E 		.word	1053609165
+ 403 0034 0000C843 		.word	1137180672
+ 404 0038 00000000 		.word	0
+ 405 003c CDCCCC3E 		.word	1053609165
+ 406 0040 0000C843 		.word	1137180672
+ARM GAS  /tmp/ccvUETav.s 			page 9
+
+
+ 407 0044 00000000 		.word	0
+ 408 0048 0000A041 		.word	1101004800
+ 409 004c 00       		.byte	0
+ 410 004d 000000   		.space	3
+ 411              		.bss
+ 412              		.align	2
+ 415              	FM24V02A0:
+ 416 0000 00       		.space	1
+ 417              		.text
+ 418              	.Letext0:
+ 419              		.file 2 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/machine/_default_types.h"
+ 420              		.file 3 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/sys/_stdint.h"
+ 421              		.file 4 "Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g474xx.h"
+ 422              		.file 5 "/opt/arm-gnu-toolchain-14.2/lib/gcc/arm-none-eabi/14.2.1/include/stddef.h"
+ 423              		.file 6 "Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h"
+ 424              		.file 7 "Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h"
+ 425              		.file 8 "Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_i2c.h"
+ 426              		.file 9 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/cmath"
+ 427              		.file 10 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/type_traits"
+ 428              		.file 11 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/debug/debug.h"
+ 429              		.file 12 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/bits/std_abs.h"
+ 430              		.file 13 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/bits/predefined_ops.h"
+ 431              		.file 14 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/math.h"
+ 432              		.file 15 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/arm-none-eabi/thumb/v7e-m+f
+ 433              		.file 16 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/c++/14.2.1/math.h"
+ 434              		.file 17 "My_Top/EEPROM/My_FM24V02A.hpp"
+ 435              		.file 18 "Core/Inc/i2c.h"
+ 436              		.file 19 "/opt/arm-gnu-toolchain-14.2/arm-none-eabi/include/string.h"
+ARM GAS  /tmp/ccvUETav.s 			page 10
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 My_FM24V02A.cpp
+     /tmp/ccvUETav.s:20     .text:00000000 $t
+     /tmp/ccvUETav.s:26     .text:00000000 _ZN11My_FM24V02A5writeEtPht
+     /tmp/ccvUETav.s:77     .text:0000002c $d
+     /tmp/ccvUETav.s:81     .text:00000030 $t
+     /tmp/ccvUETav.s:87     .text:00000030 _ZN11My_FM24V02A4readEtPht
+     /tmp/ccvUETav.s:138    .text:0000005c $d
+     /tmp/ccvUETav.s:142    .text:00000060 $t
+     /tmp/ccvUETav.s:148    .text:00000060 _ZN11My_FM24V02A7read_idEPht
+     /tmp/ccvUETav.s:187    .text:00000080 $d
+     /tmp/ccvUETav.s:191    .text:00000084 $t
+     /tmp/ccvUETav.s:197    .text:00000084 _ZN11My_FM24V02A17read_motor_paramsEt
+     /tmp/ccvUETav.s:279    .text:000000d0 $d
+     /tmp/ccvUETav.s:283    .text:000000d4 $t
+     /tmp/ccvUETav.s:289    .text:000000d4 _ZN11My_FM24V02A18write_motor_paramsEt16FOC_Motor_Params
+     /tmp/ccvUETav.s:388    .data:00000000 Motor_Params1
+     /tmp/ccvUETav.s:415    .bss:00000000 FM24V02A0
+     /tmp/ccvUETav.s:359    .rodata:00000000 $d
+     /tmp/ccvUETav.s:385    .data:00000000 $d
+     /tmp/ccvUETav.s:412    .bss:00000000 $d
+
+UNDEFINED SYMBOLS
+HAL_I2C_Mem_Write
+hi2c1
+HAL_I2C_Mem_Read
+memcpy
+memset
